@@ -1,0 +1,9 @@
+#!/bin/sh
+
+do_sysinfo_imx6ull() {
+	. /lib/imx6ull.sh
+
+	imx6ull_board_detect
+}
+
+boot_hook_add preinit_main do_sysinfo_imx6ull

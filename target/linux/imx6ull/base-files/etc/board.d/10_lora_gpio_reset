@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# Copyright (C) 2013-2015 OpenWrt.org
+#
+
+. /lib/functions/uci-defaults.sh
+
+board=$(board_name)
+
+board_config_update
+
+case "$board" in
+*wirelessroad_gw-imx6ull)
+	uci set lora.SX1301_conf.chipreset_pin='130';
+	uci set lora.SX1301_conf.pllreset_pin='';
+	;;
+esac
+
+uci commit;
+
+board_config_flush
+
+exit 0

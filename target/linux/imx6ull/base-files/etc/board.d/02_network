@@ -1,0 +1,20 @@
+#!/bin/sh
+#
+# Copyright (C) 2013-2015 OpenWrt.org
+#
+
+. /lib/functions/uci-defaults.sh
+
+board=$(board_name)
+
+board_config_update
+
+case "$board" in
+*wirelessroad_gw-imx6ull)
+	ucidef_set_interface_lan 'eth0'
+	;;
+esac
+
+board_config_flush
+
+exit 0
