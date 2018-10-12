@@ -1,0 +1,71 @@
+#!/bin/sh /etc/rc.common
+START=99
+STOP=10
+
+USE_PROCD=1
+
+PROG=/usr/sbin/lora_pkt_fwd
+
+reset_sx1301_board ()
+{
+	local gpio_pindir;
+	local chipreset_pin=$(uci get lora.SX1301_conf.chipreset_pin)
+	local pllreset_pin=$(uci get lora.SX1301_conf.pllreset_pin)
+	if [ "x$pllreset_pin" != "x" ];then
+		gpio_pindir="/sys/class/gpio/gpio$pllreset_pin";
+		if [ ! -e "$gpio_pindir" ];then
+			echo "$pllreset_pin" > /sys/class/gpio/export
+			sleep 2
+			echo "out" > $gpio_pindir/direction
+			echo "0" > $gpio_pindir/value
+			sleep 1
+			echo "1" > $gpio_pindir/value
+			sleep 1
+			echo "0" > $gpio_pindir/value
+			sleep 1
+		fi;
+	fi;
+
+	if [ "x$chipreset_pin" != "x" ];then
+		gpio_pindir="/sys/class/gpio/gpio$chipreset_pin";
+		if [ ! -e "$gpio_pindir" ];then
+			echo "$chipreset_pin" > /sys/class/gpio/export
+			sleep 2
+			echo "out" > $gpio_pindir/direction
+			echo "1" > $gpio_pindir/value
+			sleep 5
+			echo "0" > $gpio_pindir/value
+			sleep 1
+			echo "0" > $gpio_pindir/value
+		fi;
+	fi;
+}
+
+service_triggers()
+{
+	procd_add_reload_trigger "lora-global"
+}
+
+reload_service()
+{
+	logger "reload lora_pkg_fwd service"
+}
+
+start_service()
+{
+
+	reset_sx1301_board
+
+	procd_open_instance
+
+	procd_set_param command $PROG
+
+	procd_set_param respawn
+
+	procd_set_param stdout 1
+	procd_set_param stderr 1
+
+	procd_set_param file /etc/global_conf.json
+
+	procd_close_instance
+}
