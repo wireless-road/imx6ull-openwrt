@@ -30,9 +30,13 @@
 `6.` После завершения сборки в директории `bin/targets/imx6ull/cortexa7/` будут находится образы прошивки и загрузчика для записи/обновления:
 
 `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.sdcard.bin` - образ для записи на SD/MMC-карту.
+
 `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin` - образ прошивки для использования на spi-flash, этот файл используется для удалённого обновления.
+
 `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin` - образ spi-flash для записи при производстве или полного обновления прошивки и загрузчика один файлом.
+
 `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin` - образ загрузчика.
+
 
 ### Обновление и запись образа.
 
@@ -67,17 +71,16 @@
 > scp openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin root@192.168.1.1:/tmp/
 
 После этого необходимо выполнить команду записи прошивку на флеш с самого устройства.
-> mtd write /tmp/openwrt-sunxi-cortexa7-sun8i-h2-plus-orangepi-zero-squashfs-mtd-factory.bin factory
-
+> mtd write openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin factory
 
 ##### Обновление.
 
 Как загружать файлы на устройство смотрите в предыдущем разделе.
 
 Для обновления UBoot раздела скачайте файл `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin` на устройство в директорию /tmp и выполните команду
-> mtd write /tmp/openwrt-sunxi-cortexa7-sun8i-h2-plus-orangepi-zero-squashfs-uboot.bin u-boot
+> mtd write /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin u-boot
 
 Для обновления прошивки загрузите файл прошивки `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin` на устройство с использованием wget (FTP или HTTP протокол) или scp, как в предыдущем разделе (первичная запись) и выполните команду 
-> sysupgrade -с /tmp/openwrt-sunxi-cortexa7-sun8i-h2-plus-orangepi-zero-squashfs-mtd-sysupgrade.bin 
+> sysupgrade -с /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin
 
 Команда sysupgrade обновит прошивку с сохранением текущей конфигурации устройства. Ключ '-c' указывает команде найти все изменения в директории /etc/ на устройстве и сохранить их для следующей загрузки (по-умолчанию сохраняются только файлы из списка /etc/sysupgrade.conf, в основном, это конфигурационные файлы в /etc/config/).
