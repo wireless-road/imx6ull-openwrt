@@ -85,9 +85,10 @@ define Device/wirelessroad_gw-imx6ull
 	BOARDNAME := WIRELESSROAD_GW_IMX6ULL
 	IMAGE_SIZE := 7000k
 	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
 	IMAGE/u-boot.bin := imx6ull-ubootimg
-	IMAGE/sdcard.bin := imx6ull-bootscript | imx6ull-sdcard | append-metadata
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
 	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs
 	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory
 endef
