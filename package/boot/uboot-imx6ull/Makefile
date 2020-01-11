@@ -28,8 +28,13 @@ define U-Boot/wirelessroad_gw-imx6ull
   BUILD_DEVICES:=wirelessroad_gw-imx6ull
 endef
 
+define U-Boot/wirelessroad_stream-imx6ull
+  NAME:=WirelessRoad STREAM-IMX6ULL
+  BUILD_DEVICES:=wirelessroad_stream-imx6ull
+endef
+
 UBOOT_TARGETS := \
-	wirelessroad_gw-imx6ull
+	wirelessroad_gw-imx6ull wirelessroad_stream-imx6ull
 
 UBOOT_MAKE_FLAGS += $(UBOOT_IMAGE)
 
