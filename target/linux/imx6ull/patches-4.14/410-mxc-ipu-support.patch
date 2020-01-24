@@ -1,0 +1,253 @@
+diff -Nru linux-4.14.75-03-csi-dts/drivers/Kconfig linux-4.14.75-04-mxc-ipu/drivers/Kconfig
+--- linux-4.14.75-03-csi-dts/drivers/Kconfig	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/drivers/Kconfig	2020-01-19 17:05:58.222651776 +0200
+@@ -103,6 +103,8 @@
+ 
+ source "drivers/memstick/Kconfig"
+ 
++source "drivers/mxc/Kconfig"
++
+ source "drivers/leds/Kconfig"
+ 
+ source "drivers/accessibility/Kconfig"
+diff -Nru linux-4.14.75-03-csi-dts/drivers/Makefile linux-4.14.75-04-mxc-ipu/drivers/Makefile
+--- linux-4.14.75-03-csi-dts/drivers/Makefile	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/drivers/Makefile	2020-01-20 15:47:52.138069416 +0200
+@@ -130,6 +130,7 @@
+ obj-$(CONFIG_CPU_FREQ)		+= cpufreq/
+ obj-$(CONFIG_CPU_IDLE)		+= cpuidle/
+ obj-y				+= mmc/
++obj-y				+= mxc/
+ obj-$(CONFIG_MEMSTICK)		+= memstick/
+ obj-$(CONFIG_NEW_LEDS)		+= leds/
+ obj-$(CONFIG_INFINIBAND)	+= infiniband/
+diff -Nru linux-4.14.75-03-csi-dts/drivers/media/v4l2-core/v4l2-dev.c linux-4.14.75-04-mxc-ipu/drivers/media/v4l2-core/v4l2-dev.c
+--- linux-4.14.75-03-csi-dts/drivers/media/v4l2-core/v4l2-dev.c	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/drivers/media/v4l2-core/v4l2-dev.c	2020-01-20 14:17:24.841678539 +0200
+@@ -567,6 +567,7 @@
+ 	set_bit(_IOC_NR(VIDIOC_DBG_G_REGISTER), valid_ioctls);
+ 	set_bit(_IOC_NR(VIDIOC_DBG_S_REGISTER), valid_ioctls);
+ #endif
++	SET_VALID_IOCTL(ops, VIDIOC_DBG_G_CHIP_IDENT, vidioc_g_chip_ident);
+ 	/* yes, really vidioc_subscribe_event */
+ 	SET_VALID_IOCTL(ops, VIDIOC_DQEVENT, vidioc_subscribe_event);
+ 	SET_VALID_IOCTL(ops, VIDIOC_SUBSCRIBE_EVENT, vidioc_subscribe_event);
+diff -Nru linux-4.14.75-03-csi-dts/drivers/media/v4l2-core/v4l2-ioctl.c linux-4.14.75-04-mxc-ipu/drivers/media/v4l2-core/v4l2-ioctl.c
+--- linux-4.14.75-03-csi-dts/drivers/media/v4l2-core/v4l2-ioctl.c	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/drivers/media/v4l2-core/v4l2-ioctl.c	2020-01-20 14:21:29.080713022 +0200
+@@ -29,6 +29,7 @@
+ #include <media/v4l2-device.h>
+ #include <media/videobuf2-v4l2.h>
+ #include <media/v4l2-mc.h>
++#include <media/v4l2-chip-ident.h>
+ 
+ #include <trace/events/v4l2.h>
+ 
+@@ -637,6 +638,20 @@
+ 		pr_info("pts=%llu\n", p->stop.pts);
+ }
+ 
++static void v4l_print_dbg_chip_ident(const void *arg, bool write_only)
++{
++	const struct v4l2_dbg_chip_ident *p = arg;
++
++	pr_cont("type=%u, ", p->match.type);
++	if (p->match.type == V4L2_CHIP_MATCH_I2C_DRIVER)
++		pr_cont("name=%.*s, ",
++				(int)sizeof(p->match.name), p->match.name);
++	else
++		pr_cont("addr=%u, ", p->match.addr);
++	pr_cont("chip_ident=%u, revision=0x%x\n",
++			p->ident, p->revision);
++}
++
+ static void v4l_print_dbg_chip_info(const void *arg, bool write_only)
+ {
+ 	const struct v4l2_dbg_chip_info *p = arg;
+@@ -2337,6 +2352,18 @@
+ #endif
+ }
+ 
++static int v4l_dbg_g_chip_ident(const struct v4l2_ioctl_ops *ops,
++                                struct file *file, void *fh, void *arg)
++{
++	struct v4l2_dbg_chip_ident *p = arg;
++
++	p->ident = V4L2_IDENT_NONE;
++	p->revision = 0;
++	if (p->match.type == V4L2_CHIP_MATCH_SUBDEV)
++		return -EINVAL;
++	return ops->vidioc_g_chip_ident(file, fh, p);
++}
++
+ static int v4l_dbg_g_chip_info(const struct v4l2_ioctl_ops *ops,
+ 				struct file *file, void *fh, void *arg)
+ {
+@@ -2593,6 +2620,7 @@
+ 	IOCTL_INFO_STD(VIDIOC_TRY_DECODER_CMD, vidioc_try_decoder_cmd, v4l_print_decoder_cmd, 0),
+ 	IOCTL_INFO_FNC(VIDIOC_DBG_S_REGISTER, v4l_dbg_s_register, v4l_print_dbg_register, 0),
+ 	IOCTL_INFO_FNC(VIDIOC_DBG_G_REGISTER, v4l_dbg_g_register, v4l_print_dbg_register, 0),
++	IOCTL_INFO_FNC(VIDIOC_DBG_G_CHIP_IDENT, v4l_dbg_g_chip_ident, v4l_print_dbg_chip_ident, 0),
+ 	IOCTL_INFO_FNC(VIDIOC_S_HW_FREQ_SEEK, v4l_s_hw_freq_seek, v4l_print_hw_freq_seek, INFO_FL_PRIO),
+ 	IOCTL_INFO_STD(VIDIOC_S_DV_TIMINGS, vidioc_s_dv_timings, v4l_print_dv_timings, INFO_FL_PRIO | INFO_FL_CLEAR(v4l2_dv_timings, bt.flags)),
+ 	IOCTL_INFO_STD(VIDIOC_G_DV_TIMINGS, vidioc_g_dv_timings, v4l_print_dv_timings, 0),
+diff -Nru linux-4.14.75-03-csi-dts/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h linux-4.14.75-04-mxc-ipu/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h
+--- linux-4.14.75-03-csi-dts/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/include/linux/mfd/syscon/imx6q-iomuxc-gpr.h	2020-01-20 16:26:30.243112850 +0200
+@@ -101,6 +101,7 @@
+ #define IMX6Q_GPR1_PCIE_ENTER_L1		BIT(26)
+ #define IMX6Q_GPR1_MIPI_COLOR_SW		BIT(25)
+ #define IMX6Q_GPR1_DPI_OFF			BIT(24)
++#define IMX6Q_GPR1_PCIE_SW_PERST		BIT(23)
+ #define IMX6Q_GPR1_EXC_MON_MASK			BIT(22)
+ #define IMX6Q_GPR1_EXC_MON_OKAY			0x0
+ #define IMX6Q_GPR1_EXC_MON_SLVE			BIT(22)
+@@ -243,6 +244,23 @@
+ #define IMX6Q_GPR4_IPU_RD_CACHE_CTL		BIT(0)
+ 
+ #define IMX6Q_GPR5_L2_CLK_STOP			BIT(8)
++#define IMX6Q_GPR5_ENET_TX_CLK_SEL		BIT(9)
++#define IMX6Q_GPR5_PRE_PRG_SEL0_MASK		(0x3 << 12)
++#define IMX6Q_GPR5_PRE_PRG_SEL0_SHIFT		12
++#define IMX6Q_GPR5_PRE_PRG_SEL0_MSB		13
++#define IMX6Q_GPR5_PRE_PRG_SEL0_LSB		12
++#define IMX6Q_GPR5_PRE_PRG_SEL0_PRE1_PRG0_CHAN1	(0x0 << 12)
++#define IMX6Q_GPR5_PRE_PRG_SEL0_PRE1_PRG0_CHAN2	(0x1 << 12)
++#define IMX6Q_GPR5_PRE_PRG_SEL0_PRE1_PRG1_CHAN1	(0x2 << 12)
++#define IMX6Q_GPR5_PRE_PRG_SEL0_PRE1_PRG1_CHAN2	(0x3 << 12)
++#define IMX6Q_GPR5_PRE_PRG_SEL1_MASK			(0x3 << 14)
++#define IMX6Q_GPR5_PRE_PRG_SEL1_SHIFT		14
++#define IMX6Q_GPR5_PRE_PRG_SEL1_MSB		15
++#define IMX6Q_GPR5_PRE_PRG_SEL1_LSB		14
++#define IMX6Q_GPR5_PRE_PRG_SEL1_PRE2_PRG0_CHAN1	(0x0 << 14)
++#define IMX6Q_GPR5_PRE_PRG_SEL1_PRE2_PRG0_CHAN2	(0x1 << 14)
++#define IMX6Q_GPR5_PRE_PRG_SEL1_PRE2_PRG1_CHAN1	(0x2 << 14)
++#define IMX6Q_GPR5_PRE_PRG_SEL1_PRE2_PRG1_CHAN2	(0x3 << 14)
+ 
+ #define IMX6Q_GPR6_IPU1_ID00_WR_QOS_MASK	(0xf << 0)
+ #define IMX6Q_GPR6_IPU1_ID01_WR_QOS_MASK	(0xf << 4)
+@@ -286,6 +304,9 @@
+ #define IMX6Q_GPR10_OCRAM_TZ_ADDR_MASK		(0x3f << 5)
+ #define IMX6Q_GPR10_OCRAM_TZ_EN_MASK		BIT(4)
+ #define IMX6Q_GPR10_DCIC2_MUX_CTL_MASK		(0x3 << 2)
++#define IMX6Q_GPR10_DCIC2_MUX_CTL_LVDS0		(0x1 << 2)
++#define IMX6Q_GPR10_DCIC2_MUX_CTL_LVDS1		(0x2 << 2)
++#define IMX6Q_GPR10_DCIC2_MUX_CTL_MIPI		(0x3 << 2)
+ #define IMX6Q_GPR10_DCIC2_MUX_CTL_IPU1_DI0	(0x0 << 2)
+ #define IMX6Q_GPR10_DCIC2_MUX_CTL_IPU1_DI1	(0x1 << 2)
+ #define IMX6Q_GPR10_DCIC2_MUX_CTL_IPU2_DI0	(0x2 << 2)
+@@ -295,14 +316,19 @@
+ #define IMX6Q_GPR10_DCIC1_MUX_CTL_IPU1_DI1	(0x1 << 0)
+ #define IMX6Q_GPR10_DCIC1_MUX_CTL_IPU2_DI0	(0x2 << 0)
+ #define IMX6Q_GPR10_DCIC1_MUX_CTL_IPU2_DI1	(0x3 << 0)
++#define IMX6Q_GPR10_DCIC1_MUX_CTL_LVDS0		(0x1 << 0)
++#define IMX6Q_GPR10_DCIC1_MUX_CTL_LVDS1		(0x2 << 0)
++#define IMX6Q_GPR10_DCIC1_MUX_CTL_HDMI		(0x3 << 0)
+ 
+ #define IMX6Q_GPR12_ARMP_IPG_CLK_EN		BIT(27)
+ #define IMX6Q_GPR12_ARMP_AHB_CLK_EN		BIT(26)
+ #define IMX6Q_GPR12_ARMP_ATB_CLK_EN		BIT(25)
+ #define IMX6Q_GPR12_ARMP_APB_CLK_EN		BIT(24)
++#define IMX6Q_GPR12_PCIE_PM_TURN_OFF		BIT(16)
+ #define IMX6Q_GPR12_DEVICE_TYPE			(0xf << 12)
+ #define IMX6Q_GPR12_PCIE_CTL_2			BIT(10)
+ #define IMX6Q_GPR12_LOS_LEVEL			(0x1f << 4)
++#define IMX6Q_GPR12_LOS_LEVEL_9			(0x9 << 4)
+ 
+ #define IMX6Q_GPR13_SDMA_STOP_REQ		BIT(30)
+ #define IMX6Q_GPR13_CAN2_STOP_REQ		BIT(29)
+@@ -411,6 +437,15 @@
+ #define IMX6SX_GPR4_FEC_ENET1_STOP_REQ			(0x1 << 3)
+ #define IMX6SX_GPR4_FEC_ENET2_STOP_REQ			(0x1 << 4)
+ 
++#define IMX6SX_GPR2_MQS_OVERSAMPLE_MASK			(0x1 << 26)
++#define IMX6SX_GPR2_MQS_OVERSAMPLE_SHIFT		(26)
++#define IMX6SX_GPR2_MQS_EN_MASK				(0x1 << 25)
++#define IMX6SX_GPR2_MQS_EN_SHIFT			(25)
++#define IMX6SX_GPR2_MQS_SW_RST_MASK			(0x1 << 24)
++#define IMX6SX_GPR2_MQS_SW_RST_SHIFT			(24)
++#define IMX6SX_GPR2_MQS_CLK_DIV_MASK			(0xFF << 16)
++#define IMX6SX_GPR2_MQS_CLK_DIV_SHIFT			(16)
++
+ #define IMX6SX_GPR5_DISP_MUX_LDB_CTRL_MASK		(0x1 << 3)
+ #define IMX6SX_GPR5_DISP_MUX_LDB_CTRL_LCDIF1		(0x0 << 3)
+ #define IMX6SX_GPR5_DISP_MUX_LDB_CTRL_LCDIF2		(0x1 << 3)
+@@ -423,6 +458,7 @@
+ #define IMX6SX_GPR5_VADC_TO_CSI_CAPTURE_EN_MASK		(0x1 << 26)
+ #define IMX6SX_GPR5_VADC_TO_CSI_CAPTURE_EN_ENABLE	(0x1 << 26)
+ #define IMX6SX_GPR5_VADC_TO_CSI_CAPTURE_EN_DISABLE	(0x0 << 26)
++#define IMX6SX_GPR5_PCIE_PERST				BIT(18)
+ #define IMX6SX_GPR5_PCIE_BTNRST_RESET			BIT(19)
+ #define IMX6SX_GPR5_CSI1_MUX_CTRL_MASK			(0x3 << 4)
+ #define IMX6SX_GPR5_CSI1_MUX_CTRL_EXT_PIN		(0x0 << 4)
+@@ -437,10 +473,21 @@
+ #define IMX6SX_GPR5_DISP_MUX_DCIC1_LVDS			(0x1 << 1)
+ #define IMX6SX_GPR5_DISP_MUX_DCIC1_MASK			(0x1 << 1)
+ 
++#define IMX6SX_GPR12_PCIE_PM_TURN_OFF			BIT(16)
+ #define IMX6SX_GPR12_PCIE_TEST_POWERDOWN		BIT(30)
+ #define IMX6SX_GPR12_PCIE_RX_EQ_MASK			(0x7 << 0)
+ #define IMX6SX_GPR12_PCIE_RX_EQ_2			(0x2 << 0)
+ 
++/* For imx6dl iomux gpr register field definitions */
++#define IMX6DL_GPR3_LVDS1_MUX_CTL_MASK			(0x3 << 8)
++#define IMX6DL_GPR3_LVDS1_MUX_CTL_IPU1_DI0		(0x0 << 8)
++#define IMX6DL_GPR3_LVDS1_MUX_CTL_IPU1_DI1		(0x1 << 8)
++#define IMX6DL_GPR3_LVDS1_MUX_CTL_LCDIF			(0x2 << 8)
++#define IMX6DL_GPR3_LVDS0_MUX_CTL_MASK			(0x3 << 6)
++#define IMX6DL_GPR3_LVDS0_MUX_CTL_IPU1_DI0		(0x0 << 6)
++#define IMX6DL_GPR3_LVDS0_MUX_CTL_IPU1_DI1		(0x1 << 6)
++#define IMX6DL_GPR3_LVDS0_MUX_CTL_LCDIF			(0x2 << 6)
++
+ /* For imx6ul iomux gpr register field define */
+ #define IMX6UL_GPR1_ENET1_CLK_DIR		(0x1 << 17)
+ #define IMX6UL_GPR1_ENET2_CLK_DIR		(0x1 << 18)
+diff -Nru linux-4.14.75-03-csi-dts/include/media/v4l2-ioctl.h linux-4.14.75-04-mxc-ipu/include/media/v4l2-ioctl.h
+--- linux-4.14.75-03-csi-dts/include/media/v4l2-ioctl.h	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/include/media/v4l2-ioctl.h	2020-01-20 14:23:44.833542157 +0200
+@@ -555,7 +555,8 @@
+ 	int (*vidioc_g_chip_info)(struct file *file, void *fh,
+ 				  struct v4l2_dbg_chip_info *chip);
+ #endif
+-
++	int (*vidioc_g_chip_ident)     (struct file *file, void *fh,
++					struct v4l2_dbg_chip_ident *chip);
+ 	int (*vidioc_enum_framesizes)(struct file *file, void *fh,
+ 				      struct v4l2_frmsizeenum *fsize);
+ 
+diff -Nru linux-4.14.75-03-csi-dts/include/media/v4l2-subdev.h linux-4.14.75-04-mxc-ipu/include/media/v4l2-subdev.h
+--- linux-4.14.75-03-csi-dts/include/media/v4l2-subdev.h	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/include/media/v4l2-subdev.h	2020-01-20 14:26:23.865401882 +0200
+@@ -186,6 +186,7 @@
+  * @unsubscribe_event: remove event subscription from the control framework.
+  */
+ struct v4l2_subdev_core_ops {
++	int (*g_chip_ident)(struct v4l2_subdev *sd, struct v4l2_dbg_chip_ident *chip);
+ 	int (*log_status)(struct v4l2_subdev *sd);
+ 	int (*s_io_pin_config)(struct v4l2_subdev *sd, size_t n,
+ 				      struct v4l2_subdev_io_pin_config *pincfg);
+diff -Nru linux-4.14.75-03-csi-dts/include/uapi/linux/videodev2.h linux-4.14.75-04-mxc-ipu/include/uapi/linux/videodev2.h
+--- linux-4.14.75-03-csi-dts/include/uapi/linux/videodev2.h	2018-10-10 09:54:28.000000000 +0300
++++ linux-4.14.75-04-mxc-ipu/include/uapi/linux/videodev2.h	2020-01-20 14:31:59.120239057 +0200
+@@ -2269,6 +2269,13 @@
+ 	__u64 val;
+ } __attribute__ ((packed));
+ 
++/* VIDIOC_DBG_G_CHIP_IDENT */
++struct v4l2_dbg_chip_ident {
++	struct v4l2_dbg_match match;
++	__u32 ident;       /* chip identifier as specified in <media/v4l2-chip-ident.h> */
++	__u32 revision;    /* chip revision, chip specific */
++} __attribute__ ((packed));
++
+ #define V4L2_CHIP_FL_READABLE (1 << 0)
+ #define V4L2_CHIP_FL_WRITABLE (1 << 1)
+ 
+@@ -2372,6 +2379,7 @@
+  */
+ #define	VIDIOC_DBG_S_REGISTER 	 _IOW('V', 79, struct v4l2_dbg_register)
+ #define	VIDIOC_DBG_G_REGISTER 	_IOWR('V', 80, struct v4l2_dbg_register)
++#define VIDIOC_DBG_G_CHIP_IDENT _IOWR('V', 81, struct v4l2_dbg_chip_ident)
+ 
+ #define VIDIOC_S_HW_FREQ_SEEK	 _IOW('V', 82, struct v4l2_hw_freq_seek)
+ #define	VIDIOC_S_DV_TIMINGS	_IOWR('V', 87, struct v4l2_dv_timings)
