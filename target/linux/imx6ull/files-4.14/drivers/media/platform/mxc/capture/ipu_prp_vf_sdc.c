@@ -22,8 +22,10 @@
 #include <linux/ipu.h>
 #include <linux/module.h>
 #include <linux/mxcfb.h>
-#include <mach/hardware.h>
+//#include <mach/hardware.h>
+#ifdef CONFIG_MXC_MIPI_CSI2
 #include <mach/mipi_csi2.h>
+#endif
 #include "mxc_v4l2_capture.h"
 #include "ipu_prp_sw.h"
 

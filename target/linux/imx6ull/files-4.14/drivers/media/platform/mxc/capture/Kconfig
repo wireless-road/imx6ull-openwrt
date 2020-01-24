@@ -78,7 +78,8 @@ config MXC_TVIN_ADV7180
 choice
 	prompt "Select Overlay Rounting"
 	default MXC_IPU_DEVICE_QUEUE_SDC
-	depends on VIDEO_MXC_IPU_CAMERA && FB_MXC_SYNC_PANEL
+#	depends on VIDEO_MXC_IPU_CAMERA && FB_MXC_SYNC_PANEL
+	depends on VIDEO_MXC_IPU_CAMERA
 
 config MXC_IPU_DEVICE_QUEUE_SDC
 	tristate "Queue ipu device for overlay library"
