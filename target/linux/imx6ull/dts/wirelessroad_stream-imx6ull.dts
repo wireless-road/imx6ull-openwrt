@@ -78,25 +78,25 @@
 	};
 };
 
-//
-//&cpu0 {
-//	operating-points = <
-//		/* kHz  uV */
-//		900000  1275000
-//		792000  1225000
-//		528000  1175000
-//		396000  1025000
-//		198000  950000
-//	>;
-//	fsl,soc-operating-points = <
-//		/* KHz  uV */
-//		900000  1250000
-//		792000  1175000
-//		528000  1175000
-//		396000  1175000
-//		198000  1175000
-//	>;
-//};
+
+&cpu0 {
+	operating-points = <
+		/* kHz  uV */
+		900000  1275000
+		792000  1225000
+		528000  1175000
+		396000  1025000
+		198000  950000
+	>;
+	fsl,soc-operating-points = <
+		/* KHz  uV */
+		900000  1250000
+		792000  1175000
+		528000  1175000
+		396000  1175000
+		198000  1175000
+	>;
+};
 
 
 &clks {
@@ -412,13 +412,13 @@
 		clocks = <&clks IMX6UL_CLK_CSI>,
 			 <&clks IMX6UL_CLK_CSI>;
 		clock-names = "csi_mclk", "xclk";
-		xclk = <6000000>;
+		xclk = <24000000>;
 		powerdown-gpios = <&gpio5 3 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
 		pwn-gpios = <&gpio5 3 GPIO_ACTIVE_HIGH>; /* Copy powerdown for csi ov5640 driver */
 		rst-gpios = <&gpio5 2 GPIO_ACTIVE_LOW>; /* Copy reset for csi ov5640 driver */
 		csi_id = <0>;
-		mclk = <12000000>;
+		mclk = <24000000>;
 		mclk_source = <0>;
 		status = "okay";
 		port {
