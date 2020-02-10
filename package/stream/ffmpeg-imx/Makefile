@@ -88,7 +88,7 @@ FFMPEG_LATEST_CONFIGURE:= \
 	--enable-muxer=rtp_mpegts \
 	--enable-protocol=tcp --enable-protocol=udp \
 	--enable-protocol=http --enable-protocol=file --enable-protocol=ftp --enable-protocol=pipe \
-	--enable-filter=scale
+	--enable-filter=scale --enable-filter=tblend --enable-filter=minterpolate
 	
 
 ifeq ($(CONFIG_SOFT_FLOAT),y)
@@ -126,7 +126,7 @@ endif
 
 # selectively disable optimizations according to arch/cpu type
 ifneq ($(findstring arm,$(CONFIG_ARCH)),)
-#	FFMPEG_LATEST_CONFIGURE+= --enable-lto
+	FFMPEG_LATEST_CONFIGURE+= --enable-lto
 
 	ifneq ($(findstring vfp,$(CONFIG_TARGET_OPTIMIZATION)),)
 		FFMPEG_LATEST_CONFIGURE+= --enable-vfp

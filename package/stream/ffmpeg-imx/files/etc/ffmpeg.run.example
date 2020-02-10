@@ -1,0 +1,4 @@
+
+ffserver -f /etc/ffserver.conf &
+
+ffmpeg -s 640x480 -r 15 -input_format uyvy422 -i /dev/video0 http://127.0.0.1:8080/feed1.ffm

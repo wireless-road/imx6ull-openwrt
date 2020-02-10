@@ -1,7 +1,7 @@
 diff -Nru ffmpeg-3.4.6-02-fix-v4l2/libavdevice/v4l2.c ffmpeg-3.4.6-03-v4l2-imx/libavdevice/v4l2.c
 --- ffmpeg-3.4.6-02-fix-v4l2/libavdevice/v4l2.c	2019-03-29 02:49:18.000000000 +0200
-+++ ffmpeg-3.4.6-03-v4l2-imx/libavdevice/v4l2.c	2020-02-10 05:52:32.607959678 +0200
-@@ -642,6 +642,73 @@
++++ ffmpeg-3.4.6-03-v4l2-imx/libavdevice/v4l2.c	2020-02-10 06:55:59.224568886 +0200
+@@ -642,6 +642,78 @@
      av_freep(&s->buf_len);
  }
  
@@ -12,6 +12,11 @@ diff -Nru ffmpeg-3.4.6-02-fix-v4l2/libavdevice/v4l2.c ffmpeg-3.4.6-03-v4l2-imx/l
 +	struct v4l2_streamparm parm;
 +	struct v4l2_format fmt;
 +	
++	if(framerate_q->num == 0 && framerate_q->den == 0){
++		printf("framerate_q is empty, forcing to 15fps\n");
++		framerate_q->num=15;
++		framerate_q->den=1;
++	}
 +	printf("framerate_q->num: %d framerate_q->den: %d\n", framerate_q->num, framerate_q->den);
 +	printf("pixelformat: x%08X (%c%c%c%c)\n", s->pixelformat, s->pixelformat & 0xff,
 +					(s->pixelformat >> 8) & 0xff,
@@ -75,7 +80,7 @@ diff -Nru ffmpeg-3.4.6-02-fix-v4l2/libavdevice/v4l2.c ffmpeg-3.4.6-03-v4l2-imx/l
  static int v4l2_set_parameters(AVFormatContext *ctx)
  {
      struct video_data *s = ctx->priv_data;
-@@ -750,6 +817,9 @@
+@@ -750,6 +822,9 @@
                     "The driver does not permit changing the time per frame\n");
          }
      }
