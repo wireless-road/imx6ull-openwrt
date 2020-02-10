@@ -1,0 +1,92 @@
+diff -Nru ffmpeg-3.4.6-02-fix-v4l2/libavdevice/v4l2.c ffmpeg-3.4.6-03-v4l2-imx/libavdevice/v4l2.c
+--- ffmpeg-3.4.6-02-fix-v4l2/libavdevice/v4l2.c	2019-03-29 02:49:18.000000000 +0200
++++ ffmpeg-3.4.6-03-v4l2-imx/libavdevice/v4l2.c	2020-02-10 06:55:59.224568886 +0200
+@@ -642,6 +642,78 @@
+     av_freep(&s->buf_len);
+ }
+ 
++static void imx_set_capturemode(struct video_data *s, AVRational *framerate_q){
++	struct v4l2_fmtdesc fmtdesc;
++	struct v4l2_frmsizeenum frmsize;
++	struct v4l2_frmivalenum frmival;
++	struct v4l2_streamparm parm;
++	struct v4l2_format fmt;
++	
++	if(framerate_q->num == 0 && framerate_q->den == 0){
++		printf("framerate_q is empty, forcing to 15fps\n");
++		framerate_q->num=15;
++		framerate_q->den=1;
++	}
++	printf("framerate_q->num: %d framerate_q->den: %d\n", framerate_q->num, framerate_q->den);
++	printf("pixelformat: x%08X (%c%c%c%c)\n", s->pixelformat, s->pixelformat & 0xff,
++					(s->pixelformat >> 8) & 0xff,
++					(s->pixelformat >> 16) & 0xff, (s->pixelformat >> 24) & 0xff);
++	printf("width: %d height: %d\n", s->width, s->height);
++	
++	fmtdesc.index = 0;
++	fmtdesc.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
++	/* First, we search by pixelformat. */
++	while(v4l2_ioctl(s->fd, VIDIOC_ENUM_FMT, &fmtdesc) >= 0){
++		printf("  pixelformat: x%08X\n", fmtdesc.pixelformat);
++		if(fmtdesc.pixelformat == s->pixelformat){
++			frmsize.pixel_format = fmtdesc.pixelformat;
++			frmsize.index = 0;
++			/* Second, we search by resolution. */
++			while(v4l2_ioctl(s->fd, VIDIOC_ENUM_FRAMESIZES, &frmsize) >= 0) {
++				printf("    width: %d height: %d\n", frmsize.discrete.width, frmsize.discrete.height);
++				if( frmsize.discrete.width == s->width
++					&& frmsize.discrete.height == s->height 
++				){
++					frmival.index = 0;
++					frmival.pixel_format = fmtdesc.pixelformat;
++					frmival.width = frmsize.discrete.width;
++					frmival.height = frmsize.discrete.height;
++					/* At last we find mcode by index of frmsize. */
++					while (v4l2_ioctl(s->fd, VIDIOC_ENUM_FRAMEINTERVALS, &frmival) >= 0) {
++						printf("CaptureMode=%d, Width=%d, Height=%d (%.3f fps) num: %d den: %d\n",
++							frmsize.index, frmival.width, frmival.height,
++							1.0 * frmival.discrete.denominator / frmival.discrete.numerator,
++							frmival.discrete.numerator, frmival.discrete.denominator
++  							);
++						if(frmival.discrete.numerator == framerate_q->den
++							&& frmival.discrete.denominator == framerate_q->num
++						){
++							printf("== setting parameters ==\n");
++							memset(&parm, 0, sizeof(parm));
++							parm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
++							parm.parm.capture.capturemode = frmsize.index;
++							parm.parm.capture.timeperframe.numerator = framerate_q->den;
++							parm.parm.capture.timeperframe.denominator = framerate_q->num;
++							v4l2_ioctl(s->fd, VIDIOC_S_PARM, &parm);
++							
++							memset(&fmt, 0, sizeof(fmt));
++							fmt.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
++							fmt.fmt.pix.pixelformat = s->pixelformat;
++							fmt.fmt.pix.width = s->width;
++							fmt.fmt.pix.height = s->height;
++							v4l2_ioctl(s->fd, VIDIOC_S_FMT, &fmt);
++							return;
++						}
++						frmival.index++;
++					}
++				}
++				frmsize.index++;
++			}
++		}
++		fmtdesc.index++;
++	}
++}
++
+ static int v4l2_set_parameters(AVFormatContext *ctx)
+ {
+     struct video_data *s = ctx->priv_data;
+@@ -750,6 +822,9 @@
+                    "The driver does not permit changing the time per frame\n");
+         }
+     }
++    
++    imx_set_capturemode(s, &framerate_q);
++    
+     if (tpf->denominator > 0 && tpf->numerator > 0) {
+         ctx->streams[0]->avg_frame_rate.num = tpf->denominator;
+         ctx->streams[0]->avg_frame_rate.den = tpf->numerator;
