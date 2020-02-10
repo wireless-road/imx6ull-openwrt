@@ -418,7 +418,7 @@
 		pwn-gpios = <&gpio5 3 GPIO_ACTIVE_HIGH>; /* Copy powerdown for csi ov5640 driver */
 		rst-gpios = <&gpio5 2 GPIO_ACTIVE_LOW>; /* Copy reset for csi ov5640 driver */
 		csi_id = <0>;
-		mclk = <6000000>;
+		mclk = <12000000>;
 		mclk_source = <0>;
 		status = "okay";
 		port {
