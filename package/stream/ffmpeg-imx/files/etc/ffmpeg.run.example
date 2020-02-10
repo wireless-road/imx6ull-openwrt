@@ -1,4 +1,7 @@
 
-ffserver -f /etc/ffserver.conf &
+# ffserver -f /etc/ffserver.conf &
 
-ffmpeg -s 640x480 -r 15 -input_format uyvy422 -i /dev/video0 http://127.0.0.1:8080/feed1.ffm
+# ffmpeg -s 640x480 -r 15 -input_format uyvy422 -i /dev/video0 http://127.0.0.1:8080/feed1.ffm
+
+# ffmpeg -s 720x480 -r 5 -framerate 15 -input_format uyvy422 -i /dev/video0 -framerate 5 -vcodec mpeg2video -b:v 192k -override_ffserver http://127.0.0.1:8080/feed1.ffm
+
