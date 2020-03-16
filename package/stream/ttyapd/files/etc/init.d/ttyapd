@@ -1,0 +1,27 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+PROG=/sbin/ttyapd
+
+ttyapd_start(){
+#		$PROG -i wlan0 -t /dev/ttymxc2
+}
+
+boot(){
+	ttyapd_start;
+}
+
+start(){
+	ttyapd_start;
+}
+
+
+stop(){
+	killall -9 ttyapd;
+}
+
+restart(){
+	killall -9 ttyapd;
+	ttyapdd_start;
+}
