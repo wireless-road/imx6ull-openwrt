@@ -78,10 +78,10 @@ detect_mac80211() {
 
 		mode_band="g"
 		channel="11"
-		htmode=""
+		htmode="HT40"
 		ht_capab=""
 
-		iw phy "$dev" info | grep -q 'Capabilities:' && htmode=HT20
+		iw phy "$dev" info | grep -q 'Capabilities:' && htmode=HT40
 
 		iw phy "$dev" info | grep -q '5180 MHz' && {
 			mode_band="a"
@@ -113,12 +113,13 @@ detect_mac80211() {
 			set wireless.radio${devidx}.hwmode=11${mode_band}
 			${dev_id}
 			${ht_capab}
-			set wireless.radio${devidx}.disabled=1
+			set wireless.radio${devidx}.noscan=1
+			set wireless.radio${devidx}.short_preamble=1
 
 			set wireless.default_radio${devidx}=wifi-iface
 			set wireless.default_radio${devidx}.device=radio${devidx}
 			set wireless.default_radio${devidx}.network=lan
-			set wireless.default_radio${devidx}.mode=ap
+			set wireless.default_radio${devidx}.mode=sta
 			set wireless.default_radio${devidx}.ssid=OpenWrt
 			set wireless.default_radio${devidx}.encryption=none
 EOF
