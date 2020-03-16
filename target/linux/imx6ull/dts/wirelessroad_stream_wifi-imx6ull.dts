@@ -12,8 +12,8 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "WirelessRoad STREAM-IMX6ULL";
-	compatible = "fsl,imx6ull";
+	model = "WirelessRoad STREAM-WIFI-IMX6ULL";
+	compatible = "wirelessroad,stream-wifi-imx6ull", "fsl,imx6ull";
 
 	chosen {
 		stdout-path = &uart1;
@@ -282,10 +282,10 @@
 			>;
 		};
 
-		pinctrl_uart5: uart5grp {
+		pinctrl_uart3: uart3grp {
 			fsl,pins = <
-				MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX 0x1b0b1
-				MX6UL_PAD_UART5_RX_DATA__UART5_DCE_RX 0x1b0b1
+				MX6UL_PAD_NAND_READY_B__UART3_DCE_TX 0x1b0b1
+				MX6UL_PAD_NAND_CE0_B__UART3_DCE_RX 0x1b0b1
 			>;
 		};
 
@@ -363,9 +363,9 @@
 	status = "okay";
 };
 
-&uart5 {
+&uart3 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart5>;
+	pinctrl-0 = <&pinctrl_uart3>;
 	status = "okay";
 };
 

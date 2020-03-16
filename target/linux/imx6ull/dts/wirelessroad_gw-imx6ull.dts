@@ -13,7 +13,7 @@
 
 / {
 	model = "WirelessRoad GW-IMX6ULL";
-	compatible = "fsl,imx6ull";
+	compatible = "wirelessroad,gw-imx6ull", "fsl,imx6ull";
 
 	chosen {
 		stdout-path = &uart1;
