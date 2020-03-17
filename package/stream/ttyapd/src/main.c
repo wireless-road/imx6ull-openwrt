@@ -14,7 +14,7 @@
 #include "jsparse.h"
 #include "sys_uci.h"
 
-#define TTY_READ_MAXBUF		1024
+#define TTY_READ_MAXBUF		4095
 
 config_t config;
 

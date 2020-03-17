@@ -93,7 +93,7 @@ int serial_read(int fd, char *buff, int rlen, int timeout){
 	poll(read_poll, 1, timeout);
 	if(read_poll[0].revents & POLLIN){
 		pthread_mutex_lock(&serial_mutex);
-		while(((ret = read(fd, buff+i, rlen))>0)&&(i < rlen))
+		while(((ret = read(fd, buff + i, rlen))>0)&&(i < rlen))
 			i+=ret;
 		pthread_mutex_unlock(&serial_mutex);
 		ret = i;
