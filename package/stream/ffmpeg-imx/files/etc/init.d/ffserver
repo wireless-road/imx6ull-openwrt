@@ -1,0 +1,31 @@
+#!/bin/sh /etc/rc.common
+
+START=80
+
+PROG=/usr/bin/ffserver
+
+USE_PROCD=1
+
+ffserver_start(){
+	local enabled="$(uci get ffserver.ffserver.enabled)";
+	if [ "$enabled" == "1" ] || [ "$enabled" == "true" ];then
+		local ffconfig="$(uci get ffserver.ffserver.config)";
+		
+		procd_open_instance;
+		procd_set_param file $ffconfig;
+		procd_set_param command $PROG -f $ffconfig;
+		procd_set_param respawn;
+		procd_close_instance;
+	
+	fi
+}
+
+
+service_triggers(){
+	procd_add_reload_trigger "ffserver"
+}
+
+start_service(){
+	ffserver_start;
+}
+

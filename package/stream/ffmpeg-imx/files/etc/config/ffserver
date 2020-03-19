@@ -1,0 +1,4 @@
+
+config ffserver ffserver
+	option enabled		'1'
+	option config		'/etc/ffserver.conf'
