@@ -4,24 +4,24 @@ START=99
 
 PROG=/sbin/ttyapd
 
+USE_PROCD=1
+
 ttyapd_start(){
-#		$PROG -i wlan0 -t /dev/ttymxc2
+	local wlanif="$(uci get ttyapd.ttyapd.wlan_if)";
+	local ttyif="$(uci get ttyapd.ttyapd.tty_if)";
+	
+	procd_open_instance;
+	procd_set_param command $PROG -f -i "$wlanif" -t "$ttyif";
+	procd_set_param respawn;
+	procd_close_instance;
 }
 
-boot(){
+
+service_triggers(){
+	procd_add_reload_trigger "ttyapd"
+}
+
+start_service(){
 	ttyapd_start;
 }
 
-start(){
-	ttyapd_start;
-}
-
-
-stop(){
-	killall -9 ttyapd;
-}
-
-restart(){
-	killall -9 ttyapd;
-	ttyapdd_start;
-}

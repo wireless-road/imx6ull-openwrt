@@ -1,0 +1,4 @@
+config ttyapd 'ttyapd'
+	option wlan_if	"wlan0"
+	option tty_if	"/dev/ttymxc2"
+
