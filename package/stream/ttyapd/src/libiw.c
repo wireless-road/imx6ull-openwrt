@@ -301,7 +301,7 @@ int libiw_init(unsigned char *wlandev, void **iwptr){
 	strcpy(iw->ifname, wlandev);
 	iw->iwops = iwops;
 	
-	*iwptr = iw;
+	*iwptr = (void *)iw;
 	
 	return 0;
 }

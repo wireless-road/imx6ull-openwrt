@@ -88,7 +88,7 @@ int check_config(config_t *c){
 }
 
 void m_pidwrite(void){
-	pid_t mypid = getpid();
+	pid_t mypid;
 	FILE *pf;
 	
 	unlink(config.pidfile);
