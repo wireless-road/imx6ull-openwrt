@@ -10,7 +10,9 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-*wirelessroad_gw-imx6ull)
+wirelessroad_gw-imx6ull|\
+wirelessroad_stream-imx6ull|\
+wirelessroad_stream_wifi-imx6ull)
 	ucidef_set_interface_lan 'eth0'
 	;;
 esac

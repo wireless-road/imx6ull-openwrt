@@ -17,6 +17,14 @@ imx6ull_board_detect() {
 		name="wirelessroad_gw-imx6ull";
 		model="wirelessroad_gw-imx6ull";
 		;;
+	"WirelessRoad STREAM-IMX6ULL")
+		name="wirelessroad_stream-imx6ull";
+		model="wirelessroad_stream-imx6ull";
+		;;
+	"WirelessRoad STREAM-WIFI-IMX6ULL")
+		name="wirelessroad_stream_wifi-imx6ull";
+		model="wirelessroad_stream_wifi-imx6ull";
+		;;
 
 	*)
 		name="generic"

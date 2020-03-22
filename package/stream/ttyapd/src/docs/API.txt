@@ -1,0 +1,182 @@
+JSON API.
+
+
+1. General decription.
+Protocol provides two-way communication using JSON data format.
+Daemon on host machine waits for commands from TTY interface.
+In this document examples started with IN describes input commands
+from daemon point ov view, OUT is output from daemon to TTY.
+Key-Value pair of "cmd" field is case insesitive and can use any 
+case of characters, "arg" field has case sensitive value and case insesitive key.
+For example,
+IN: { "CmD": "sTatuS" } - is valid
+IN: { "cmd": "status" } - is valid
+IN: { "cmd": "seT_ESSID", "aRg" : "SomeAP" } - is valid, but essid will be set to 
+                                               "SomeAP" without altering.
+
+
+2. JSON format
+Commands to daemon are in strict JSON, if any error parsing JSON
+occured, message will be declined and considered garbage.
+Message consist of one mandatory and one optional fields.
+Mandatory field is "cmd", optional is "arg", and used when 
+command implies some argument to be passed.
+Output command always have "result" field and can have 
+optional fields, that depend on command type.
+
+
+2.1 Getting status of wifi interface:
+"cmd" is set to "status". No arguments.
+Output results:
+  "not connected" - means that adapter is not connected to AP.
+  "no information available" - adapter not available at current moment.
+  "connected" - adapter is connected to wifi-network and response message
+               has additional info about connection.
+Optional fields on "connected" message:
+  "bssid" - BSSID (MAC) of connected network.
+  "essid" - ESSID, name of the network.
+  "channel" - channel number of current connection.
+  "signal" - signal level in dBm.
+  "noise" - noise level on current channel in dBm.
+  "snr" - signal-to-noise ratio, calculated as "signal - noise".
+  "last_active_ms" - last packet sent/received in milliseconds.
+  "rx_rate_kbit" - Receive bitrate on PHY in kbit/s
+  "tx_rate_kbit" - Transmit bitrate on PHY in kbit/s
+  "rx_packets" - Total received packets count.
+  "tx_packets" - Total transmitted packets count.
+
+Examples:
+ IN: { "cmd" : "status" }
+ OUT: { "result": "connected", "bssid": "10:FE:ED:F5:6D:0C", "essid": "G", "channel": "4", "signal": "-46", "noise": "-109", "snr": "63", "last_active_ms": "230", "rx_rate_kbit": "180000", "tx_rate_kbit": "1000", "rx_packets": "914446", "tx_packets": "528783" }
+
+or
+ OUT: { "result": "not connected" }
+
+
+2.2 Scanning for networks.
+"cmd" is set to "scan". No arguments.
+Output results:
+  "scan not possible" - interface is busy and cannot scan. Try again later.
+  "no scan results" - any network is found during scan process.
+  "ok" - scan process finished and results are in optional fields and within array.
+Optional fields:
+  "num_elems" - number of entries in array of scanned networks.
+  "scan_data" - array with scan results.
+Array fields:
+  "idx" - index of entry.
+  "bssid" - BSSID (MAC) of network/AccessPoint.
+  "essid" - ESSID, name of the network.
+  "mode" - network mode, currently daemon returns only AccessPoint.
+  "channel" - channel number.
+  "signal" - signal level in dBm.
+  "quality" - queality level.
+  "quality_max" - max quality level.
+  "encryption" - encryption type used in this network.
+
+Example:
+ IN: { "cmd" : "scan" }
+ OUT: { "result": "ok", "num_elems": "5", "scan_data": 
+      [ 
+        { "idx": "1", "bssid": "24:A4:3C:74:47:C5", "essid": "G", "mode": "AccessPoint", "channel": "1", "signal": "-53", "quality": "57", "quality_max": "70", "encryption": "psk2+ccmp" },
+        { "idx": "2", "bssid": "94:0C:6D:E8:D8:62", "essid": "G", "mode": "AccessPoint", "channel": "11", "signal": "-69", "quality": "41", "quality_max": "70", "encryption": "psk2+ccmp" },
+        { "idx": "3", "bssid": "F0:B4:29:70:7F:29", "essid": "Xiaomi_7F28", "mode": "AccessPoint", "channel": "1", "signal": "-53", "quality": "57", "quality_max": "70", "encryption": "psk-mixed+tkip+ccmp" },
+        { "idx": "4", "bssid": "76:29:AF:48:03:75", "essid": "DIRECT-mB-BRAVIA", "mode": "AccessPoint", "channel": "1", "signal": "-61", "quality": "49", "quality_max": "70", "encryption": "psk2+ccmp" },
+        { "idx": "5", "bssid": "00:AD:24:E2:E5:C2", "essid": "Kyivstar-E5C0", "mode": "AccessPoint", "channel": "13", "signal": "-77", "quality": "33", "quality_max": "70", "encryption": "psk2+ccmp" } 
+	  ] 
+	}
+  
+
+2.3 Setting ESSID.
+"cmd" is set to "set_essid". Argument is string with essid.
+Output results:
+  "ok" - essid is set ok.
+  "fail" - some error occured.
+Optional field:
+  "arg" - contains ESSID to be set.
+
+Example:
+ IN: { "cmd" : "set_essid", "arg" : "test_essid" }
+ OUT: { "result" : "ok" }
+
+
+2.3 Setting encryption type.
+"cmd is set to "set_enctype". Argument is string with encryption type.
+Allowed values for argument is strict openwrt ecnryption types.
+Output reults:
+  "ok" - encryption type is set ok.
+  "fail" - some error occured.
+Optional field:
+  "arg" - contains encryption type to be set. "psk-mixed" is universal.
+
+Example:
+ IN: { "cmd" : "set_enctype", "arg" : "psk-mixed" }
+ OUT: { "result" : "ok" }
+
+
+2.4 Setting encryption key.
+"cmd" is set to "set_enckey". Argument is string with encryption key.
+Be sure, that psk keys are longer or equals than 8 symbols.
+Output results:
+  "ok" - encryption key is set ok.
+  "fail" - some error occured.
+Optional field:
+  "arg" - contains encryption key to be set.
+
+Example: 
+ IN: { "cmd" : "set_enckey", "arg" : "somelongpskkey12" }
+ OUT: { "result" : "ok" }
+
+
+2.5 Commiting changes.
+"cmd" is set to "commit". No arguments.
+Commit message saves all previous messages to config and restarts wifi interface.
+Output reults:
+  "ok" - is always returned to acknowledge received message.
+
+Example:
+ IN: { "cmd" : "commit" }
+ OUT: { "result": "ok" }
+
+
+2.6 Get current ESSID.
+"cmd" is set to "get_essid". No arguments.
+Output stores ESSID in "result" field.
+
+Example:
+ IN: { "cmd" : "get_essid" }
+ OUT: { "result": "test_essid" }
+ 
+
+2.7 Get current encryption type.
+"cmd" is set to "get_enctype". No arguments.
+Output stores current encryption type in "result" field.
+
+Example:
+ IN: { "cmd" : "get_eNctype" }
+ OUT: { "result": "psk2" }
+
+
+2.8 Get current encryption key.
+"cmd" is set to "get_enckey". No arguments.
+Output stores current encryption key in "result" field.
+
+Example:
+ IN: { "cmd" : "get_eNckeY" }
+ OUT: { "result": "123qwe123" }
+
+
+3. Notes and General workflow.
+Due to nature of wifi implementation in linux environment 
+and especially wpa_supplicant, when interface is not connected
+to network supplicant makes own scan process and our daemon
+cannot acquire own scan process simultaneously, so error 
+message returned. Be free to repeat scan requests,
+eventially scan process will start.
+Also, while scan process is running, all other interaction
+is blocked while waiting for scan results.
+
+To edit and apply wifi settings we use different set of commands.
+First we set options one-by-one and at finish we commit to save
+this options to configuration file in openwrt and restart wifi.
+
+

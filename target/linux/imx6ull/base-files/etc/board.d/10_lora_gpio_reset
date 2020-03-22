@@ -14,6 +14,8 @@ case "$board" in
 	uci set lora.SX1301_conf.chipreset_pin='130';
 	uci set lora.SX1301_conf.pllreset_pin='';
 	;;
+*)
+	;;
 esac
 
 uci commit;

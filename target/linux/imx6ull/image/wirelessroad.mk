@@ -111,4 +111,21 @@ define Device/wirelessroad_stream-imx6ull
 endef
 TARGET_DEVICES += wirelessroad_stream-imx6ull
 
+define Device/wirelessroad_stream_wifi-imx6ull
+	DEVICE_TITLE := WirelessRoad STREAM_WIFI-IMX6ULL
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-mt7601u iwinfo wpad-mini
+	DEVICE_NAME := wirelessroad_stream_wifi-imx6ull
+	DEVICE_DTS := wirelessroad_stream_wifi-imx6ull
+	BOARDNAME := WIRELESSROAD_STREAM_WIFI_IMX6ULL
+	IMAGE_SIZE := 7000k
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory
+endef
+TARGET_DEVICES += wirelessroad_stream_wifi-imx6ull
+
 endif

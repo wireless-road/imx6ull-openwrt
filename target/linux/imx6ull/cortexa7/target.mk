@@ -9,4 +9,4 @@ include $(TOPDIR)/rules.mk
 
 BOARDNAME:=Freescale i.mx6ull
 CPU_TYPE:=cortex-a7
-CPU_SUBTYPE:=neon
+CPU_SUBTYPE:=neon-vfpv4

@@ -1,0 +1,10 @@
+
+config ffmpeg ffmpeg
+	option in_device	'/dev/video0'
+	option framerate	'5'
+	option resolution	'720x480'
+	option vcodec		'mpeg2video'
+	option b_v		'192k'
+	option override_ffserver '1'
+	option remote		'http://127.0.0.1:8080/feed1.ffm'
+	option enabled		'1'

@@ -11,6 +11,7 @@ BOARD:=imx6ull
 BOARDNAME:=Freescale i.MX 6 ULL
 FEATURES:=fpu gpio pcie rtc usb usbgadget squashfs targz
 SUBTARGETS:=cortexa7
+CPU_SUBTYPE:=neon-vfpv4
 MAINTAINER:=
 
 KERNEL_PATCHVER:=4.14

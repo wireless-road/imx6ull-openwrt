@@ -12,8 +12,8 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "WirelessRoad STREAM-IMX6ULL";
-	compatible = "wirelessroad,stream-imx6ull", "fsl,imx6ull";
+	model = "WirelessRoad STREAM-WIFI-IMX6ULL";
+	compatible = "wirelessroad,stream-wifi-imx6ull", "fsl,imx6ull";
 
 	chosen {
 		stdout-path = &uart1;
@@ -282,6 +282,13 @@
 			>;
 		};
 
+		pinctrl_uart3: uart3grp {
+			fsl,pins = <
+				MX6UL_PAD_NAND_READY_B__UART3_DCE_TX 0x1b0b1
+				MX6UL_PAD_NAND_CE0_B__UART3_DCE_RX 0x1b0b1
+			>;
+		};
+
 		pinctrl_usdhc1: usdhc1grp {
 			fsl,pins = <
 				MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x17059
@@ -356,19 +363,32 @@
 	status = "okay";
 };
 
-&usbotg1 {
-	dr_mode = "otg";
-	srp-disable;
-	hnp-disable;
-	adp-disable;
-	pinctrl-0 = <&pinctrl_usb_otg1_id>;
-	disable-over-current;
+&uart3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart3>;
 	status = "okay";
+};
+
+&usbotg1 {
+	dr_mode = "host";
+	disable-over-current;
+	external-vbus-divider;
+	phy_type = "utmi";
+	phys = <&usbphy1>;
+	phy-names = "usb-phy";
+	maximum-speed;
+	status = "okay";
+	
 };
 
 &usbotg2 {
 	dr_mode = "host";
 	disable-over-current;
+	external-vbus-divider;
+	phy_type = "utmi";
+	phys = <&usbphy2>;
+	phy-names = "usb-phy";
+	maximum-speed;
 	status = "okay";
 };
 
