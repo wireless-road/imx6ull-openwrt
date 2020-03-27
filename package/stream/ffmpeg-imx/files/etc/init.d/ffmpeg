@@ -18,6 +18,7 @@ ffmpeg_start(){
 		local override_ffserver="$(uci get ffmpeg.ffmpeg.override_ffserver)";
 #		local in_pix_fmt="$(uci get ffmpeg.ffmpeg.input_pix_format)";
 		local in_pix_fmt="uyvy422"; #On i.mx6ull with ov5640 only this is aplicable
+		local out_fmt="$(uci get ffmpeg.ffmpeg.out_format)"
 		
 		local args="";
 		
@@ -34,7 +35,11 @@ ffmpeg_start(){
 		if [ "$override_ffserver" == "1" ] || [ "$override_ffserver" == "true" ];then
 			args="$args -override_ffserver";
 		fi;
-		args="$args $remote";
+		local remote_str="$remote";
+		if [ x"$out_fmt" != "x" ];then
+			remote_str="-f $out_fmt $remote";
+		fi
+		args="$args $remote_str";
 		
 		procd_open_instance;
 		procd_set_param command $PROG $args;

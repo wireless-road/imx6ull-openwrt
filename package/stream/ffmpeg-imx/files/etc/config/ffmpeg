@@ -6,5 +6,6 @@ config ffmpeg ffmpeg
 	option vcodec		'mpeg2video'
 	option b_v		'192k'
 	option override_ffserver '1'
+	option out_format	'ffm'
 	option remote		'http://127.0.0.1:8080/feed1.ffm'
 	option enabled		'1'
