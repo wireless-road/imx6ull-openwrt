@@ -12,7 +12,7 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "WirelessRoad GW-IMX6ULL";
+	model = "LoraWan Gateway Ethernet";
 	compatible = "wirelessroad,gw-imx6ull", "fsl,imx6ull";
 
 	chosen {
