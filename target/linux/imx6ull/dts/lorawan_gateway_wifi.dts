@@ -78,6 +78,25 @@
 	};
 };
 
+&cpu0 {
+	operating-points = <
+		/* kHz  uV */
+		900000  1275000
+		792000  1225000
+		528000  1175000
+		396000  1025000
+		198000  950000
+	>;
+	fsl,soc-operating-points = <
+		/* KHz  uV */
+		900000  1250000
+		792000  1175000
+		528000  1175000
+		396000  1175000
+		198000  1175000
+	>;
+};
+
 &clks {
 	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
 	assigned-clock-rates = <786432000>;
@@ -287,12 +306,10 @@
 			>;
 		};
 
-		pinctrl_uart2: uart2grp {
+		pinctrl_uart3: uart3grp {
 			fsl,pins = <
-				MX6UL_PAD_UART2_TX_DATA__UART2_DCE_TX	0x1b0b1
-				MX6UL_PAD_UART2_RX_DATA__UART2_DCE_RX	0x1b0b1
-				MX6UL_PAD_UART3_RX_DATA__UART2_DCE_RTS	0x1b0b1
-				MX6UL_PAD_UART3_TX_DATA__UART2_DCE_CTS	0x1b0b1
+				MX6UL_PAD_NAND_READY_B__UART3_DCE_TX 0x1b0b1
+				MX6UL_PAD_NAND_CE0_B__UART3_DCE_RX 0x1b0b1
 			>;
 		};
 
@@ -370,29 +387,31 @@
 	status = "okay";
 };
 
-&uart2 {
+&uart3 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart2>;
-	fsl,uart-has-rtscts;
-	/* for DTE mode, add below change */
-	/* fsl,dte-mode; */
-	/* pinctrl-0 = <&pinctrl_uart2dte>; */
+	pinctrl-0 = <&pinctrl_uart3>;
 	status = "okay";
 };
 
 &usbotg1 {
-	dr_mode = "otg";
-	srp-disable;
-	hnp-disable;
-	adp-disable;
-	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+	dr_mode = "host";
 	disable-over-current;
+	external-vbus-divider;
+	phy_type = "utmi";
+	phys = <&usbphy1>;
+	phy-names = "usb-phy";
+	maximum-speed;
 	status = "okay";
 };
 
 &usbotg2 {
 	dr_mode = "host";
 	disable-over-current;
+	external-vbus-divider;
+	phy_type = "utmi";
+	phys = <&usbphy2>;
+	phy-names = "usb-phy";
+	maximum-speed;
 	status = "okay";
 };
 
