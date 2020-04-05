@@ -4,6 +4,7 @@ function index()
 	entry( {"admin", "lorawan"}, template("lorawan"), _("LoraWan"), 99 )
 	entry( {"admin", "lorawan", "get_data"}, call("get_data")).leaf = true
 	entry( {"admin", "lorawan", "set_data"}, post("set_data")).leaf = true
+	entry( {"admin", "lorawan", "restart_lora"}, call("restart_lora")).leaf = true
 end
 
 require "nixio.fs"
@@ -61,5 +62,10 @@ function set_data()
 	luci.http.write("ok");
 end
 
+function restart_lora()
+	luci.sys.exec("/etc/init.d/lora_pkt_fwd restart")
 
+	luci.http.prepare_content("text/plain; charset=utf-8")
+	luci.http.write_json("ok");
+end
 

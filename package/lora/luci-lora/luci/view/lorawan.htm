@@ -4,7 +4,6 @@
 //<![CDATA[
 
 function handleSubmit(ev){
-	var url;
 	var gw_id = document.querySelector('input[name="gateway-id"]').value;
 	var srv_addr = document.querySelector('input[name="serv-address"]').value;
 	var srv_pup = document.querySelector('input[name="serv-port-up"]').value;
@@ -28,11 +27,12 @@ function handleSubmit(ev){
 		data["server-address"] = srv_addr;
 		document.querySelector('input[name="serv-address"]').value = "";
 	}
-	
-	url = "admin/lorawan/set_data";
 
-	XHR.post(url, data, function(xhr,j){
-			setTimeout(get_show_data, 1000);
+	XHR.post("admin/lorawan/set_data", data, function(xhr,j){
+		XHR.get("admin/lorawan/restart_lora", null, function(xhr,j){
+				setTimeout(get_show_data, 1000);
+			}
+		)
 		}
 	);
 }
