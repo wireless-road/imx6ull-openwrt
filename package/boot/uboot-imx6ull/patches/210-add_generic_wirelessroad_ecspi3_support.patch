@@ -1,691 +1,51 @@
-diff -Nru u-boot-2017.07-01-owrt/arch/arm/cpu/armv7/mx6/Kconfig u-boot-2017.07-02-wroad/arch/arm/cpu/armv7/mx6/Kconfig
---- u-boot-2017.07-01-owrt/arch/arm/cpu/armv7/mx6/Kconfig	2018-10-08 12:39:11.598455242 +0300
-+++ u-boot-2017.07-02-wroad/arch/arm/cpu/armv7/mx6/Kconfig	2018-10-08 20:24:18.360541961 +0300
-@@ -252,6 +252,13 @@
+diff -Nru u-boot-2017.07-001/arch/arm/cpu/armv7/mx6/Kconfig u-boot-2017.07-002-generic_ecspi3/arch/arm/cpu/armv7/mx6/Kconfig
+--- u-boot-2017.07-001/arch/arm/cpu/armv7/mx6/Kconfig	2020-03-28 00:59:42.813268988 +0200
++++ u-boot-2017.07-002-generic_ecspi3/arch/arm/cpu/armv7/mx6/Kconfig	2020-03-28 01:11:46.915001855 +0200
+@@ -252,6 +252,7 @@
  	select DM_THERMAL
  	select SUPPORT_SPL
  
-+config TARGET_WIRELESSROAD_GW_IMX6ULL
-+	bool "Support imx6ull WirelessRoad GW-IMX6ULL"
-+	select BOARD_LATE_INIT
-+	select MX6ULL
-+	select DM
-+	select DM_THERMAL
 +
  config TARGET_MX6UL_14X14_EVK
  	select BOARD_LATE_INIT
  	bool "mx6ul_14x14_evk"
-@@ -640,5 +647,6 @@
- source "board/udoo/neo/Kconfig"
- source "board/wandboard/Kconfig"
- source "board/warp/Kconfig"
-+source "board/freescale/wirelessroad_gw-imx6ull/Kconfig"
+@@ -285,6 +286,13 @@
+ 	select DM_THERMAL
+ 	select SUPPORT_SPL
  
- endif
-diff -Nru u-boot-2017.07-01-owrt/arch/arm/cpu/armv7/mx6/Kconfig.orig u-boot-2017.07-02-wroad/arch/arm/cpu/armv7/mx6/Kconfig.orig
---- u-boot-2017.07-01-owrt/arch/arm/cpu/armv7/mx6/Kconfig.orig	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/arch/arm/cpu/armv7/mx6/Kconfig.orig	2018-10-08 12:39:11.598455242 +0300
-@@ -0,0 +1,644 @@
-+if ARCH_MX6
-+
-+config MX6
-+	bool
-+	default y
-+	select ARM_ERRATA_743622 if !MX6UL
-+	select ARM_ERRATA_751472 if !MX6UL
-+	select ARM_ERRATA_761320 if !MX6UL
-+	select ARM_ERRATA_794072 if !MX6UL
-+	imply CMD_FUSE
-+
-+config MX6D
-+	bool
-+
-+config MX6DL
-+	bool
-+
-+config MX6Q
-+	bool
-+
-+config MX6QDL
-+	bool
-+
-+config MX6S
-+	bool
-+
-+config MX6SL
-+	bool
-+
-+config MX6SX
-+	select ROM_UNIFIED_SECTIONS
-+	bool
-+
-+config MX6SLL
-+	select ROM_UNIFIED_SECTIONS
-+	bool
-+
-+config MX6UL
-+	select SYS_L2CACHE_OFF
-+	select ROM_UNIFIED_SECTIONS
-+	bool
-+
-+config MX6UL_LITESOM
-+	bool
-+	select MX6UL
-+	select DM
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+
-+config MX6UL_OPOS6UL
-+	bool
-+	select MX6UL
-+	select BOARD_LATE_INIT
-+	select DM
-+	select DM_GPIO
-+	select DM_MMC
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+
-+config MX6ULL
-+	bool
-+	select MX6UL
-+
-+config MX6_DDRCAL
-+	bool "Include dynamic DDR calibration routines"
-+	depends on SPL
-+	default n
-+	help
-+	  Say "Y" if your board uses dynamic (per-boot) DDR calibration.
-+	  If unsure, say N.
-+
-+choice
-+	prompt "MX6 board select"
-+	optional
-+
-+config TARGET_ADVANTECH_DMS_BA16
-+	bool "Advantech dms-ba16"
-+	select BOARD_LATE_INIT
-+	select MX6Q
-+
-+config TARGET_APALIS_IMX6
-+	bool "Toradex Apalis iMX6 board"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_SERIAL
-+	select DM_THERMAL
-+
-+config TARGET_ARISTAINETOS
-+	bool "aristainetos"
-+
-+config TARGET_ARISTAINETOS2
-+	bool "aristainetos2"
-+	select BOARD_LATE_INIT
-+
-+config TARGET_ARISTAINETOS2B
-+	bool "Support aristainetos2-revB"
-+	select BOARD_LATE_INIT
-+
-+config TARGET_CGTQMX6EVAL
-+	bool "cgtqmx6eval"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_THERMAL
-+
-+config TARGET_CM_FX6
-+	bool "CM-FX6"
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_SERIAL
-+	select DM_GPIO
-+
-+config TARGET_COLIBRI_IMX6
-+	bool "Toradex Colibri iMX6 board"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_SERIAL
-+	select DM_THERMAL
-+
-+config TARGET_EMBESTMX6BOARDS
-+	bool "embestmx6boards"
-+	select BOARD_LATE_INIT
-+
-+config TARGET_GE_B450V3
-+	bool "General Electric B450v3"
-+	select BOARD_LATE_INIT
-+	select MX6Q
-+
-+config TARGET_GE_B650V3
-+	bool "General Electric B650v3"
-+	select BOARD_LATE_INIT
-+	select MX6Q
-+
-+config TARGET_GE_B850V3
-+	bool "General Electric B850v3"
-+	select BOARD_LATE_INIT
-+	select MX6Q
-+
-+config TARGET_GW_VENTANA
-+	bool "gw_ventana"
-+	select SUPPORT_SPL
-+
-+config TARGET_KOSAGI_NOVENA
-+	bool "Kosagi Novena"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+
-+config TARGET_MCCMON6
-+	bool "mccmon6"
-+	select SUPPORT_SPL
-+
-+config TARGET_MX6CUBOXI
-+	bool "Solid-run mx6 boards"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+
-+config TARGET_MX6LOGICPD
-+	bool "Logic PD i.MX6 SOM"
-+	select BOARD_EARLY_INIT_F
-+	select BOARD_LATE_INIT
-+	select DM
-+	select DM_ETH
-+	select DM_GPIO
-+	select DM_I2C
-+	select DM_MMC
-+	select DM_PMIC
-+	select DM_REGULATOR
-+	select OF_CONTROL
-+
-+config TARGET_MX6QARM2
-+	bool "mx6qarm2"
-+
-+config TARGET_MX6Q_ICORE
-+	bool "Support Engicam i.Core"
-+	select BOARD_LATE_INIT
-+	select MX6QDL
-+	select OF_CONTROL
-+	select SPL_OF_LIBFDT
-+	select DM
-+	select DM_ETH
-+	select DM_GPIO
-+	select DM_I2C
-+	select DM_MMC
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+	select SPL_LOAD_FIT
-+
-+config TARGET_MX6Q_ICORE_RQS
-+	bool "Support Engicam i.Core RQS"
-+	select BOARD_LATE_INIT
-+	select MX6QDL
-+	select OF_CONTROL
-+	select SPL_OF_LIBFDT
-+	select DM
-+	select DM_ETH
-+	select DM_GPIO
-+	select DM_I2C
-+	select DM_MMC
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+	select SPL_LOAD_FIT
-+
-+config TARGET_MX6QSABREAUTO
-+	bool "mx6qsabreauto"
-+	select BOARD_LATE_INIT
-+	select DM
-+	select DM_THERMAL
-+	select BOARD_EARLY_INIT_F
-+
-+config TARGET_MX6SABRESD
-+	bool "mx6sabresd"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_THERMAL
-+	select BOARD_EARLY_INIT_F
-+
-+config TARGET_MX6SLEVK
-+	bool "mx6slevk"
-+	select SUPPORT_SPL
-+
-+config TARGET_MX6SLLEVK
-+        bool "mx6sll evk"
-+	select BOARD_LATE_INIT
-+        select MX6SLL
-+        select DM
-+        select DM_THERMAL
-+
-+config TARGET_MX6SXSABRESD
-+	bool "mx6sxsabresd"
-+	select MX6SX
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_THERMAL
-+	select BOARD_EARLY_INIT_F
-+
-+config TARGET_MX6SXSABREAUTO
-+        bool "mx6sxsabreauto"
-+	select BOARD_LATE_INIT
-+	select MX6SX
-+        select DM
-+        select DM_THERMAL
-+	select BOARD_EARLY_INIT_F
-+
-+config TARGET_MX6UL_9X9_EVK
-+	bool "mx6ul_9x9_evk"
-+	select BOARD_LATE_INIT
-+	select MX6UL
-+	select DM
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+
-+config TARGET_MX6UL_14X14_EVK
-+	select BOARD_LATE_INIT
-+	bool "mx6ul_14x14_evk"
-+	select MX6UL
-+	select DM
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+
-+config TARGET_MX6UL_GEAM
-+	bool "Support Engicam GEAM6UL"
-+	select BOARD_LATE_INIT
-+	select MX6UL
-+	select OF_CONTROL
-+	select DM
-+	select DM_ETH
-+	select DM_GPIO
-+	select DM_I2C
-+	select DM_MMC
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+config TARGET_MX6UL_ISIOT
-+	bool "Support Engicam Is.IoT MX6UL"
-+	select BOARD_LATE_INIT
-+	select MX6UL
-+	select OF_CONTROL
-+	select DM
-+	select DM_ETH
-+	select DM_GPIO
-+	select DM_I2C
-+	select DM_MMC
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+
-+config TARGET_MX6ULL_14X14_EVK
-+	bool "Support mx6ull_14x14_evk"
++config TARGET_MX6ULL_WIRELESSROAD_ECSPI3
++	bool "Support imx6ull WirelessRoad on ecspi3"
 +	select BOARD_LATE_INIT
 +	select MX6ULL
 +	select DM
 +	select DM_THERMAL
 +
-+config TARGET_A
-+	bool "a"
-+
-+config TARGET_ACL
-+	bool "acl"
-+
-+config TARGET_AP
-+	bool "ap"
-+
-+config TARGET_ASH
-+	bool "ash"
-+
-+config TARGET_ASH2
-+	bool "ash2"
-+
-+config TARGET_BT
-+	bool "bt"
-+
-+config TARGET_BT2
-+	bool "bt2"
-+
-+config TARGET_CAD
-+	bool "cad"
-+
-+config TARGET_CID
-+	bool "cid"
-+
-+config TARGET_CID_TAB
-+	bool "cid_tab"
-+
-+config TARGET_CNT
-+	bool "cnt"
-+
-+config TARGET_COB
-+	bool "cob"
-+
-+config TARGET_COB2
-+	bool "cob2"
-+
-+config TARGET_DASH
-+	bool "dash"
-+
-+config TARGET_EO
-+	bool "eo"
-+
-+config TARGET_H
-+	bool "h"
-+
-+config TARGET_H4
-+	bool "h4"
-+
-+config TARGET_HL
-+	bool "hl"
-+
-+config TARGET_HP
-+	bool "hp"
-+
-+config TARGET_INSP
-+	bool "insp"
-+
-+config TARGET_IOC
-+	bool "ioc"
-+
-+config TARGET_JLM
-+	bool "jlm"
-+
-+config TARGET_LS
-+	bool "ls"
-+
-+config TARGET_LSHORE
-+	bool "lshore"
-+
-+config TARGET_LTCH
-+	bool "ltch"
-+
-+config TARGET_MCS
-+	bool "mcs"
-+
-+config TARGET_MED
-+	bool "med"
-+
-+config TARGET_MTP
-+	bool "mtp"
-+
-+config TARGET_MX6_R
-+	bool "mx6_r"
-+
-+config TARGET_NEOL
-+	bool "neol"
-+
-+config TARGET_NIT6XLITE
-+	bool "nit6xlite"
-+
-+config TARGET_NITROGEN6_MAX
-+	bool "nitrogen6_max"
-+
-+config TARGET_NITROGEN6_SCM
-+	bool "nitrogen6_scm"
-+
-+config TARGET_NITROGEN6_SOM2
-+	bool "nitrogen6_som2"
-+
-+config TARGET_NITROGEN6_VM
-+	bool "nitrogen6_vm"
-+
-+config TARGET_NITROGEN6SX
-+	bool "nitrogen6sx"
-+	select MX6SX
-+
-+config TARGET_NITROGEN6X
-+	bool "nitrogen6x"
-+
-+config TARGET_OPOS6ULDEV
-+	bool "Armadeus OPOS6ULDev board"
-+	select MX6UL_OPOS6UL
-+
-+config TARGET_NW
-+	bool "nw"
-+
-+config TARGET_OC
-+	bool "oc"
-+
-+config TARGET_PER
-+	bool "per"
-+
-+config TARGET_RC
-+	bool "rc"
-+
-+config TARGET_S
-+	bool "s"
-+
-+config TARGET_SES
-+	bool "ses"
-+
-+config TARGET_SNAP
-+	bool "snap"
-+
-+config TARGET_SP
-+	bool "sp"
-+
-+config TARGET_TA
-+	bool "ta"
-+
-+config TARGET_USD
-+	bool "usd"
-+
-+config TARGET_USD_MR2
-+	bool "usd_mr2"
-+
-+config TARGET_UTC
-+	bool "utc"
-+
-+config TARGET_VP
-+	bool "vp"
-+
-+config TARGET_YS
-+	bool "ys"
-+	select MX6SX
-+
-+config TARGET_OT1200
-+	bool "Bachmann OT1200"
-+	select SUPPORT_SPL
-+
-+config TARGET_PICO_IMX6UL
-+	bool "PICO-IMX6UL-EMMC"
-+	select MX6UL
-+
-+config TARGET_LITEBOARD
-+	bool "Grinn liteBoard (i.MX6UL)"
-+	select BOARD_LATE_INIT
-+	select MX6UL_LITESOM
-+
-+config TARGET_PLATINUM_PICON
-+	bool "platinum-picon"
-+	select SUPPORT_SPL
-+
-+config TARGET_PLATINUM_TITANIUM
-+	bool "platinum-titanium"
-+	select SUPPORT_SPL
-+
-+config TARGET_PCM058
-+	bool "Phytec PCM058 i.MX6 Quad"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+
-+config TARGET_SECOMX6
-+	bool "secomx6 boards"
-+
-+config TARGET_TBS2910
-+	bool "TBS2910 Matrix ARM mini PC"
-+
-+config TARGET_TITANIUM
-+	bool "titanium"
-+
-+config TARGET_TQMA6
-+	bool "TQ Systems TQMa6 board"
-+	select BOARD_LATE_INIT
-+
-+config TARGET_UDOO
-+	bool "udoo"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+
-+config TARGET_UDOO_NEO
-+	bool "UDOO Neo"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select MX6SX
-+	select DM
-+	select DM_THERMAL
-+
-+config TARGET_SAMTEC_VINING_2000
-+	bool "samtec VIN|ING 2000"
-+	select BOARD_LATE_INIT
-+	select MX6SX
-+	select DM
-+	select DM_THERMAL
-+
-+config TARGET_WANDBOARD
-+	bool "wandboard"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+
-+config TARGET_WARP
-+	bool "WaRP"
-+	select BOARD_LATE_INIT
-+
-+config TARGET_XPRESS
-+	bool "CCV xPress"
-+	select BOARD_LATE_INIT
-+	select MX6UL
-+	select DM
-+	select DM_THERMAL
-+	select SUPPORT_SPL
-+
-+config TARGET_ZC5202
-+	bool "zc5202"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_THERMAL
-+
-+config TARGET_ZC5601
-+	bool "zc5601"
-+	select BOARD_LATE_INIT
-+	select SUPPORT_SPL
-+	select DM
-+	select DM_THERMAL
-+
-+endchoice
-+
-+config SYS_SOC
-+	default "mx6"
-+
-+source "board/ge/bx50v3/Kconfig"
-+source "board/advantech/dms-ba16/Kconfig"
-+source "board/aristainetos/Kconfig"
-+source "board/armadeus/opos6uldev/Kconfig"
-+source "board/bachmann/ot1200/Kconfig"
-+source "board/barco/platinum/Kconfig"
-+source "board/barco/titanium/Kconfig"
-+source "board/boundary/a/Kconfig"
-+source "board/boundary/acl/Kconfig"
-+source "board/boundary/ap/Kconfig"
-+source "board/boundary/ash/Kconfig"
-+source "board/boundary/ash2/Kconfig"
-+source "board/boundary/bt/Kconfig"
-+source "board/boundary/bt2/Kconfig"
-+source "board/boundary/cad/Kconfig"
-+source "board/boundary/cid/Kconfig"
-+source "board/boundary/cid_tab/Kconfig"
-+source "board/boundary/cnt/Kconfig"
-+source "board/boundary/cob/Kconfig"
-+source "board/boundary/cob2/Kconfig"
-+source "board/boundary/dash/Kconfig"
-+source "board/boundary/eo/Kconfig"
-+source "board/boundary/h/Kconfig"
-+source "board/boundary/h4/Kconfig"
-+source "board/boundary/hl/Kconfig"
-+source "board/boundary/hp/Kconfig"
-+source "board/boundary/insp/Kconfig"
-+source "board/boundary/ioc/Kconfig"
-+source "board/boundary/jlm/Kconfig"
-+source "board/boundary/ls/Kconfig"
-+source "board/boundary/lshore/Kconfig"
-+source "board/boundary/ltch/Kconfig"
-+source "board/boundary/mcs/Kconfig"
-+source "board/boundary/med/Kconfig"
-+source "board/boundary/mtp/Kconfig"
-+source "board/boundary/mx6_r/Kconfig"
-+source "board/boundary/neol/Kconfig"
-+source "board/boundary/nit6xlite/Kconfig"
-+source "board/boundary/nitrogen6_max/Kconfig"
-+source "board/boundary/nitrogen6_scm/Kconfig"
-+source "board/boundary/nitrogen6_som2/Kconfig"
-+source "board/boundary/nitrogen6_vm/Kconfig"
-+source "board/boundary/nitrogen6sx/Kconfig"
-+source "board/boundary/nitrogen6x/Kconfig"
-+source "board/boundary/nw/Kconfig"
-+source "board/boundary/oc/Kconfig"
-+source "board/boundary/per/Kconfig"
-+source "board/boundary/rc/Kconfig"
-+source "board/boundary/s/Kconfig"
-+source "board/boundary/ses/Kconfig"
-+source "board/boundary/snap/Kconfig"
-+source "board/boundary/sp/Kconfig"
-+source "board/boundary/ta/Kconfig"
-+source "board/boundary/usd/Kconfig"
-+source "board/boundary/usd_mr2/Kconfig"
-+source "board/boundary/utc/Kconfig"
-+source "board/boundary/vp/Kconfig"
-+source "board/boundary/ys/Kconfig"
-+source "board/ccv/xpress/Kconfig"
-+source "board/compulab/cm_fx6/Kconfig"
-+source "board/congatec/cgtqmx6eval/Kconfig"
-+source "board/el/el6x/Kconfig"
-+source "board/embest/mx6boards/Kconfig"
-+source "board/engicam/geam6ul/Kconfig"
-+source "board/engicam/icorem6/Kconfig"
-+source "board/engicam/icorem6_rqs/Kconfig"
-+source "board/engicam/isiotmx6ul/Kconfig"
-+source "board/freescale/mx6qarm2/Kconfig"
-+source "board/freescale/mx6qsabreauto/Kconfig"
-+source "board/freescale/mx6sabresd/Kconfig"
-+source "board/freescale/mx6slevk/Kconfig"
-+source "board/freescale/mx6sllevk/Kconfig"
-+source "board/freescale/mx6sxsabresd/Kconfig"
-+source "board/freescale/mx6sxsabreauto/Kconfig"
-+source "board/freescale/mx6ul_14x14_evk/Kconfig"
-+source "board/freescale/mx6ullevk/Kconfig"
-+source "board/grinn/liteboard/Kconfig"
-+source "board/phytec/pcm058/Kconfig"
-+source "board/gateworks/gw_ventana/Kconfig"
-+source "board/kosagi/novena/Kconfig"
-+source "board/samtec/vining_2000/Kconfig"
-+source "board/liebherr/mccmon6/Kconfig"
-+source "board/logicpd/imx6/Kconfig"
-+source "board/seco/Kconfig"
-+source "board/solidrun/mx6cuboxi/Kconfig"
-+source "board/technexion/pico-imx6ul/Kconfig"
-+source "board/tbs/tbs2910/Kconfig"
-+source "board/tqc/tqma6/Kconfig"
-+source "board/toradex/apalis_imx6/Kconfig"
-+source "board/toradex/colibri_imx6/Kconfig"
-+source "board/udoo/Kconfig"
-+source "board/udoo/neo/Kconfig"
-+source "board/wandboard/Kconfig"
-+source "board/warp/Kconfig"
-+
-+endif
-diff -Nru u-boot-2017.07-01-owrt/arch/arm/dts/Makefile u-boot-2017.07-02-wroad/arch/arm/dts/Makefile
---- u-boot-2017.07-01-owrt/arch/arm/dts/Makefile	2017-07-10 20:07:38.000000000 +0300
-+++ u-boot-2017.07-02-wroad/arch/arm/dts/Makefile	2018-10-08 20:12:12.638204358 +0300
+ config TARGET_MX6ULL_14X14_EVK
+ 	bool "Support mx6ull_14x14_evk"
+ 	select BOARD_LATE_INIT
+@@ -641,4 +649,6 @@
+ source "board/wandboard/Kconfig"
+ source "board/warp/Kconfig"
+ 
++source "board/freescale/wirelessroad_ecspi3/Kconfig"
++
+ endif
+diff -Nru u-boot-2017.07-001/arch/arm/dts/Makefile u-boot-2017.07-002-generic_ecspi3/arch/arm/dts/Makefile
+--- u-boot-2017.07-001/arch/arm/dts/Makefile	2017-07-10 20:07:38.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/arch/arm/dts/Makefile	2020-03-28 01:07:44.577910947 +0200
 @@ -362,7 +362,8 @@
  	imx6ul-isiot-emmc.dtb \
  	imx6ul-isiot-mmc.dtb \
  	imx6ul-isiot-nand.dtb \
 -	imx6ul-opos6uldev.dtb
 +	imx6ul-opos6uldev.dtb \
-+	wirelessroad_gw-imx6ull.dtb
++	wirelessroad_ecspi3.dtb
  
  dtb-$(CONFIG_MX7) += imx7-colibri.dtb \
  	imx7d-sdb.dtb
-diff -Nru u-boot-2017.07-01-owrt/arch/arm/dts/wirelessroad_gw-imx6ull.dts u-boot-2017.07-02-wroad/arch/arm/dts/wirelessroad_gw-imx6ull.dts
---- u-boot-2017.07-01-owrt/arch/arm/dts/wirelessroad_gw-imx6ull.dts	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/arch/arm/dts/wirelessroad_gw-imx6ull.dts	2018-10-08 14:40:58.768040408 +0300
+diff -Nru u-boot-2017.07-001/arch/arm/dts/wirelessroad_ecspi3.dts u-boot-2017.07-002-generic_ecspi3/arch/arm/dts/wirelessroad_ecspi3.dts
+--- u-boot-2017.07-001/arch/arm/dts/wirelessroad_ecspi3.dts	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/arch/arm/dts/wirelessroad_ecspi3.dts	2020-03-28 01:07:01.467369482 +0200
 @@ -0,0 +1,240 @@
 +/*
 + * Copyright (C) 2016 Freescale Semiconductor, Inc.
@@ -701,7 +61,7 @@ diff -Nru u-boot-2017.07-01-owrt/arch/arm/dts/wirelessroad_gw-imx6ull.dts u-boot
 +#include "imx6ull.dtsi"
 +
 +/ {
-+	model = "WirelessRoad GW-IMX6ULL";
++	model = "WirelessRoad ecspi3";
 +	compatible = "fsl,imx6ull";
 +
 +	chosen {
@@ -927,9 +287,9 @@ diff -Nru u-boot-2017.07-01-owrt/arch/arm/dts/wirelessroad_gw-imx6ull.dts u-boot
 +};
 +
 +
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/ddr3_256m.cfg u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/ddr3_256m.cfg
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/ddr3_256m.cfg	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/ddr3_256m.cfg	2018-10-08 13:51:36.462614035 +0300
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/ddr3_256m.cfg u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/ddr3_256m.cfg
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/ddr3_256m.cfg	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/ddr3_256m.cfg	2020-03-19 04:47:08.202714768 +0200
 @@ -0,0 +1,116 @@
 +/*
 + * Copyright (C) 2016 Freescale Semiconductor, Inc.
@@ -1047,9 +407,9 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/ddr3_25
 +DATA 4 0x021B001C 0x00000000
 +
 +#endif
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/ddr3_512m.cfg u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/ddr3_512m.cfg
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/ddr3_512m.cfg	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/ddr3_512m.cfg	2018-10-08 13:51:36.462614035 +0300
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/ddr3_512m.cfg u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/ddr3_512m.cfg
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/ddr3_512m.cfg	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/ddr3_512m.cfg	2020-03-19 04:47:08.202714768 +0200
 @@ -0,0 +1,116 @@
 +/*
 + * Copyright (C) 2016 Freescale Semiconductor, Inc.
@@ -1167,25 +527,25 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/ddr3_51
 +DATA 4 0x021B001C 0x00000000
 +
 +#endif
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/Kconfig u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/Kconfig
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/Kconfig	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/Kconfig	2018-10-08 20:21:01.631712649 +0300
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/Kconfig u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/Kconfig
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/Kconfig	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/Kconfig	2020-03-28 01:12:10.889981668 +0200
 @@ -0,0 +1,12 @@
-+if TARGET_WIRELESSROAD_GW_IMX6ULL
++if TARGET_MX6ULL_WIRELESSROAD_ECSPI3
 +
 +config SYS_BOARD
-+	default "wirelessroad_gw-imx6ull"
++	default "wirelessroad_ecspi3"
 +
 +config SYS_VENDOR
 +	default "freescale"
 +
 +config SYS_CONFIG_NAME
-+	default "wirelessroad_gw-imx6ull"
++	default "wirelessroad_ecspi3"
 +
 +endif
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/MAINTAINERS u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/MAINTAINERS
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/MAINTAINERS	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/MAINTAINERS	2018-10-08 13:51:36.462614035 +0300
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/MAINTAINERS u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/MAINTAINERS
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/MAINTAINERS	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/MAINTAINERS	2020-03-19 04:47:08.202714768 +0200
 @@ -0,0 +1,7 @@
 +MX6ULEVK BOARD
 +M:	Peng Fan <peng.fan@nxp.com>
@@ -1194,19 +554,19 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/MAINTAI
 +F:	include/configs/mx6ul_14x14_evk.h
 +F:	configs/mx6ul_14x14_evk_defconfig
 +F:	configs/mx6ul_9x9_evk_defconfig
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/Makefile u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/Makefile
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/Makefile	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/Makefile	2018-10-08 13:53:14.495357960 +0300
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/Makefile u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/Makefile
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/Makefile	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/Makefile	2020-03-28 01:12:18.886977602 +0200
 @@ -0,0 +1,6 @@
 +# (C) Copyright 2015 Freescale Semiconductor, Inc.
 +#
 +# SPDX-License-Identifier:	GPL-2.0+
 +#
 +
-+obj-y  := wirelessroad_gw_imx6ull.o
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/README u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/README
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/README	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/README	2018-10-08 13:51:36.462614035 +0300
++obj-y  := wirelessroad_ecspi3.o
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/README u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/README
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/README	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/README	2020-03-19 04:47:08.202714768 +0200
 @@ -0,0 +1,32 @@
 +How to use U-Boot on Freescale MX6UL 14x14 EVK
 +-----------------------------------------------
@@ -1240,9 +600,9 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/README 
 +
 +- Insert the micro SD card in the board, power it up and U-Boot messages should
 +come up.
-diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/wirelessroad_gw_imx6ull.c u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/wirelessroad_gw_imx6ull.c
---- u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/wirelessroad_gw_imx6ull.c	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/board/freescale/wirelessroad_gw-imx6ull/wirelessroad_gw_imx6ull.c	2018-10-08 13:54:03.075065957 +0300
+diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c
+--- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c	2020-03-28 01:18:12.821831652 +0200
 @@ -0,0 +1,851 @@
 +/*
 + * Copyright (C) 2015 Freescale Semiconductor, Inc.
@@ -1802,27 +1162,27 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/wireles
 +int board_spi_cs_gpio(unsigned bus, unsigned cs)
 +{
 +	printf("board_spi_cs_gpio bus %d cs %d\n",bus,cs);
-+	//gpio_direction_output(IMX_GPIO_NR(4, 26),0);
-+	return (bus == 0 && cs == 0) ? (IMX_GPIO_NR(4, 26)) : -1;
++	//gpio_direction_output(IMX_GPIO_NR(1, 20),0);
++	return (bus == 2 && cs == 0) ? (IMX_GPIO_NR(1, 20)) : -1;
 +}
 +#endif
 +
-+static iomux_v3_cfg_t const ecspi1_pads[] = {
++static iomux_v3_cfg_t const ecspi3_pads[] = {
 +	/* SS1 */
-+	MX6_PAD_CSI_DATA05__GPIO4_IO26   | MUX_PAD_CTRL(NO_PAD_CTRL),
++	MX6_PAD_UART2_TX_DATA__GPIO1_IO20   | MUX_PAD_CTRL(NO_PAD_CTRL),
 +	//MX6_PAD_CSI_DATA05__ECSPI1_SS0| MUX_PAD_CTRL(SPI_PAD_CTRL),
-+	MX6_PAD_CSI_DATA07__ECSPI1_MISO | MUX_PAD_CTRL(SPI_PAD_CTRL),
-+	MX6_PAD_CSI_DATA06__ECSPI1_MOSI  | MUX_PAD_CTRL(SPI_PAD_CTRL),
-+	MX6_PAD_CSI_DATA04__ECSPI1_SCLK  | MUX_PAD_CTRL(SPI_PAD_CTRL),
++	MX6_PAD_UART2_RTS_B__ECSPI3_MISO | MUX_PAD_CTRL(SPI_PAD_CTRL),
++	MX6_PAD_UART2_CTS_B__ECSPI3_MOSI  | MUX_PAD_CTRL(SPI_PAD_CTRL),
++	MX6_PAD_UART2_RX_DATA__ECSPI3_SCLK  | MUX_PAD_CTRL(SPI_PAD_CTRL),
 +};
 +
 +static void setup_spi(void)
 +{
-+	imx_iomux_v3_setup_multiple_pads(ecspi1_pads,
-+					 ARRAY_SIZE(ecspi1_pads));
++	imx_iomux_v3_setup_multiple_pads(ecspi3_pads,
++					 ARRAY_SIZE(ecspi3_pads));
 +
-+	gpio_request(IMX_GPIO_NR(4, 26),"spi1");
-+	gpio_direction_output(IMX_GPIO_NR(4, 26),1);
++	gpio_request(IMX_GPIO_NR(1, 20),"spi3");
++	gpio_direction_output(IMX_GPIO_NR(1, 20),1);
 +}
 +#endif
 +
@@ -1915,7 +1275,7 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/wireles
 +int checkboard(void)
 +{
 +
-+	puts("Board: MX6ULL WirelessRoad module\n");
++	puts("Board: MX6ULL WirelessRoad ECSPI3 module\n");
 +
 +	return 0;
 +}
@@ -2095,10 +1455,10 @@ diff -Nru u-boot-2017.07-01-owrt/board/freescale/wirelessroad_gw-imx6ull/wireles
 +	board_init_r(NULL, 0);
 +}
 +#endif
-diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boot-2017.07-02-wroad/configs/wirelessroad_gw-imx6ull_defconfig
---- u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/configs/wirelessroad_gw-imx6ull_defconfig	2018-10-08 20:11:34.435101635 +0300
-@@ -0,0 +1,1025 @@
+diff -Nru u-boot-2017.07-001/configs/wirelessroad_ecspi3_defconfig u-boot-2017.07-002-generic_ecspi3/configs/wirelessroad_ecspi3_defconfig
+--- u-boot-2017.07-001/configs/wirelessroad_ecspi3_defconfig	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/configs/wirelessroad_ecspi3_defconfig	2020-03-28 01:16:29.418162945 +0200
+@@ -0,0 +1,1039 @@
 +#
 +# Automatically generated file; DO NOT EDIT.
 +# U-Boot 2017.07 Configuration
@@ -2120,8 +1480,8 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +CONFIG_SYS_CPU="armv7"
 +CONFIG_SYS_SOC="mx6"
 +CONFIG_SYS_VENDOR="freescale"
-+CONFIG_SYS_BOARD="wirelessroad_gw-imx6ull"
-+CONFIG_SYS_CONFIG_NAME="wirelessroad_gw-imx6ull"
++CONFIG_SYS_BOARD="wirelessroad_ecspi3"
++CONFIG_SYS_CONFIG_NAME="wirelessroad_ecspi3"
 +
 +#
 +# ARM architecture
@@ -2272,13 +1632,14 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# CONFIG_TARGET_MX6SXSABRESD is not set
 +# CONFIG_TARGET_MX6SXSABREAUTO is not set
 +# CONFIG_TARGET_MX6UL_9X9_EVK is not set
-+CONFIG_TARGET_WIRELESSROAD_GW_IMX6ULL=y
++CONFIG_TARGET_MX6ULL_WIRELESSROAD_ECSPI3=y
 +# CONFIG_TARGET_MX6UL_14X14_EVK is not set
 +# CONFIG_TARGET_MX6UL_GEAM is not set
 +# CONFIG_TARGET_MX6UL_ISIOT is not set
 +# CONFIG_TARGET_MX6ULL_14X14_EVK is not set
 +# CONFIG_TARGET_A is not set
 +# CONFIG_TARGET_ACL is not set
++# CONFIG_TARGET_AP is not set
 +# CONFIG_TARGET_ASH is not set
 +# CONFIG_TARGET_ASH2 is not set
 +# CONFIG_TARGET_BT is not set
@@ -2288,6 +1649,7 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# CONFIG_TARGET_CID_TAB is not set
 +# CONFIG_TARGET_CNT is not set
 +# CONFIG_TARGET_COB is not set
++# CONFIG_TARGET_COB2 is not set
 +# CONFIG_TARGET_DASH is not set
 +# CONFIG_TARGET_EO is not set
 +# CONFIG_TARGET_H is not set
@@ -2299,7 +1661,9 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# CONFIG_TARGET_JLM is not set
 +# CONFIG_TARGET_LS is not set
 +# CONFIG_TARGET_LSHORE is not set
++# CONFIG_TARGET_LTCH is not set
 +# CONFIG_TARGET_MCS is not set
++# CONFIG_TARGET_ADK is not set
 +# CONFIG_TARGET_MED is not set
 +# CONFIG_TARGET_MTP is not set
 +# CONFIG_TARGET_MX6_R is not set
@@ -2317,6 +1681,7 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# CONFIG_TARGET_PER is not set
 +# CONFIG_TARGET_RC is not set
 +# CONFIG_TARGET_S is not set
++# CONFIG_TARGET_SES is not set
 +# CONFIG_TARGET_SNAP is not set
 +# CONFIG_TARGET_SP is not set
 +# CONFIG_TARGET_TA is not set
@@ -2358,7 +1723,7 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# ARM debug
 +#
 +# CONFIG_DEBUG_LL is not set
-+CONFIG_DEFAULT_DEVICE_TREE="wirelessroad_gw-imx6ull"
++CONFIG_DEFAULT_DEVICE_TREE="wirelessroad_ecspi3"
 +CONFIG_SMBIOS_PRODUCT_NAME="mx6ullevk"
 +# CONFIG_DEBUG_UART is not set
 +# CONFIG_AHCI is not set
@@ -2387,7 +1752,7 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# CONFIG_OF_BOARD_SETUP is not set
 +# CONFIG_OF_SYSTEM_SETUP is not set
 +CONFIG_OF_STDOUT_VIA_ALIAS=y
-+CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/freescale/wirelessroad_gw-imx6ull/ddr3_256m.cfg"
++CONFIG_SYS_EXTRA_OPTIONS="IMX_CONFIG=board/freescale/wirelessroad_ecspi3/ddr3_256m.cfg"
 +CONFIG_ARCH_FIXUP_FDT_MEMORY=y
 +
 +#
@@ -2647,8 +2012,7 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +# CONFIG_CMD_BEDBUG is not set
 +# CONFIG_CMD_DIAG is not set
 +# CONFIG_CMD_KGDB is not set
-+CONFIG_CMD_UBI=y
-+CONFIG_CMD_UBIFS=y
++# CONFIG_CMD_UBI is not set
 +
 +#
 +# Partition Types
@@ -2848,15 +2212,25 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +#
 +# SPI Flash Support
 +#
-+# CONFIG_SPI_FLASH is not set
++CONFIG_SPI_FLASH=y
++# CONFIG_SPI_FLASH_BAR is not set
++# CONFIG_SF_DUAL_FLASH is not set
++CONFIG_SPI_FLASH_ATMEL=y
++CONFIG_SPI_FLASH_EON=y
++CONFIG_SPI_FLASH_GIGADEVICE=y
++CONFIG_SPI_FLASH_ISSI=y
++CONFIG_SPI_FLASH_MACRONIX=y
++CONFIG_SPI_FLASH_SPANSION=y
++CONFIG_SPI_FLASH_STMICRO=y
++CONFIG_SPI_FLASH_SST=y
++CONFIG_SPI_FLASH_WINBOND=y
++CONFIG_SPI_FLASH_USE_4K_SECTORS=y
++CONFIG_SPI_FLASH_MTD=y
 +
 +#
 +# UBI support
 +#
-+CONFIG_MTD_UBI=y
-+CONFIG_MTD_UBI_WL_THRESHOLD=4096
-+CONFIG_MTD_UBI_BEB_LIMIT=20
-+# CONFIG_MTD_UBI_FASTMAP is not set
++# CONFIG_MTD_UBI is not set
 +# CONFIG_BITBANGMII is not set
 +# CONFIG_MV88E6352_SWITCH is not set
 +CONFIG_PHYLIB=y
@@ -3124,12 +2498,12 @@ diff -Nru u-boot-2017.07-01-owrt/configs/wirelessroad_gw-imx6ull_defconfig u-boo
 +CONFIG_SMBIOS_MANUFACTURER="freescale"
 +CONFIG_EFI_LOADER=y
 +# CONFIG_UNIT_TEST is not set
-diff -Nru u-boot-2017.07-01-owrt/include/configs/wirelessroad_gw-imx6ull.h u-boot-2017.07-02-wroad/include/configs/wirelessroad_gw-imx6ull.h
---- u-boot-2017.07-01-owrt/include/configs/wirelessroad_gw-imx6ull.h	1970-01-01 03:00:00.000000000 +0300
-+++ u-boot-2017.07-02-wroad/include/configs/wirelessroad_gw-imx6ull.h	2018-10-08 15:04:29.366305097 +0300
-@@ -0,0 +1,258 @@
+diff -Nru u-boot-2017.07-001/include/configs/wirelessroad_ecspi3.h u-boot-2017.07-002-generic_ecspi3/include/configs/wirelessroad_ecspi3.h
+--- u-boot-2017.07-001/include/configs/wirelessroad_ecspi3.h	1970-01-01 03:00:00.000000000 +0300
++++ u-boot-2017.07-002-generic_ecspi3/include/configs/wirelessroad_ecspi3.h	2020-03-19 04:47:08.202714768 +0200
+@@ -0,0 +1,240 @@
 +/*
-+ * Copyright (C) 2018 WirelessRoad.
++ * Copyright (C) 2020 WirelessRoad.
 + *
 + * Configuration settings for the i.MX6ULL  board.
 + *
@@ -3217,7 +2591,7 @@ diff -Nru u-boot-2017.07-01-owrt/include/configs/wirelessroad_gw-imx6ull.h u-boo
 +#define CONFIG_SPI_FLASH_SST
 +#define CONFIG_SPI_FLASH_USE_4K_SECTORS
 +#define CONFIG_MXC_SPI
-+#define CONFIG_SF_DEFAULT_BUS		0
++#define CONFIG_SF_DEFAULT_BUS		2
 +#define CONFIG_SF_DEFAULT_CS		0
 +#define CONFIG_SF_DEFAULT_SPEED		20000000
 +#define CONFIG_SF_DEFAULT_MODE		SPI_MODE_0
@@ -3281,7 +2655,7 @@ diff -Nru u-boot-2017.07-01-owrt/include/configs/wirelessroad_gw-imx6ull.h u-boo
 +		"echo restored environment to factory default ; fi\0" \
 +	"loadaddr=84000000\0" \
 +	"fit_size=1000000\0" \
-+	"dtbname=wirelessroad_gw_imx6ull.dtb\0" \
++	"dtbname=wirelessroad_stream_wifi_imx6ull.dtb\0" \
 +	"bootcmd=for dtype in ${bootdevs}" \
 +		"; do " \
 +			"if itest.s \"xusb\" == \"x${dtype}\" ; then " \
@@ -3295,28 +2669,10 @@ diff -Nru u-boot-2017.07-01-owrt/include/configs/wirelessroad_gw-imx6ull.h u-boo
 +					"&& source ${loadaddr} ; " \
 +			"done ; " \
 +		"done ; " \
-+		"nand read ${loadaddr} ufit_ro 1000000 ;" \
-+		"source ${loadaddr}:script@user ;" \
-+		"nand read ${loadaddr} ffit_ro 1000000 ;" \
-+		"source ${loadaddr}:script@factory ;" \
-+		"setenv stdout serial,vga ; " \
-+		"echo ; echo 6x_bootscript not found ; " \
-+		"echo ; echo serial console at 115200, 8N1 ; echo ; " \
-+		"setenv stdout serial;" \
-+		"setenv stdin serial,usbkbd;" \
-+		"for dtype in ${umsdevs} ; do " \
-+				"initcmd='mmc rescan' ;" \
-+			"for disk in 0 1 ; do " \
-+				"if $initcmd && $dtype dev $disk ; then " \
-+					"setenv stdout serial,vga; " \
-+					"echo expose ${dtype} ${disk} " \
-+						"over USB; " \
-+					"ums 0 $dtype $disk ;" \
-+				"fi; " \
-+		"	done; " \
-+		"done ;" \
-+		"setenv stdout serial,vga; " \
-+		"echo no block devices found;" \
++		"setenv bootargs \"\"; "\
++		"sf probe;"\
++		"sf read ${loadaddr} 0x100000 0x700000;"\
++		"bootm ${loadaddr};"\
 +		"\0" \
 +	"initrd_high=0xffffffff\0" \
 +	"loadaddr=0x82000000\0" \

@@ -23,7 +23,7 @@ endef
 define Build/imx6ull-bootscript
 	mkimage -A arm -O linux -T script -C none -a 0 -e 0 \
 		-n '$(DEVICE_NAME) OpenWrt bootscript' \
-		-d ./6x_bootscript-$(DEVICE_NAME).txt \
+		-d ./6x_bootscript-wirelessroad-imx6ull.txt \
 		$(KDIR)/6x_bootscript-$(DEVICE_NAME).scr
 endef
 
@@ -47,7 +47,7 @@ define Build/imx6ull-sdcard
 		$(IMAGE_ROOTFS) \
 		$(PART_BOOT_SIZE) \
 		$(PART_ROOTFS_SIZE) \
-		$(STAGING_DIR_IMAGE)/$(DEVICE_NAME)-u-boot.imx
+		$(STAGING_DIR_IMAGE)/wirelessroad_ecspi3-u-boot.imx
 	rm -f $@.boot
 endef
 
@@ -55,7 +55,7 @@ define Build/imx6ull-ubootimg
 	rm -f $@
 	rm -f $@.preamble
 	dd if=/dev/zero of=$@.preamble bs=1024 count=1
-	cat $@.preamble $(STAGING_DIR_IMAGE)/$(DEVICE_NAME)-u-boot.imx >$@
+	cat $@.preamble $(STAGING_DIR_IMAGE)/wirelessroad_ecspi3-u-boot.imx >$@
 	
 	$(eval IMX6ULL_UBOOTIMG := $@)
 endef
@@ -77,55 +77,80 @@ define Build/imx6ull-mtd-factory
 endef
 
 
-define Device/wirelessroad_gw-imx6ull
-	DEVICE_TITLE := WirelessRoad GW-IMX6ULL
+define Device/lorawan_gateway_ethernet
+	DEVICE_TITLE := Lorawan Gateway Ethernet
 	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
-	DEVICE_NAME := wirelessroad_gw-imx6ull
-	DEVICE_DTS := wirelessroad_gw-imx6ull
+	DEVICE_NAME := lorawan_gateway_ethernet
+	DEVICE_DTS := lorawan_gateway_ethernet
 	BOARDNAME := WIRELESSROAD_GW_IMX6ULL
-	IMAGE_SIZE := 7000k
+	SUPPORTED_DEVICES:= wirelessroad_gw-imx6ull
+	IMAGE_SIZE := 7m
+	IMAGE_SIZE_FACTORY := 8m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
 	IMAGE/u-boot.bin := imx6ull-ubootimg
 	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
-	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs
-	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
 endef
-TARGET_DEVICES += wirelessroad_gw-imx6ull
+TARGET_DEVICES += lorawan_gateway_ethernet
 
-define Device/wirelessroad_stream-imx6ull
-	DEVICE_TITLE := WirelessRoad STREAM-IMX6ULL
-	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
-	DEVICE_NAME := wirelessroad_stream-imx6ull
-	DEVICE_DTS := wirelessroad_stream-imx6ull
-	BOARDNAME := WIRELESSROAD_STREAM_IMX6ULL
-	IMAGE_SIZE := 7000k
-	CONSOLE := ttymxc0,115200
-	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
-	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
-	IMAGE/u-boot.bin := imx6ull-ubootimg
-	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
-	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs
-	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory
-endef
-TARGET_DEVICES += wirelessroad_stream-imx6ull
-
-define Device/wirelessroad_stream_wifi-imx6ull
-	DEVICE_TITLE := WirelessRoad STREAM_WIFI-IMX6ULL
+define Device/lorawan_gateway_wifi
+	DEVICE_TITLE := Lorawan Gateway WiFi
 	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-mt7601u iwinfo wpad-mini
-	DEVICE_NAME := wirelessroad_stream_wifi-imx6ull
-	DEVICE_DTS := wirelessroad_stream_wifi-imx6ull
-	BOARDNAME := WIRELESSROAD_STREAM_WIFI_IMX6ULL
-	IMAGE_SIZE := 7000k
+	DEVICE_NAME := lorawan_gateway_wifi
+	DEVICE_DTS := lorawan_gateway_wifi
+	BOARDNAME := WIRELESSROAD_GW_WIFI_IMX6ULL
+	IMAGE_SIZE := 7m
+	IMAGE_SIZE_FACTORY := 8m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
 	IMAGE/u-boot.bin := imx6ull-ubootimg
 	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
-	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs
-	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
 endef
-TARGET_DEVICES += wirelessroad_stream_wifi-imx6ull
+TARGET_DEVICES += lorawan_gateway_wifi
+
+
+define Device/video_stream_ethernet
+	DEVICE_TITLE := Video Stream Ethernet
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
+	DEVICE_NAME := video_stream_ethernet
+	DEVICE_DTS := video_stream_ethernet
+	BOARDNAME := WIRELESSROAD_STREAM_IMX6ULL
+	SUPPORTED_DEVICES := wirelessroad_stream-imx6ull
+	IMAGE_SIZE := 7m
+	IMAGE_SIZE_FACTORY := 8m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += video_stream_ethernet
+
+define Device/video_stream_wifi
+	DEVICE_TITLE := Video Stream Wifi
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-mt7601u iwinfo wpad-mini
+	DEVICE_NAME := video_stream_wifi
+	DEVICE_DTS := video_stream_wifi
+	BOARDNAME := WIRELESSROAD_STREAM_WIFI_IMX6ULL
+	SUPPORTED_DEVICES := wirelessroad_stream_wifi-imx6ull
+	IMAGE_SIZE := 7m
+	IMAGE_SIZE_FACTORY := 8m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += video_stream_wifi
 
 endif

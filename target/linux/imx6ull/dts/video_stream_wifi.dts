@@ -12,7 +12,7 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "WirelessRoad STREAM-WIFI-IMX6ULL";
+	model = "Video Stream WiFi";
 	compatible = "wirelessroad,stream-wifi-imx6ull", "fsl,imx6ull";
 
 	chosen {
@@ -378,7 +378,6 @@
 	phy-names = "usb-phy";
 	maximum-speed;
 	status = "okay";
-	
 };
 
 &usbotg2 {
