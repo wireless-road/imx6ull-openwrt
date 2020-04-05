@@ -31,7 +31,7 @@ define Build/Compile
 endef
 
 define Package/luci-lora/install
-	[ -e "./files" ] && $(CP) ./files/* $(1)/
+#	[ -e "./files" ] && $(CP) ./files/* $(1)/
 	[ -e "./luci" ] && (mkdir -p $(1)/usr/lib/lua/luci/ ;$(CP) ./luci/* $(1)/usr/lib/lua/luci/ )
 endef
 
