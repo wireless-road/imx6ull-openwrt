@@ -1,0 +1,96 @@
+<%+header%>
+
+<script type="text/javascript">
+//<![CDATA[
+
+function handleSubmit(ev){
+	var url;
+	var gw_id = document.querySelector('input[name="gateway-id"]').value;
+	var srv_addr = document.querySelector('input[name="serv-address"]').value;
+	var srv_pup = document.querySelector('input[name="serv-port-up"]').value;
+	var srv_pdn = document.querySelector('input[name="serv-port-down"]').value;
+	
+	let data = { };
+	
+	if(Number.parseInt(srv_pup) > 0 && Number.parseInt(srv_pup) <= 65536){
+		data["serv-port-up"] = srv_pup;
+		document.querySelector('input[name="serv-port-up"]').value = "";
+	}
+	if(Number.parseInt(srv_pdn) > 0 && Number.parseInt(srv_pdn) <= 65536){
+		data["serv-port-down"] = srv_pdn;
+		document.querySelector('input[name="serv-port-down"]').value = "";
+	}
+	if(gw_id.length != 0){
+		data['gateway-id'] = gw_id;
+		document.querySelector('input[name="gateway-id"]').value = "";
+	}
+	if(srv_addr.length != 0){
+		data["server-address"] = srv_addr;
+		document.querySelector('input[name="serv-address"]').value = "";
+	}
+	
+	url = "admin/lorawan/set_data";
+
+	XHR.post(url, data, function(xhr,j){
+			setTimeout(get_show_data, 1000);
+		}
+	);
+}
+
+function get_show_data(){
+	var c_gw_id = document.querySelector('#curr-gateway-id');
+	var c_srv_addr = document.querySelector('#curr-serv-address');
+	var c_srv_pup = document.querySelector('#curr-serv-port-up');
+	var c_srv_pdn = document.querySelector('#curr-serv-port-down');
+	L.get('admin/lorawan/get_data', null, function(xhr, j) {
+		c_gw_id.innerHTML = j["gateway-id"];
+		c_srv_addr.innerHTML = j["server-address"];
+		c_srv_pup.innerHTML = j["serv-port-up"];
+		c_srv_pdn.innerHTML = j["serv-port-down"];
+	});
+}
+
+window.requestAnimationFrame(function() {
+	get_show_data();
+});
+//]]>
+</script>
+
+<h2 name="content"><%:LoraWan Configuration%>:</h2>
+
+<div class="table" id="lorawan-configs">
+	<div class="tr table-titles">
+		<div class="th col-1 middle center"><%:Option Name%></div>
+		<div class="th col-2 middle center"><%:Current Value%></div>
+		<div class="th col-3 middle center"><%:Enter Value%></div>
+	</div>
+	<div class="tr">
+		<div class="td"><%:Gateway ID%>:</div>
+		<div class="td center" id="curr-gateway-id"></div>
+		<div class="td"> <input type="text" name="gateway-id"/></div>
+	</div>
+	<div class="tr">
+		<div class="td"><%:Server Address%>: </div>
+		<div class="td center" id="curr-serv-address"></div>
+		<div class="td"><input type="text" name="serv-address"/></div>
+	</div>
+	<div class="tr">
+		<div class="td"><%:Server Port up%>:</div>
+		<div class="td center" id="curr-serv-port-up"></div>
+		<div class="td"><input type="text" name="serv-port-up"/></div>
+	</div>
+	<div class="tr">
+		<div class="td"><%:Server Port down%>:</div>
+		<div class="td center" id="curr-serv-port-down"></div>
+		<div class="td"><input type="text" name="serv-port-down"/></div>
+	</div>
+</div>
+
+<div class="cbi-page-actions">
+	<div class="right" style="width: 100%; height: 100%">
+	<button class="btn cbi-button cbi-button-action" onclick="handleSubmit(event)"> <%:Save & Apply %> </button>
+	</div>
+</div>
+<br>
+
+<%+footer%>
