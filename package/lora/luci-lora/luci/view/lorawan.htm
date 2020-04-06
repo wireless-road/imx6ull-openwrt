@@ -9,7 +9,8 @@ function handleSubmit(ev){
 	var srv_pup = document.querySelector('input[name="serv-port-up"]').value;
 	var srv_pdn = document.querySelector('input[name="serv-port-down"]').value;
 	
-	let data = { };
+	let data = { token: '<%=token%>' };
+	var xhr = new XHR();
 	
 	if(Number.parseInt(srv_pup) > 0 && Number.parseInt(srv_pup) <= 65536){
 		data["serv-port-up"] = srv_pup;
@@ -28,8 +29,8 @@ function handleSubmit(ev){
 		document.querySelector('input[name="serv-address"]').value = "";
 	}
 
-	XHR.post("admin/lorawan/set_data", data, function(xhr,j){
-		XHR.get("admin/lorawan/restart_lora", null, function(xhr,j){
+	xhr.post("/cgi-bin/luci/admin/lorawan/set_data", data, function(xhr,j){
+		XHR.get("/cgi-bin/luci/admin/lorawan/restart_lora", { token: '<%=token%>' }, function(xhr,j){
 				setTimeout(get_show_data, 1000);
 			}
 		)
@@ -42,7 +43,7 @@ function get_show_data(){
 	var c_srv_addr = document.querySelector('#curr-serv-address');
 	var c_srv_pup = document.querySelector('#curr-serv-port-up');
 	var c_srv_pdn = document.querySelector('#curr-serv-port-down');
-	L.get('admin/lorawan/get_data', null, function(xhr, j) {
+	XHR.get('/cgi-bin/luci/admin/lorawan/get_data', { token: '<%=token%>' }, function(xhr, j) {
 		c_gw_id.innerHTML = j["gateway-id"];
 		c_srv_addr.innerHTML = j["server-address"];
 		c_srv_pup.innerHTML = j["serv-port-up"];
