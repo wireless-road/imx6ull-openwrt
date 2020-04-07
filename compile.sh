@@ -56,6 +56,10 @@ compile() {
 	cp "$configfile" ./.config;
 	yes "" | make oldconfig;
 	make download;
+	# Rebuild linux kernel to prevent incompatibility list between targets.
+	if [ -d "build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7" ];then
+		rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
+	fi
 	make -j $(nproc --ignore=3);
 	echo "   Done.";
 };
