@@ -13,24 +13,27 @@ imx6ull_board_detect() {
 	machine=$(cat /proc/device-tree/model)
 
 	case "$machine" in
-	"WirelessRoad GW-IMX6ULL")
-		name="wirelessroad_gw-imx6ull";
-		model="wirelessroad_gw-imx6ull";
+	"LoraWan Gateway Ethernet")
+		name="lorawan_gateway_ethernet";
 		;;
-	"WirelessRoad STREAM-IMX6ULL")
-		name="wirelessroad_stream-imx6ull";
-		model="wirelessroad_stream-imx6ull";
+	"LoraWan Gateway WiFi")
+		name="lorawan_gateway_wifi";
 		;;
-	"WirelessRoad STREAM-WIFI-IMX6ULL")
-		name="wirelessroad_stream_wifi-imx6ull";
-		model="wirelessroad_stream_wifi-imx6ull";
+	"Video Stream Ethernet")
+		name="video_stream_ethernet";
 		;;
-
+	"Video Stream WiFi")
+		name="video_stream_wifi";
+		;;
 	*)
 		name="generic"
 		;;
 	esac
-
+	
+	if [ "$name" != "generic" ];then
+		model="$name";
+	fi;
+	
 	[ -z "$IMX6_BOARD_NAME" ] && IMX6_BOARD_NAME="$name"
 	[ -z "$IMX6_MODEL" ] && IMX6_MODEL="$machine"
 

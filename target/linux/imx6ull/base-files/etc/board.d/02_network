@@ -10,9 +10,10 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-wirelessroad_gw-imx6ull|\
-wirelessroad_stream-imx6ull|\
-wirelessroad_stream_wifi-imx6ull)
+lorawan_gateway_ethernet|\
+lorawan_gateway_wifi|\
+video_stream_ethernet|\
+video_stream_wifi)
 	ucidef_set_interface_lan 'eth0'
 	;;
 esac

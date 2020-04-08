@@ -10,7 +10,8 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-*wirelessroad_stream_wifi-imx6ull)
+video_stream_wifi|\
+lorawan_gateway_wifi)
 	touch /etc/config/wireless;
 	uci set wireless.default_radio0=wifi-iface
 	uci set wireless.@wifi-iface[0].mode="sta";

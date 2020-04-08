@@ -10,7 +10,8 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-*wirelessroad_gw-imx6ull)
+lorawan_gateway_ethernet|\
+lorawan_gateway_wifi)
 	uci set lora.SX1301_conf.chipreset_pin='130';
 	uci set lora.SX1301_conf.pllreset_pin='';
 	;;
