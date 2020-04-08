@@ -118,7 +118,7 @@ detect_mac80211() {
 
 			set wireless.default_radio${devidx}=wifi-iface
 			set wireless.default_radio${devidx}.device=radio${devidx}
-			set wireless.default_radio${devidx}.network=lan
+			set wireless.default_radio${devidx}.network=wlan
 			set wireless.default_radio${devidx}.mode=sta
 			set wireless.default_radio${devidx}.ssid=OpenWrt
 			set wireless.default_radio${devidx}.encryption=none
