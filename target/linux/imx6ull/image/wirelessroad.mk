@@ -83,7 +83,7 @@ define Device/lorawan_gateway_ethernet
 	DEVICE_NAME := lorawan_gateway_ethernet
 	DEVICE_DTS := lorawan_gateway_ethernet
 	BOARDNAME := WIRELESSROAD_GW_IMX6ULL
-	SUPPORTED_DEVICES:= wirelessroad_gw-imx6ull
+	SUPPORTED_DEVICES:= wirelessroad_gw-imx6ull lorawan_gateway_ethernet
 	IMAGE_SIZE := 7m
 	IMAGE_SIZE_FACTORY := 8m
 	CONSOLE := ttymxc0,115200
@@ -102,6 +102,7 @@ define Device/lorawan_gateway_wifi
 	DEVICE_NAME := lorawan_gateway_wifi
 	DEVICE_DTS := lorawan_gateway_wifi
 	BOARDNAME := WIRELESSROAD_GW_WIFI_IMX6ULL
+	SUPPORTED_DEVICES:= lorawan_gateway_wifi
 	IMAGE_SIZE := 7m
 	IMAGE_SIZE_FACTORY := 8m
 	CONSOLE := ttymxc0,115200
@@ -121,7 +122,7 @@ define Device/video_stream_ethernet
 	DEVICE_NAME := video_stream_ethernet
 	DEVICE_DTS := video_stream_ethernet
 	BOARDNAME := WIRELESSROAD_STREAM_IMX6ULL
-	SUPPORTED_DEVICES := wirelessroad_stream-imx6ull
+	SUPPORTED_DEVICES := wirelessroad_stream-imx6ull video_stream_ethernet
 	IMAGE_SIZE := 7m
 	IMAGE_SIZE_FACTORY := 8m
 	CONSOLE := ttymxc0,115200
@@ -140,7 +141,7 @@ define Device/video_stream_wifi
 	DEVICE_NAME := video_stream_wifi
 	DEVICE_DTS := video_stream_wifi
 	BOARDNAME := WIRELESSROAD_STREAM_WIFI_IMX6ULL
-	SUPPORTED_DEVICES := wirelessroad_stream_wifi-imx6ull
+	SUPPORTED_DEVICES := wirelessroad_stream_wifi-imx6ull video_stream_wifi
 	IMAGE_SIZE := 7m
 	IMAGE_SIZE_FACTORY := 8m
 	CONSOLE := ttymxc0,115200
