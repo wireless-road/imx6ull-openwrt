@@ -187,8 +187,8 @@ int sys_uci_commit(char * opt)
 void sys_wifireset(void){
 	pid_t ret = fork();
 	if (ret == 0) {
-		char *params[2]  = {"wifi", 0};
-		execv("wifi", params);
+		char *params[2]  = {"/sbin/wifi", 0};
+		execv("/sbin/wifi", params);
 		exit(0);
 	} else {
 		waitpid(ret, NULL, 0);
