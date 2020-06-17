@@ -9,34 +9,46 @@ USE_PROCD=1
 ffmpeg_start(){
 	local enabled="$(uci get ffmpeg.ffmpeg.enabled)";
 	if [ "$enabled" == "1" ] || [ "$enabled" == "true" ];then
-		local in_dev="$(uci get ffmpeg.ffmpeg.in_device)";
-		local framerate="$(uci get ffmpeg.ffmpeg.framerate)";
-		local resolution="$(uci get ffmpeg.ffmpeg.resolution)";
-		local out_vcodec="$(uci get ffmpeg.ffmpeg.vcodec)";
-		local b_v="$(uci get ffmpeg.ffmpeg.b_v)";
-		local remote="$(uci get ffmpeg.ffmpeg.remote)";
-		local override_ffserver="$(uci get ffmpeg.ffmpeg.override_ffserver)";
-#		local in_pix_fmt="$(uci get ffmpeg.ffmpeg.input_pix_format)";
+		local in_dev="$(uci get ffmpeg.ffmpeg.in_device 2>/dev/null)";
+		local framerate="$(uci get ffmpeg.ffmpeg.framerate 2>/dev/null)";
+		local resolution="$(uci get ffmpeg.ffmpeg.resolution 2>/dev/null)";
+		local out_vcodec="$(uci get ffmpeg.ffmpeg.vcodec 2>/dev/null)";
+		local b_v="$(uci get ffmpeg.ffmpeg.b_v 2>/dev/null)";
+		local qscale_v="$(uci get ffmpeg.ffmpeg.qscale_v 2>/dev/null)";
+		local remote="$(uci get ffmpeg.ffmpeg.remote 2>/dev/null)";
+		local override_ffserver="$(uci get ffmpeg.ffmpeg.override_ffserver 2>/dev/null)";
+#		local in_pix_fmt="$(uci get ffmpeg.ffmpeg.input_pix_format 2>/dev/null)";
 		local in_pix_fmt="uyvy422"; #On i.mx6ull with ov5640 only this is aplicable
-		local out_fmt="$(uci get ffmpeg.ffmpeg.out_format)"
+		local out_fmt="$(uci get ffmpeg.ffmpeg.out_format 2>/dev/null)"
 		
 		local args="";
 		
-		args=" -s $resolution -r $framerate";
+		if [ "x$framerate" != "x" ];then
+			args=" -s $resolution -r $framerate";
+		else
+			args=" -s $resolution";
+		fi;
 		#framerate before input dev sets device framerate ov5640 supports only one of 15 or 30.
-		args="$args -framerate 15 ";
+		args="$args -framerate 15";
 		#i.mx6ull driver supports only uyvy422
 		args="$args -input_format $in_pix_fmt";
 		args="$args -i $in_dev";
 		#output framerate, only used for proper timing in output stream
-		args="$args -framerate $framerate"
+		if [ "x$framerate" != "x" ];then
+			args="$args -framerate $framerate"
+		fi;
 		args="$args -vcodec $out_vcodec";
-		args="$args -b:v $b_v";
+		if [ "x$b_v" != "x" ];then
+			args="$args -b:v $b_v";
+		fi;
+		if [ "x$qscale_v" != "x" ];then
+			args="$args -qscale:v $qscale_v";
+		fi;
 		if [ "$override_ffserver" == "1" ] || [ "$override_ffserver" == "true" ];then
 			args="$args -override_ffserver";
 		fi;
 		local remote_str="$remote";
-		if [ x"$out_fmt" != "x" ];then
+		if [ "x$out_fmt" != "x" ];then
 			remote_str="-f $out_fmt $remote";
 		fi
 		args="$args $remote_str";
