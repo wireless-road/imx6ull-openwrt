@@ -13,7 +13,8 @@ case "$board" in
 lorawan_gateway_ethernet|\
 lorawan_gateway_wifi|\
 video_stream_ethernet|\
-video_stream_wifi)
+video_stream_wifi|\
+audio_stream_ethernet))
 	ucidef_set_interface_lan 'eth0'
 	;;
 esac

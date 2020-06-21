@@ -1,0 +1,12 @@
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+@@ -1288,6 +1288,9 @@
+ 	struct snd_soc_codec *codec = dai->codec;
+ 	struct wm8960_priv *wm8960 = snd_soc_codec_get_drvdata(codec);
+
++	clk_id = WM8960_SYSCLK_AUTO;
++	wm8960->freq_in = freq;
++
+ 	switch (clk_id) {
+ 	case WM8960_SYSCLK_MCLK:
+		snd_soc_update_bits(codec, WM8960_CLOCK1,

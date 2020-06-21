@@ -154,4 +154,23 @@ define Device/video_stream_wifi
 endef
 TARGET_DEVICES += video_stream_wifi
 
+define Device/audio_stream_ethernet
+	DEVICE_TITLE := Audio Stream Ethernet
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
+	DEVICE_NAME := audio_stream_ethernet
+	DEVICE_DTS := audio_stream_ethernet
+	BOARDNAME := WIRELESSROAD_AUDIOSTREAM_IMX6ULL
+	SUPPORTED_DEVICES:= audio_stream_ethernet
+	IMAGE_SIZE := 7m
+	IMAGE_SIZE_FACTORY := 8m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += audio_stream_ethernet
+
 endif

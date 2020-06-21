@@ -25,6 +25,9 @@ imx6ull_board_detect() {
 	"Video Stream WiFi")
 		name="video_stream_wifi";
 		;;
+	"Audio Stream Ethernet")
+		name="audio_stream_ethernet";
+		;;
 	*)
 		name="generic"
 		;;
