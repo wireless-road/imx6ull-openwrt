@@ -5,3 +5,7 @@
 
 # ffmpeg -s 720x480 -r 5 -framerate 15 -input_format uyvy422 -i /dev/video0 -framerate 5 -vcodec mpeg2video -b:v 192k -override_ffserver http://127.0.0.1:8080/feed1.ffm
 
+# ffmpeg -s 320x240 -framerate 15 -input_format uyvy422 -i /dev/video0 -vcodec mpeg2video -qscale:v 5 -f mpegts udp://192.168.0.105:5555
+
+# ffplay -fflags -nobuffer -probesize 32 -sync ext -i udp://192.168.0.105:5555
+
