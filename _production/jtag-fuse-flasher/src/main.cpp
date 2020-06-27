@@ -75,6 +75,7 @@ bool process_wait_for_line(QProcess *p, QString line, int timeout_msec){
         if(p->waitForReadyRead(timeout_msec)){
             counter=0;
             temp = QString::fromLocal8Bit(p->readAll()).simplified();
+			qInfo() << "Al: " << temp;
             if(temp.contains(line, Qt::CaseInsensitive)){
                 ret = true;
                 break;
@@ -268,7 +269,7 @@ void  worker(QString ocd, QString serial_port, quint16 telnet_port, QString uboo
 
     qInfo() << "   Writing FUSE for ECSPI3.";
     serial_send_cmd(&qserial, "fuse prog -y 0 5 0x0a000030 ", 1000);
-    if(serial_wait_for_line(&qserial, "Programming bank", 1000)){
+    if(serial_wait_for_line(&qserial, "Programming bank", 5000)){
         qInfo() << "   ECSPI3 programming ok (0x450 = 0x0a000030)";
     }else{
         qWarning() << "Some error programming fuse for ECSPI3. Bailing.";
@@ -277,7 +278,7 @@ void  worker(QString ocd, QString serial_port, quint16 telnet_port, QString uboo
 
     QThread::sleep(1);
     serial_send_cmd(&qserial, "fuse prog -y 0 6 0x00000010 ", 1000);
-    if(serial_wait_for_line(&qserial, "Programming bank", 1000)){
+    if(serial_wait_for_line(&qserial, "Programming bank", 5000)){
         qInfo() << "   BT_FUSE_SEL programming ok (0x460 = 0x00000010)";
     }else{
         qWarning() << "Some error programming fuse for BT_FUSE_SEL. Bailing.";

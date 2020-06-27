@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="jtag-flasher"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="msvc8"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\..\;CMake Files\..\..\..\..\..\..\..\..\Qt\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Core\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5SerialPort\;CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Network\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 all"/>
+					<CompileFile command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+					<DistClean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jtag-flasher">
+				<Option output="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release/jtag-flasher.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_NO_DEBUG"/>
+					<Add option="-DQT_SERIALPORT_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add directory="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+					<Add directory="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src"/>
+					<Add directory="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release/jtag-flasher_autogen/include"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include/QtCore"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/./mkspecs/win32-msvc"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include/QtSerialPort"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include/QtNetwork"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.26.28801\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 jtag-flasher"/>
+					<CompileFile command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+					<DistClean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jtag-flasher/fast">
+				<Option output="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release/jtag-flasher.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="msvc8"/>
+				<Compiler>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add option="-DQT_NO_DEBUG"/>
+					<Add option="-DQT_SERIALPORT_LIB"/>
+					<Add option="-DQT_NETWORK_LIB"/>
+					<Add directory="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+					<Add directory="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src"/>
+					<Add directory="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release/jtag-flasher_autogen/include"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include/QtCore"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/./mkspecs/win32-msvc"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include/QtSerialPort"/>
+					<Add directory="C:/Qt/Qt5.14.2/5.14.2/msvc2017/include/QtNetwork"/>
+					<Add directory="C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Tools\MSVC\14.26.28801\include"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\ucrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\shared"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\um"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\winrt"/>
+					<Add directory="C:\Program Files (x86)\Windows Kits\10\include\10.0.18362.0\cppwinrt"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 jtag-flasher/fast"/>
+					<CompileFile command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+					<DistClean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 edit_cache"/>
+					<CompileFile command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+					<DistClean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+					<DistClean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="jtag-flasher_autogen">
+				<Option working_dir="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 jtag-flasher_autogen"/>
+					<CompileFile command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+					<DistClean command="jom /NOLOGO /f C:\Users\almaz\Downloads\lorawan-imx6ull-master\lorawan-imx6ull-master\_production\jtag-fuse-flasher\build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release\Makefile VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/build-src-Desktop_Qt_5_14_2_MSVC2017_32bit-Release/jtag-flasher_autogen/mocs_compilation.cpp">
+			<Option target="jtag-flasher"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/QTelnet.cpp">
+			<Option target="jtag-flasher"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/QTelnet.h">
+			<Option target="jtag-flasher"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/main.cpp">
+			<Option target="jtag-flasher"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5/Qt5Config.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5/Qt5ConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5/Qt5ModuleLocation.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Core\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5SerialPort/Qt5SerialPortConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5SerialPort\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5SerialPort/Qt5SerialPortConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5SerialPort\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Network/Qt5NetworkConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Network/Qt5NetworkConfigVersion.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Network\"/>
+		</Unit>
+		<Unit filename="C:/Users/almaz/Downloads/lorawan-imx6ull-master/lorawan-imx6ull-master/_production/jtag-fuse-flasher/src/../../../../../../../../Qt/Qt5.14.2/5.14.2/msvc2017/lib/cmake/Qt5Network/Qt5Network_QGenericEnginePlugin.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\..\..\..\..\Qt\Qt5.14.2\5.14.2\msvc2017\lib\cmake\Qt5Network\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
