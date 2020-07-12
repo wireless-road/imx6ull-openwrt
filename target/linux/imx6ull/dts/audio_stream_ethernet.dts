@@ -369,5 +369,6 @@
 		#sound-dai-cells = <0>;
 		compatible = "wlf,wm8960";
 		reg = <0x1a>;
+		wlf,shared-lrclk;
 	};
 };
