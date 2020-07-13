@@ -13,6 +13,19 @@ dialplan/default/20-interconnect.xml
 directory/private.xml
 ```
 
+Для запуска сервера введите:
+```
+$ sudo mkdir /usr/local/freeswitch/var/run/freeswitch/;
+$ sudo chown -R freeswitch:freeswitch /usr/local/freeswitch;
+$ sudo chmod -R a+rw  /usr/local/freeswitch/var/run/freeswitch/;
+$ sudo /usr/local/freeswitch/bin/freeswitch -u freeswitch -g freeswitch -c -nonat -rp
+```
+Для запуска в фоновом режиме вместо последней команды введите:
+```
+/usr/local/freeswitch/bin/freeswitch -u freeswitch -g freeswitch -ncwait -nonat -rp
+```
+
+
 ### SIP-клиент
 В прошивке используется клиент `baresip`, для его полноценной работы требуется исправить параметр module_path в файле `/etc/baresip/config` на:
 ```
@@ -33,3 +46,11 @@ baresip -f /etc/baresip
 
 Список команд и их сокращений выводится по нажатию Enter.
 Для вызова удалённой стороны небходимо ввести `/dial` или просто букву `d` (нажатие Enter для сокращённых команд не требуется), после чего ввести адрес вызываемого абонента. Если абонент зарегистрирован на том же сервере, достаточно указать его логин и нажать Enter. Для поднятия трубки при входящем вызове достаточно нажать `a` (сокращение от answer). Для завершения звонка нажмите клавишу `b` (сокращение от break).
+
+
+Таким образом, для совершения пробного звонка с сервера (ноутбука), на котором запущен сервер `freeswitch` запустите клиент `baresip`:
+```
+$ baresip
+```
+В запущенном ранее `baresip` клиенте на железке совершите вызов:  `d 1000`. В коносли клиента `baresip` на ноутбуке возьмите трубку  `a`.
+
