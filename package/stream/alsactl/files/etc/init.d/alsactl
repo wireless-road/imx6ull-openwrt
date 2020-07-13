@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+
+USE_PROCD=0
+
+alsactl_store(){
+	/usr/sbin/alsactl -f /etc/asound.state store;
+}
+alsactl_restore(){
+	/usr/sbin/alsactl -f /etc/asound.state restore;
+}
+
+start_service(){
+	alsactl_restore;
+}
+
+stop_service(){
+	alsactl_store;
+}
+

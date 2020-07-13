@@ -1,0 +1,19 @@
+<include>
+   <extension name="Interconnect1">
+    <condition field="destination_number" expression="^(1[0-9]{3})$">
+     <!-- This will dial a registered phone at the ip or domain name you set in the globals section -->
+     <!-- (The % indicates it is an internal extension)                                             -->
+     <action application="bridge" data="user/$1@192.168.0.105"/>
+    </condition>
+   </extension>
+
+   <extension name="Interconnect5">
+    <condition field="destination_number" expression="^(5[0-9]{3})$">
+     <!-- This will dial a registered phone at the ip or domain name you set in the globals section -->
+     <!-- (The % indicates it is an internal extension)                                             -->
+     <action application="bridge" data="user/$1@192.168.0.105"/>
+    </condition>
+   </extension>
+
+
+</include>
