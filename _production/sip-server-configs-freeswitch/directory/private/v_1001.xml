@@ -1,0 +1,25 @@
+<include>
+  <user id="1001">
+    <params>
+      <param name="password" value="1001"/>
+      <param name="reverse-auth-user" value="1001"/>
+      <param name="reverse-auth-pass" value="1001"/>
+      <param name="directory-exten-visible" value="true"/>
+      <param name="t38-passthru" value="true"/>
+      <param name="dial-string" value="{sip_invite_domain=${domain_name},leg_timeout=120,presence_id=${dialed_user}@${dialed_domain}}${sofia_contact(${dialed_user}@${dialed_domain})}"/>
+    </params>
+    <variables>
+      <variable name="toll_allow" value=""/>
+      <variable name="call_timeout" value="120"/>
+      <variable name="user_context" value="default"/>
+      <variable name="effective_caller_id_name" value="YEA-1"/>
+      <variable name="effective_caller_id_number" value="1001"/>
+      <variable name="outbound_caller_id_name" value="YEA-1"/>
+      <variable name="outbound_caller_id_number" value="1001"/>
+      <variable name="emergency_caller_id_name" value="YEA-1"/>
+      <variable name="emergency_caller_id_number" value="1001"/>
+      <variable name="directory-visible" value="true"/>
+      <variable name="limit_max" value="2"/>
+    </variables>
+  </user>
+</include>
