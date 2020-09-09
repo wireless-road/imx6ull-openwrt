@@ -182,7 +182,7 @@
 		};
 		partition@3 {
 			label = "factory";
-			reg = <0x000000 x1000000>;
+			reg = <0x000000 0x1000000>;
 		};
 	};
 };
