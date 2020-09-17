@@ -3,8 +3,8 @@ ifeq ($(SUBTARGET),cortexa7)
 
 FAT32_BLOCK_SIZE=1024
 
-#Max flash is 8MiB
-MAXFWSIZE := $(shell echo $$(( ( 8 * 1024 * 1024 ) / $(FAT32_BLOCK_SIZE) )) )
+#Max flash is 16MiB
+MAXFWSIZE := $(shell echo $$(( ( 16 * 1024 * 1024 ) / $(FAT32_BLOCK_SIZE) )) )
 
 #On FAT32 there's restriction to pad FS to this value.
 # SECTOR size is 512 and we need to pad to 32 sectors.
@@ -84,8 +84,8 @@ define Device/lorawan_gateway_ethernet
 	DEVICE_DTS := lorawan_gateway_ethernet
 	BOARDNAME := WIRELESSROAD_GW_IMX6ULL
 	SUPPORTED_DEVICES:= wirelessroad_gw-imx6ull lorawan_gateway_ethernet
-	IMAGE_SIZE := 7m
-	IMAGE_SIZE_FACTORY := 8m
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
@@ -103,8 +103,8 @@ define Device/lorawan_gateway_wifi
 	DEVICE_DTS := lorawan_gateway_wifi
 	BOARDNAME := WIRELESSROAD_GW_WIFI_IMX6ULL
 	SUPPORTED_DEVICES:= lorawan_gateway_wifi
-	IMAGE_SIZE := 7m
-	IMAGE_SIZE_FACTORY := 8m
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
@@ -123,8 +123,8 @@ define Device/video_stream_ethernet
 	DEVICE_DTS := video_stream_ethernet
 	BOARDNAME := WIRELESSROAD_STREAM_IMX6ULL
 	SUPPORTED_DEVICES := wirelessroad_stream-imx6ull video_stream_ethernet
-	IMAGE_SIZE := 7m
-	IMAGE_SIZE_FACTORY := 8m
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
@@ -143,8 +143,8 @@ define Device/flexcan_ethernet
         DEVICE_DTS := flexcan_ethernet
         BOARDNAME := WIRELESSROAD_STREAM_IMX6ULL
         SUPPORTED_DEVICES := wirelessroad_stream-imx6ull flexcan_ethernet
-        IMAGE_SIZE := 7m
-        IMAGE_SIZE_FACTORY := 8m
+        IMAGE_SIZE := 15m
+        IMAGE_SIZE_FACTORY := 16m
         CONSOLE := ttymxc0,115200
         KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
         IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
@@ -163,8 +163,8 @@ define Device/video_stream_wifi
 	DEVICE_DTS := video_stream_wifi
 	BOARDNAME := WIRELESSROAD_STREAM_WIFI_IMX6ULL
 	SUPPORTED_DEVICES := wirelessroad_stream_wifi-imx6ull video_stream_wifi
-	IMAGE_SIZE := 7m
-	IMAGE_SIZE_FACTORY := 8m
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
@@ -182,8 +182,8 @@ define Device/audio_stream_ethernet
 	DEVICE_DTS := audio_stream_ethernet
 	BOARDNAME := WIRELESSROAD_AUDIOSTREAM_IMX6ULL
 	SUPPORTED_DEVICES:= audio_stream_ethernet
-	IMAGE_SIZE := 7m
-	IMAGE_SIZE_FACTORY := 8m
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
 	CONSOLE := ttymxc0,115200
 	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
 	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
