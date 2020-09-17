@@ -12,7 +12,7 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "Video Stream Ethernet";
+	model = "FlexCAN Ethernet";
 	compatible = "wirelessroad,stream-imx6ull", "fsl,imx6ull";
 
 	chosen {
