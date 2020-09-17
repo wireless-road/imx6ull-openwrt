@@ -10,16 +10,14 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-lorawan_gateway_ethernet|\
-lorawan_gateway_wifi|\
-video_stream_ethernet|\
-video_stream_wifi|\
-flexcan_ethernet|\
-audio_stream_ethernet)
-	ucidef_set_interface_lan 'eth0'
+flexcan_ethernet)
+	ip link set can0 down
+	ip link set can0 up type can bitrate 500000
+	ip link set can1 down
+	ip link set can1 up type can bitrate 500000
 	;;
 esac
 
 board_config_flush
 
-exit 0
+exit 1

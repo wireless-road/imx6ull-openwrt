@@ -28,6 +28,9 @@ imx6ull_board_detect() {
 	"Audio Stream Ethernet")
 		name="audio_stream_ethernet";
 		;;
+	"FlexCAN Ethernet")
+		name="flexcan_ethernet";
+		;;
 	*)
 		name="generic"
 		;;
