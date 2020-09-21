@@ -1,0 +1,2 @@
+Rewritten on python. moved to separate repository:
+https://github.com/wireless-road/imx6ull_production_script
