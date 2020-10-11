@@ -30,6 +30,7 @@ get_status_led() {
 	e750g-v8|\
 	eap120|\
 	minibox-v1|\
+	minibox-v3.2|\
 	packet-squirrel|\
 	som9331|\
 	sr3200|\
@@ -66,6 +67,7 @@ get_status_led() {
 	archer-c25-v1|\
 	archer-c58-v1|\
 	archer-c59-v1|\
+	archer-c59-v2|\
 	archer-c60-v1|\
 	archer-c60-v2|\
 	archer-c7-v4|\
@@ -73,6 +75,7 @@ get_status_led() {
 	fritz300e|\
 	fritz4020|\
 	fritz450e|\
+	gl-ar750s|\
 	gl-usb150|\
 	mr12|\
 	mr16|\
@@ -83,8 +86,6 @@ get_status_led() {
 	tl-wr902ac-v1)
 		status_led="$board:green:power"
 		;;
-	archer-c5|\
-	archer-c7|\
 	tl-mr10u|\
 	tl-mr12u|\
 	tl-mr13u|\
@@ -127,6 +128,7 @@ get_status_led() {
 		status_led="$board:red:sys"
 		;;
 	bullet-m|\
+	bullet-m-xw|\
 	loco-m-xw|\
 	nano-m|\
 	nanostation-m|\
@@ -371,6 +373,7 @@ get_status_led() {
 	rb-911g-2hpnd|\
 	rb-911g-5hpacd|\
 	rb-911g-5hpnd|\
+	rb-931-2nd|\
 	rb-941-2nd|\
 	rb-951ui-2nd|\
 	rb-952ui-5ac2nd|\
@@ -378,7 +381,9 @@ get_status_led() {
 	rb-lhg-5nd|\
 	rb-map-2nd|\
 	rb-mapl-2nd|\
-	rb-wap-2nd)
+	rb-sxt-2nd-r3|\
+	rb-wap-2nd|\
+	rb-wapr-2nd)
 		status_led="rb:green:user"
 		;;
 	rb-951ui-2hnd)
@@ -444,6 +449,8 @@ get_status_led() {
 	tl-mr6400)
 		status_led="tp-link:white:power"
 		;;
+	archer-c5|\
+	archer-c7|\
 	tl-mr3220|\
 	tl-mr3220-v2|\
 	tl-mr3420|\

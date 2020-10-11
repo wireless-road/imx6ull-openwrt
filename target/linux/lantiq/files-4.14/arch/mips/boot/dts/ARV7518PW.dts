@@ -16,6 +16,7 @@
 		led-boot = &power_green;
 		led-failsafe = &power_red;
 		led-running = &power_green;
+		led-upgrade = &power_green;
 
 		led-dsl = &dsl;
 		led-internet = &online_green;
@@ -105,6 +106,18 @@
 			gpios = <&gpiomm 6 GPIO_ACTIVE_LOW>;
 		};
 	};
+
+	usb_vbus: regulator-usb-vbus {
+		compatible = "regulator-fixed";
+
+		regulator-name = "USB_VBUS";
+
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+
+		gpio = <&gpio 14 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
 };
 
 &gpio {
@@ -144,18 +157,6 @@
 			lantiq,pull = <2>;
 			lantiq,open-drain = <1>;
 		};
-	};
-
-	usb_vbus: regulator-usb-vbus {
-		compatible = "regulator-fixed";
-
-		regulator-name = "USB_VBUS";
-
-		regulator-min-microvolt = <5000000>;
-		regulator-max-microvolt = <5000000>;
-
-		gpio = <&gpio 14 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
 	};
 };
 
@@ -227,11 +228,11 @@
 
 &usb_phy {
 	status = "okay";
-	phy-supply = <&usb_vbus>;
 };
 
 &usb {
 	status = "okay";
+	vbus-supply = <&usb_vbus>;
 };
 
 &vmmc {

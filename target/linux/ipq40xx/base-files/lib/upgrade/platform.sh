@@ -29,33 +29,74 @@ EOF
 	return 0;
 }
 
+zyxel_do_upgrade() {
+	local tar_file="$1"
+
+	local board_dir=$(tar tf $tar_file | grep -m 1 '^sysupgrade-.*/$')
+	board_dir=${board_dir%/}
+
+	tar Oxf $tar_file ${board_dir}/kernel | mtd write - kernel
+
+	if [ -n "$UPGRADE_BACKUP" ]; then
+		tar Oxf $tar_file ${board_dir}/root | mtd -j "$UPGRADE_BACKUP" write - rootfs
+	else
+		tar Oxf $tar_file ${board_dir}/root | mtd write - rootfs
+	fi
+}
+
 platform_do_upgrade() {
 	case "$(board_name)" in
-	8dev,jalapeno)
-		nand_do_upgrade "$ARGV"
+	8dev,jalapeno |\
+	alfa-network,ap120c-ac |\
+	avm,fritzbox-7530 |\
+	avm,fritzrepeater-1200 |\
+	avm,fritzrepeater-3000 |\
+	qxwlan,e2600ac-c2)
+		nand_do_upgrade "$1"
+		;;
+	asus,map-ac2200)
+		CI_KERNPART="linux"
+		nand_do_upgrade "$1"
 		;;
 	asus,rt-ac58u)
 		CI_UBIPART="UBI_DEV"
 		CI_KERNPART="linux"
 		nand_do_upgrade "$1"
 		;;
-	openmesh,a42 |\
-	openmesh,a62)
-		PART_NAME="inactive"
-		platform_do_upgrade_openmesh "$ARGV"
+	linksys,ea6350v3 |\
+	linksys,ea8300)
+		platform_do_upgrade_linksys "$1"
 		;;
 	meraki,mr33)
 		CI_KERNPART="part.safe"
 		nand_do_upgrade "$1"
 		;;
+	openmesh,a42 |\
+	openmesh,a62)
+		PART_NAME="inactive"
+		platform_do_upgrade_openmesh "$1"
+		;;
+	zyxel,nbg6617)
+		zyxel_do_upgrade "$1"
+		;;
 	*)
-		default_do_upgrade "$ARGV"
+		default_do_upgrade "$1"
 		;;
 	esac
 }
 
 platform_nand_pre_upgrade() {
 	case "$(board_name)" in
+	alfa-network,ap120c-ac)
+		part="$(awk -F 'ubi.mtd=' '{printf $2}' /proc/cmdline | sed -e 's/ .*$//')"
+		if [ "$part" = "rootfs1" ]; then
+			fw_setenv active 2 || exit 1
+			CI_UBIPART="rootfs2"
+		else
+			fw_setenv active 1 || exit 1
+			CI_UBIPART="rootfs1"
+		fi
+		;;
 	asus,rt-ac58u)
 		CI_UBIPART="UBI_DEV"
 		CI_KERNPART="linux"
@@ -65,9 +106,3 @@ platform_nand_pre_upgrade() {
 		;;
 	esac
 }
-
-blink_led() {
-	. /etc/diag.sh; set_state upgrade
-}
-
-append sysupgrade_pre_upgrade blink_led

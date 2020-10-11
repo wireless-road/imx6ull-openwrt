@@ -197,6 +197,7 @@ foreach my $mirror (@ARGV) {
 		push @mirrors, "https://mirror.netcologne.de/apache.org/$1";
 		push @mirrors, "https://mirror.aarnet.edu.au/pub/apache/$1";
 		push @mirrors, "https://mirror.csclub.uwaterloo.ca/apache/$1";
+		push @mirrors, "https://archive.apache.org/dist/$1";
 		push @mirrors, "http://mirror.cogentco.com/pub/apache/$1";
 		push @mirrors, "http://mirror.navercorp.com/apache/$1";
 		push @mirrors, "http://ftp.jaist.ac.jp/pub/apache/$1";
@@ -258,9 +259,8 @@ foreach my $mirror (@ARGV) {
 }
 
 #push @mirrors, 'https://mirror1.openwrt.org';
-push @mirrors, 'https://sources.lede-project.org';
+push @mirrors, 'https://sources.openwrt.org';
 push @mirrors, 'https://mirror2.openwrt.org/sources';
-push @mirrors, 'https://downloads.openwrt.org/sources';
 
 while (!-f "$target/$filename") {
 	my $mirror = shift @mirrors;

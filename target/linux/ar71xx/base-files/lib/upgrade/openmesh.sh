@@ -26,16 +26,6 @@ cfg_value_get()
 		done
 }
 
-# make sure we got uboot-envtools and fw_env.config copied over to the ramfs
-# create /var/lock for the lock "fw_setenv.lock" of fw_setenv
-platform_add_ramfs_ubootenv()
-{
-	[ -e /usr/sbin/fw_setenv ] && install_bin /usr/sbin/fw_setenv
-	[ -e /etc/fw_env.config ] && install_file /etc/fw_env.config
-	mkdir -p $RAM_ROOT/var/lock
-}
-append sysupgrade_pre_upgrade platform_add_ramfs_ubootenv
-
 platform_check_image_target_openmesh()
 {
 	img_board_target="$1"
@@ -100,7 +90,7 @@ platform_check_image_openmesh()
 {
 	local img_magic=$1
 	local img_path=$2
-	local fw_setenv=/usr/sbin/fw_setenv
+	local fw_printenv=/usr/sbin/fw_printenv
 	local img_board_target= img_num_files= i=0
 	local cfg_name= kernel_name= rootfs_name=
 
@@ -144,7 +134,7 @@ platform_check_image_openmesh()
 		return 1
 	}
 
-	[ ! -x "$fw_setenv" ] && {
+	[ ! -x "$fw_printenv" ] && {
 		echo "Please install uboot-envtools!"
 		return 1
 	}
@@ -169,7 +159,7 @@ platform_do_upgrade_openmesh()
 	local cfg_size= kernel_size= rootfs_size=
 	local append=""
 
-	[ -f "$CONF_TAR" -a "$SAVE_CONFIG" -eq 1 ] && append="-j $CONF_TAR"
+	[ -f "$UPGRADE_BACKUP" ] && append="-j $UPGRADE_BACKUP"
 
 	cfg_size=$(dd if="$img_path" bs=2 skip=35 count=4 2>/dev/null)
 	kernel_size=$(dd if="$img_path" bs=2 skip=71 count=4 2>/dev/null)
@@ -234,6 +224,7 @@ platform_do_upgrade_openmesh()
 	printf "rootfs_size %s\n" $rootfs_checksize >> $uboot_env_upgrade
 	printf "rootfs_checksum %s\n" $rootfs_md5 >> $uboot_env_upgrade
 
+	mkdir -p /var/lock
 	fw_setenv -s $uboot_env_upgrade || {
 		echo "failed to update U-Boot environment"
 		return 1

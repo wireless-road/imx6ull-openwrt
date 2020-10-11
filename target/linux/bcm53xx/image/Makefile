@@ -79,7 +79,14 @@ endef
 
 define Build/asus-trx
 	$(STAGING_DIR_HOST)/bin/asustrx \
-		-p $(PRODUCTID) -i $@ -o $@.new
+		-p $(ASUS_PRODUCTID) -i $@ -o $@.new
+	mv $@.new $@
+endef
+
+define Build/luxul-lxl
+	$(STAGING_DIR_HOST)/bin/lxlfw create $@.new \
+		-i $@ \
+		-b $(LUXUL_BOARD)
 	mv $@.new $@
 endef
 
@@ -100,14 +107,17 @@ define Build/seama-nand
 		-i $@.entity
 endef
 
-DEVICE_VARS += PRODUCTID SIGNATURE NETGEAR_BOARD_ID NETGEAR_REGION TPLINK_BOARD
+DEVICE_VARS += ASUS_PRODUCTID
 DEVICE_VARS += BUFFALO_TAG_PLATFORM BUFFALO_TAG_VERSION BUFFALO_TAG_MINOR
+DEVICE_VARS += SIGNATURE
+DEVICE_VARS += NETGEAR_BOARD_ID NETGEAR_REGION TPLINK_BOARD
+DEVICE_VARS += LUXUL_BOARD
 
-IEEE8021X := wpad-mini
+IEEE8021X := wpad-basic
 B43 := $(IEEE8021X) kmod-b43
 BRCMFMAC_43602A1 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-43602a1-pcie
 BRCMFMAC_4366B1 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-4366b1-pcie
-BRCMFMAC_4366C0 := $(IEEE8021X) kmod-brcmfmac
+BRCMFMAC_4366C0 := $(IEEE8021X) kmod-brcmfmac brcmfmac-firmware-4366c0-pcie
 USB2_PACKAGES := kmod-usb-ohci kmod-usb2 kmod-phy-bcm-ns-usb2
 USB2_PACKAGES += kmod-usb-ledtrig-usbport
 USB3_PACKAGES := $(USB2_PACKAGES) kmod-usb3 kmod-phy-bcm-ns-usb3
@@ -135,26 +145,34 @@ define Device/asus
 endef
 
 define Device/asus-rt-ac56u
+  $(call Device/asus)
   DEVICE_TITLE := Asus RT-AC56U
   DEVICE_PACKAGES := $(B43) $(USB3_PACKAGES)
+  ASUS_PRODUCTID := RT-AC56U
 endef
 TARGET_DEVICES += asus-rt-ac56u
 
 define Device/asus-rt-ac68u
+  $(call Device/asus)
   DEVICE_TITLE := Asus RT-AC68U
   DEVICE_PACKAGES := $(USB3_PACKAGES)
+  ASUS_PRODUCTID := RT-AC68U
 endef
 TARGET_DEVICES += asus-rt-ac68u
 
 define Device/asus-rt-ac87u
+  $(call Device/asus)
   DEVICE_TITLE := Asus RT-AC87U
   DEVICE_PACKAGES := $(USB3_PACKAGES)
+  ASUS_PRODUCTID := RT-AC87U
 endef
 TARGET_DEVICES += asus-rt-ac87u
 
 define Device/asus-rt-n18u
+  $(call Device/asus)
   DEVICE_TITLE := Asus RT-N18U
   DEVICE_PACKAGES := $(USB3_PACKAGES)
+  ASUS_PRODUCTID := RT-N18U
 endef
 TARGET_DEVICES += asus-rt-n18u
 
@@ -224,12 +242,17 @@ endef
 TARGET_DEVICES += dlink-dir-885l
 
 # Linksys devices are disabled due to problem with 2 TRX partitions
-
 define Device/linksys-ea6300-v1
   DEVICE_TITLE := Linksys EA6300 V1
   DEVICE_PACKAGES := $(B43) $(USB3_PACKAGES)
 endef
 # TARGET_DEVICES += linksys-ea6300-v1
+
+define Device/linksys-ea6500-v2
+  DEVICE_TITLE := Linksys EA6500 V2
+  DEVICE_PACKAGES := $(B43) $(USB3_PACKAGES)
+endef
+TARGET_DEVICES += linksys-ea6500-v2
 
 define Device/linksys-ea9200
   DEVICE_TITLE := Linksys EA9200 V1
@@ -243,6 +266,45 @@ define Device/linksys-ea9500
   DEVICE_DTS := bcm47094-linksys-panamera
 endef
 # TARGET_DEVICES += linksys-ea9500
+
+define Device/luxul
+  IMAGES := lxl
+  IMAGE/lxl := append-ubi | trx-nand | luxul-lxl
+endef
+
+define Device/luxul-abr-4500
+  $(Device/luxul)
+  DEVICE_TITLE := Luxul ABR-4500
+  DEVICE_PACKAGES := $(USB3_PACKAGES)
+  LUXUL_BOARD := ABR-4500
+endef
+TARGET_DEVICES += luxul-abr-4500
+
+define Device/luxul-xap-1610
+  $(Device/luxul)
+  DEVICE_TITLE := Luxul XAP-1610
+  DEVICE_PACKAGES := $(BRCMFMAC_4366C0)
+  IMAGE/lxl := append-rootfs | trx-serial | luxul-lxl
+  LUXUL_BOARD := XAP-1610
+endef
+TARGET_DEVICES += luxul-xap-1610
+
+define Device/luxul-xbr-4500
+  $(Device/luxul)
+  DEVICE_TITLE := Luxul XBR-4500
+  DEVICE_PACKAGES := $(USB3_PACKAGES)
+  LUXUL_BOARD := XBR-4500
+endef
+TARGET_DEVICES += luxul-xbr-4500
+
+define Device/luxul-xwr-3150
+  $(Device/luxul)
+  DEVICE_TITLE := Luxul XWR-3150
+  DEVICE_PACKAGES := $(BRCMFMAC_4366C0) $(USB3_PACKAGES)
+  DEVICE_DTS := bcm47094-luxul-xwr-3150-v1
+  LUXUL_BOARD := XWR-3150
+endef
+TARGET_DEVICES += luxul-xwr-3150
 
 define Device/netgear
   IMAGES := chk
@@ -307,6 +369,13 @@ define Device/smartrg-sr400ac
   KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma-d16
 endef
 TARGET_DEVICES += smartrg-sr400ac
+
+define Device/phicomm-k3
+  DEVICE_TITLE := PHICOMM K3
+  DEVICE_PACKAGES := $(BRCMFMAC_4366C0) $(USB3_PACKAGES)
+  IMAGES := trx
+endef
+TARGET_DEVICES += phicomm-k3
 
 define Device/tenda-ac9
   DEVICE_TITLE := Tenda AC9

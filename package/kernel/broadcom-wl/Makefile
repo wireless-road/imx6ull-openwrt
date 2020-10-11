@@ -10,7 +10,7 @@ include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=broadcom-wl
 PKG_VERSION:=5.10.56.27.3
-PKG_RELEASE:=8
+PKG_RELEASE:=9
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)_$(ARCH).tar.bz2
 PKG_SOURCE_URL:=http://downloads.openwrt.org/sources
@@ -32,15 +32,15 @@ include $(INCLUDE_DIR)/package.mk
 define Package/broadcom-wl/Default
   SECTION:=kernel
   CATEGORY:=Kernel modules
-  DEPENDS:=@PACKAGE_kmod-brcm-wl||PACKAGE_kmod-brcm-wl-mini
+  DEPENDS:=@(PACKAGE_kmod-brcm-wl||PACKAGE_kmod-brcm-wl-mini)
   SUBMENU:=Proprietary BCM43xx WiFi driver
-  SUBMENUDEP:=@TARGET_brcm47xx||TARGET_brcm63xx
+  SUBMENUDEP:=(TARGET_brcm47xx||TARGET_brcm63xx)
 endef
 
 define KernelPackage/brcm-wl/Default
   $(call Package/broadcom-wl/Default)
   SECTION:=kernel
-  DEPENDS:=@TARGET_brcm47xx||TARGET_brcm63xx +wireless-tools
+  DEPENDS:=@(TARGET_brcm47xx||TARGET_brcm63xx) +wireless-tools
   TITLE:=Kernel driver for BCM43xx chipsets
   FILES:=$(PKG_BUILD_DIR)/driver$(1)/wl.ko $(PKG_BUILD_DIR)/glue/wl_glue.ko
   AUTOLOAD:=$(call AutoProbe,wl)

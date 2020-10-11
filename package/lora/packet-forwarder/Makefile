@@ -28,7 +28,7 @@ $(call Package/packet-forwarder/Default)
   SECTION:=LORA
   CATEGORY:=LoraWAN Packages
   SUBMENU:=LoRaWAN
-  DEPENDS:=+libloragw +librt +lua +json4lua +libuci-lua +libubus-lua +libubox-lua
+  DEPENDS:=libloragw +librt +lua +json4lua +libuci-lua +libubus-lua +libubox-lua
 endef
 
 define Package/packet-forwarder/description
@@ -42,7 +42,8 @@ define Package/packet-forwarder-utils
   CATEGORY:=LoraWAN Packages
   SUBMENU:=LoRaWAN
   TITLE:=Utilities for lora pakcet forwarder
-  DEPENDS:=+libloragw +packet-forwarder
+  DEPENDS:=libloragw packet-forwarder
+#  DEPENDS:=+libloragw
 endef
 
 CFLAGS += $(FPIC) -O2 -Wall -Wextra -std=c99 -Iinc -I. -lm

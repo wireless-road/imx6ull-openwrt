@@ -6,20 +6,37 @@
 	compatible = "wrtnode,wrtnode2r", "wrtnode,wrtnode2", "mediatek,mt7628an-soc";
 	model = "WRTnode2R";
 
-	gpio-leds {
+	aliases {
+		led-boot = &led_indicator;
+		led-failsafe = &led_indicator;
+		led-running = &led_indicator;
+		led-upgrade = &led_indicator;
+	};
+
+	leds {
 		compatible = "gpio-leds";
 
-		indicator {
+		pinctrl-names = "default";
+		pinctrl-0 = <&led_pins>;
+
+		led_indicator: indicator {
 			label = "wrtnode:blue:indicator";
 			gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
 		};
-	}; 
+	};
 };
 
 &pinctrl {
 	state_default: pinctrl0 {
 		gpio {
-			ralink,group = "i2c", "gpio", "wled_an";
+			ralink,group = "gpio";
+			ralink,function = "gpio";
+		};
+	};
+
+	led_pins: led {
+		gpio {
+			ralink,group = "wled_an";
 			ralink,function = "gpio";
 		};
 	};

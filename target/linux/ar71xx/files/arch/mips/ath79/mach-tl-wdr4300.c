@@ -148,7 +148,7 @@ static struct ar8327_platform_data wdr4300_ar8327_data = {
 static struct mdio_board_info wdr4300_mdio0_info[] = {
 	{
 		.bus_id = "ag71xx-mdio.0",
-		.phy_addr = 0,
+		.mdio_addr = 0,
 		.platform_data = &wdr4300_ar8327_data,
 	},
 };
@@ -183,7 +183,7 @@ static void __init wdr4300_setup(void)
 
 	ath79_register_mdio(0, 0x0);
 
-	ath79_init_mac(ath79_eth0_data.mac_addr, mac, -2);
+	ath79_init_mac(ath79_eth0_data.mac_addr, mac, 0);
 
 	/* GMAC0 is connected to an AR8327N switch */
 	ath79_eth0_data.phy_if_mode = PHY_INTERFACE_MODE_RGMII;
