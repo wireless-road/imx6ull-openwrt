@@ -9,11 +9,18 @@
 	compatible = "tplink,c20i", "ralink,mt7620a-soc";
 	model = "TP-Link Archer C20i";
 
+	aliases {
+		led-boot = &led_wps;
+		led-failsafe = &led_wps;
+		led-running = &led_wps;
+		led-upgrade = &led_wps;
+	};
+
 	chosen {
 		bootargs = "console=ttyS0,115200";
 	};
 
-	gpio-leds {
+	leds {
 		compatible = "gpio-leds";
 		lan {
 			label = "c20i:blue:lan";
@@ -22,8 +29,10 @@
 		usb {
 			label = "c20i:blue:usb";
 			gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+			trigger-sources = <&ohci_port1>, <&ehci_port1>;
+			linux,default-trigger = "usbport";
 		};
-		wps {
+		led_wps: wps {
 			label = "c20i:blue:wps";
 			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
 		};
@@ -34,13 +43,13 @@
 		wlan {
 			label = "c20i:blue:wlan";
 			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
+			linux,default-trigger = "phy1tpt";
 		};
 	};
 
-	gpio-keys {
+	keys {
 		compatible = "gpio-keys";
-		#address-cells = <1>;
-		#size-cells = <0>;
+
 		rfkill {
 			label = "rfkill";
 			gpios = <&gpio0 2 GPIO_ACTIVE_LOW>;
@@ -70,41 +79,46 @@
 	status = "okay";
 
 	m25p80@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
 		compatible = "jedec,spi-nor";
 		reg = <0>;
 		spi-max-frequency = <10000000>;
 
-		partition@0 {
-			label = "u-boot";
-			reg = <0x0 0x20000>;
-			read-only;
-		};
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
 
-		partition@20000 {
-			label = "firmware";
-			reg = <0x20000 0x7a0000>;
-		};
+			partition@0 {
+				label = "u-boot";
+				reg = <0x0 0x20000>;
+				read-only;
+			};
 
-		partition@7c0000 {
-			label = "config";
-			reg = <0x7c0000 0x10000>;
-		};
+			partition@20000 {
+				compatible = "tplink,firmware";
+				label = "firmware";
+				reg = <0x20000 0x7a0000>;
+			};
 
-		rom: partition@7d0000 {
-			label = "rom";
-			reg = <0x7d0000 0x10000>;
-		};
+			partition@7c0000 {
+				label = "config";
+				reg = <0x7c0000 0x10000>;
+			};
 
-		partition@7e0000 {
-			label = "romfile";
-			reg = <0x7e0000 0x10000>;
-		};
+			rom: partition@7d0000 {
+				label = "rom";
+				reg = <0x7d0000 0x10000>;
+			};
 
-		radio: partition@7f0000 {
-			label = "radio";
-			reg = <0x7f0000 0x10000>;
+			partition@7e0000 {
+				label = "romfile";
+				reg = <0x7e0000 0x10000>;
+			};
+
+			radio: partition@7f0000 {
+				label = "radio";
+				reg = <0x7f0000 0x10000>;
+			};
 		};
 	};
 };
@@ -138,16 +152,19 @@
 
 &wmac {
 	ralink,mtd-eeprom = <&radio 0>;
+	mtd-mac-address = <&rom 0xf100>;
 };
 
 &pcie {
 	status = "okay";
+};
 
-	pcie-bridge {
-		mt76@0,0 {
-			reg = <0x0000 0 0 0 0>;
-			device_type = "pci";
-			mediatek,mtd-eeprom = <&radio 32768>;
-		};
+&pcie0 {
+	mt76@0,0 {
+		reg = <0x0000 0 0 0 0>;
+		mediatek,mtd-eeprom = <&radio 32768>;
+		ieee80211-freq-limit = <5000000 6000000>;
+		mtd-mac-address = <&rom 0xf100>;
+		mtd-mac-address-increment = <(-1)>;
 	};
 };

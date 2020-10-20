@@ -6,7 +6,7 @@
 / {
 	compatible = "allnet,all0256n", "ralink,rt3050-soc";
 
-	gpio-leds {
+	leds {
 		compatible = "gpio-leds";
 
 		rssilow {
@@ -25,10 +25,8 @@
 		};
 	};
 
-	gpio-keys-polled {
+	keys {
 		compatible = "gpio-keys-polled";
-		#address-cells = <1>;
-		#size-cells = <0>;
 		poll-interval = <20>;
 
 		reset {

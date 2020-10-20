@@ -12,11 +12,11 @@ include $(INCLUDE_DIR)/version.mk
 include $(INCLUDE_DIR)/feeds.mk
 
 PKG_NAME:=base-files
-PKG_RELEASE:=192
+PKG_RELEASE:=204.2
 PKG_FLAGS:=nonshared
 
 PKG_FILE_DEPENDS:=$(PLATFORM_DIR)/ $(GENERIC_PLATFORM_DIR)/base-files/
-PKG_BUILD_DEPENDS:=usign/host
+PKG_BUILD_DEPENDS:=usign/host ucert/host
 PKG_LICENSE:=GPL-2.0
 
 # Extend depends from version.mk
@@ -49,6 +49,7 @@ define Package/base-files/conffiles
 /etc/config/system
 /etc/crontabs/
 /etc/dropbear/
+/etc/ethers
 /etc/group
 /etc/hosts
 /etc/inittab
@@ -101,6 +102,9 @@ ifdef CONFIG_SIGNED_PACKAGES
   define Build/Configure
 	[ -s $(BUILD_KEY) -a -s $(BUILD_KEY).pub ] || \
 		$(STAGING_DIR_HOST)/bin/usign -G -s $(BUILD_KEY) -p $(BUILD_KEY).pub -c "Local build key"
+
+	[ -s $(BUILD_KEY).ucert ] || \
+		$(STAGING_DIR_HOST)/bin/ucert -I -c $(BUILD_KEY).ucert -p $(BUILD_KEY).pub -s $(BUILD_KEY)
 
   endef
 
@@ -185,12 +189,14 @@ define Package/base-files/install
 
 	$(if $(CONFIG_INCLUDE_CONFIG), \
 		echo -e "# Build configuration for board $(BOARD)/$(SUBTARGET)/$(PROFILE)\n" >$(1)/etc/build.config; \
-		cat $(BIN_DIR)/config.seed >>$(1)/etc/build.config)
+		cat $(BIN_DIR)/config.buildinfo >>$(1)/etc/build.config)
 
 	$(if $(CONFIG_CLEAN_IPKG),, \
 		mkdir -p $(1)/etc/opkg; \
 		$(call FeedSourcesAppend,$(1)/etc/opkg/distfeeds.conf); \
 		$(VERSION_SED_SCRIPT) $(1)/etc/opkg/distfeeds.conf)
+	$(if $(CONFIG_IPK_FILES_CHECKSUMS), \
+		rm -f $(1)/sbin/pkg_check,)
 endef
 
 ifneq ($(DUMP),1)

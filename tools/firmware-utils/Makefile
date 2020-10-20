@@ -19,11 +19,12 @@ define Host/Compile
 	mkdir -p $(HOST_BUILD_DIR)/bin
 	$(call cc,addpattern)
 	$(call cc,asustrx)
+	$(call cc,lxlfw)
 	$(call cc,trx)
 	$(call cc,otrx)
 	$(call cc,motorola-bin)
 	$(call cc,dgfirmware)
-	$(call cc,mksenaofw md5)
+	$(call cc,mksenaofw md5, -Wall --std=gnu99)
 	$(call cc,trx2usr)
 	$(call cc,ptgen)
 	$(call cc,srec2bin)
@@ -70,8 +71,8 @@ define Host/Compile
 	$(call cc,fix-u-media-header cyg_crc32,-Wall)
 	$(call cc,hcsmakeimage bcmalgo)
 	$(call cc,mkporayfw, -Wall)
+	$(call cc,mkrasimage, --std=gnu99)
 	$(call cc,mkhilinkfw, -lcrypto)
-	$(call cc,mkdcs932, -Wall)
 	$(call cc,mkheader_gemtek,-lz)
 	$(call cc,mkrtn56uimg, -lz)
 	$(call cc,dgn3500sum, -Wall)
@@ -82,8 +83,10 @@ define Host/Compile
 	$(call cc,mkbuffaloimg, -Wall)
 	$(call cc,zyimage, -Wall)
 	$(call cc,mkdhpimg buffalo-lib, -Wall)
-	$(call cc,mkdlinkfw mkdlinkfw-lib, -lz -Wall --std=gnu99)
+	$(call cc,mkdlinkfw mkdlinkfw-lib, -lz -Wall --std=c99)
 	$(call cc,dns313-header, -Wall)
+	$(call cc,mksercommfw, -Wall)
+	$(call cc,nec-enc, -Wall --std=gnu99)
 endef
 
 define Host/Install

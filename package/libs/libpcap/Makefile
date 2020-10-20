@@ -8,19 +8,19 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=libpcap
-PKG_VERSION:=1.8.1
-PKG_RELEASE:=1
+PKG_VERSION:=1.9.1
+PKG_RELEASE:=2.1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=http://www.us.tcpdump.org/release/ \
         http://www.tcpdump.org/release/
-PKG_HASH:=673dbc69fdc3f5a86fb5759ab19899039a8e5e6c631749e48dcd9c6f0c83541e
+PKG_HASH:=635237637c5b619bcceba91900666b64d56ecb7be63f298f601ec786ce087094
 PKG_FIXUP:=patch-libtool
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
 
 PKG_INSTALL:=1
-PKG_BUILD_PARALLEL:=1
+PKG_BUILD_PARALLEL:=0
 PKG_LICENSE:=BSD-3-Clause
 
 include $(INCLUDE_DIR)/package.mk
@@ -32,6 +32,7 @@ define Package/libpcap
   TITLE:=Low-level packet capture library
   URL:=http://www.tcpdump.org/
   MENU:=1
+  ABI_VERSION:=1
 endef
 
 define Package/libpcap/description
@@ -83,6 +84,10 @@ define Build/Configure
 	$(if $(CONFIG_PCAP_HAS_USB),,$(SED) 's/pcap-usb-linux.c *//' $(PKG_BUILD_DIR)/Makefile)
 	$(if $(CONFIG_PCAP_HAS_BT),,$(SED) '/^#define PCAP_SUPPORT_BT/D' $(PKG_BUILD_DIR)/config.h)
 	$(if $(CONFIG_PCAP_HAS_BT),,$(SED) 's/pcap-bt-linux.c *//' $(PKG_BUILD_DIR)/Makefile)
+
+	# Workaround https://bugs.openwrt.org/index.php?do=details&task_id=2970
+	mkdir $(PKG_BUILD_DIR)/debian
+	echo "libpcap (1-0)" > $(PKG_BUILD_DIR)/debian/changelog
 endef
 
 define Build/InstallDev
@@ -95,7 +100,7 @@ endef
 
 define Package/libpcap/install
 	$(INSTALL_DIR) $(1)/usr/lib
-	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcap.so* $(1)/usr/lib/
+	$(CP) $(PKG_INSTALL_DIR)/usr/lib/libpcap.so.* $(1)/usr/lib/
 endef
 
 $(eval $(call BuildPackage,libpcap))

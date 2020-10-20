@@ -8,17 +8,21 @@
  * by the Free Software Foundation.
  */
 
+#include <linux/version.h>
 #include <linux/init.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>
 #include <linux/dma-mapping.h>
 #include <linux/mtd/mtd.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 #include <linux/mtd/nand.h>
+#else
+#include <linux/mtd/rawnand.h>
+#endif
 #include <linux/mtd/partitions.h>
 #include <linux/platform_device.h>
 #include <linux/delay.h>
 #include <linux/slab.h>
-#include <linux/version.h>
 
 #include <linux/platform/ar934x_nfc.h>
 
@@ -1562,7 +1566,7 @@ ar934x_nfc_remove(struct platform_device *pdev)
 	nfc = platform_get_drvdata(pdev);
 	if (nfc) {
 		mtd = ar934x_nfc_to_mtd(nfc);
-		nand_release(mtd);
+		nand_release(&nfc->nand_chip);
 		ar934x_nfc_free_buf(nfc);
 		free_irq(nfc->irq, nfc);
 	}

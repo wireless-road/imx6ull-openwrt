@@ -20,11 +20,16 @@
  *
  */
 
+#include <linux/version.h>
 #include <linux/platform_device.h>
 #include <linux/ar8216_platform.h>
 #include <linux/gpio.h>
 #include <linux/mtd/mtd.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 #include <linux/mtd/nand.h>
+#else
+#include <linux/mtd/rawnand.h>
+#endif
 #include <linux/platform/ar934x_nfc.h>
 
 #include <asm/mach-ath79/ar71xx_regs.h>
@@ -198,11 +203,11 @@ static struct gpio_keys_button nbg6616_gpio_keys[] __initdata = {
 	},
 	{
 		.desc		= "RFKILL button",
-		.type		= EV_KEY,
+		.type		= EV_SW,
 		.code		= KEY_RFKILL,
 		.debounce_interval = NBG6716_KEYS_DEBOUNCE_INTERVAL,
 		.gpio		= NBG6716_GPIO_BTN_RFKILL,
-		.active_low	= 1,
+		.active_low	= 0,
 	},
 	{
 		.desc		= "WPS button",
@@ -242,7 +247,7 @@ static struct ar8327_platform_data nbg6716_ar8327_data = {
 static struct mdio_board_info nbg6716_mdio0_info[] = {
 	{
 		.bus_id = "ag71xx-mdio.0",
-		.phy_addr = 0,
+		.mdio_addr = 0,
 		.platform_data = &nbg6716_ar8327_data,
 	},
 };

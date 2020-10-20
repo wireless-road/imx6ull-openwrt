@@ -21,11 +21,6 @@ define Build/hilink-header
 	mv $@.new $@
 endef
 
-define Build/jcg-header
-	$(STAGING_DIR_HOST)/bin/jcgimage -v $(1) -u $@ -o $@.new
-	mv $@.new $@
-endef
-
 
 define Device/3g150b
   DTS := 3G150B
@@ -74,6 +69,7 @@ define Device/a5-v11
 	$$(sysupgrade_bin) | check-size $$$$(IMAGE_SIZE) | poray-header -B A5-V11 -F 4M
   DEVICE_TITLE := A5-V11
   DEVICE_PACKAGES := kmod-usb-core kmod-usb-ohci kmod-usb2
+  DEFAULT := n
 endef
 TARGET_DEVICES += a5-v11
 
@@ -210,6 +206,22 @@ define Device/dap-1350
 endef
 TARGET_DEVICES += dap-1350
 
+define Device/dcs-930
+  DTS := DCS-930
+  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  DEVICE_TITLE := D-Link DCS-930
+  DEVICE_PACKAGES := kmod-video-core kmod-video-uvc kmod-sound-core kmod-usb-audio kmod-usb-core kmod-usb-dwc2
+endef
+TARGET_DEVICES += dcs-930
+
+define Device/dcs-930l-b1
+  DTS := DCS-930L-B1
+  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  DEVICE_TITLE := D-Link DCS-930L B1
+  DEVICE_PACKAGES := kmod-video-core kmod-video-uvc kmod-sound-core kmod-usb-audio kmod-usb-core kmod-usb-ohci kmod-usb2
+endef
+TARGET_DEVICES += dcs-930l-b1
+
 define Device/dir-300-b1
   DTS := DIR-300-B1
   IMAGE_SIZE := $(ralink_default_fw_size_4M)
@@ -217,6 +229,7 @@ define Device/dir-300-b1
   IMAGE/factory.bin := \
 	$$(sysupgrade_bin) | check-size $$$$(IMAGE_SIZE) | wrg-header wrgn23_dlwbr_dir300b
   DEVICE_TITLE := D-Link DIR-300 B1
+  DEFAULT := n
 endef
 TARGET_DEVICES += dir-300-b1
 
@@ -225,6 +238,7 @@ define Device/dir-300-b7
   BLOCKSIZE := 4k
   IMAGE_SIZE := $(ralink_default_fw_size_4M)
   DEVICE_TITLE := D-Link DIR-300 B7
+  DEFAULT := n
 endef
 TARGET_DEVICES += dir-300-b7
 
@@ -246,21 +260,12 @@ endef
 TARGET_DEVICES += dir-600-b1
 
 define Device/dir-610-a1
+  $(Device/seama)
   DTS := DIR-610-A1
   BLOCKSIZE := 4k
-  IMAGES += factory.bin
+  SEAMA_SIGNATURE := wrgn59_dlob.hans_dir610
   KERNEL := $(KERNEL_DTB)
   IMAGE_SIZE := $(ralink_default_fw_size_4M)
-  IMAGE/sysupgrade.bin := \
-	append-kernel | pad-offset $$$$(BLOCKSIZE) 64 | append-rootfs | \
-	seama -m "dev=/dev/mtdblock/2" -m "type=firmware" | \
-	pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
-  IMAGE/factory.bin := \
-	append-kernel | pad-offset $$$$(BLOCKSIZE) 64 | \
-	append-rootfs | pad-rootfs -x 64 | \
-	seama -m "dev=/dev/mtdblock/2" -m "type=firmware" | \
-	seama-seal -m "signature=wrgn59_dlob.hans_dir610" | \
-	check-size $$$$(IMAGE_SIZE)
   DEVICE_TITLE := D-Link DIR-610 A1 
   DEVICE_PACKAGES := kmod-ledtrig-netdev kmod-ledtrig-timer
 endef
@@ -329,6 +334,7 @@ define Device/f5d8235-v2
   DTS := F5D8235_V2
   IMAGE_SIZE := 7744k
   DEVICE_TITLE := Belkin F5D8235 v2
+  DEVICE_PACKAGES := kmod-switch-rtl8366rb
 endef
 TARGET_DEVICES += f5d8235-v2
 
@@ -336,7 +342,6 @@ define Device/f7c027
   DTS := F7C027
   IMAGE_SIZE := 7616k
   DEVICE_TITLE := Belkin F7C027
-  DEVICE_PACKAGES := -kmod-usb-core -kmod-usb-dwc2 -kmod-usb-ledtrig-usbport
 endef
 TARGET_DEVICES += f7c027
 
@@ -646,13 +651,14 @@ define Device/rt-n10-plus
   BLOCKSIZE := 64k
   IMAGE_SIZE := $(ralink_default_fw_size_4M)
   DEVICE_TITLE := Asus RT-N10+
+  DEFAULT := n
 endef
 TARGET_DEVICES += rt-n10-plus
 
 define Device/rt-n13u
   DTS := RT-N13U
   DEVICE_TITLE := Asus RT-N13U
-  DEVICE_PACKAGES := kmod-leds-gpio kmod-rt2800-pci wpad-mini kmod-usb-dwc2
+  DEVICE_PACKAGES := kmod-leds-gpio kmod-rt2800-pci kmod-usb-dwc2
 endef
 TARGET_DEVICES += rt-n13u
 
@@ -811,6 +817,7 @@ define Device/wl-351
   IMAGE_SIZE := $(ralink_default_fw_size_4M)
   DEVICE_TITLE := Sitecom WL-351 v1
   DEVICE_PACKAGES := kmod-switch-rtl8366rb kmod-swconfig swconfig
+  DEFAULT := n
 endef
 TARGET_DEVICES += wl-351
 
@@ -830,6 +837,7 @@ define Device/wr512-3gn-4M
   DTS := WR512-3GN-4M
   IMAGE_SIZE := $(ralink_default_fw_size_4M)
   DEVICE_TITLE := WR512-3GN (4M)
+  DEFAULT := n
 endef
 TARGET_DEVICES += wr512-3gn-4M
 
@@ -896,11 +904,19 @@ TARGET_DEVICES += xdxrn502j
 define Device/kn
   DTS := kn
   BLOCKSIZE := 64k
-  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  IMAGE_SIZE := 7872k
   DEVICE_TITLE := ZyXEL Keenetic
-  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ehci kmod-usb-ledtrig-usbport
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ehci \
+	kmod-usb-ledtrig-usbport kmod-usb-dwc2
 endef
 TARGET_DEVICES += kn
+
+define Device/zyxel_keenetic-start
+  DTS := kn_st
+  IMAGE_SIZE := $(ralink_default_fw_size_4M)
+  DEVICE_TITLE := ZyXEL Keenetic Start
+endef
+TARGET_DEVICES += zyxel_keenetic-start
 
 define Device/zorlik_zl5900v2
   DTS := ZL5900V2

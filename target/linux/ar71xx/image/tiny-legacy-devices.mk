@@ -1,3 +1,10 @@
+define LegacyDevice/F9K1115V2
+  DEVICE_TITLE := Belkin AC1750DB (F9K1115V2)
+  DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb3 kmod-usb-ledtrig-usbport \
+        kmod-ath10k-ct ath10k-firmware-qca988x-ct
+endef
+LEGACY_DEVICES += F9K1115V2
+
 define LegacyDevice/DIR600A1
   DEVICE_TITLE := D-Link DIR-600 rev. A1
 endef
@@ -98,16 +105,19 @@ LEGACY_DEVICES += WNR2000V3
 define LegacyDevice/WNR2000V4
   DEVICE_TITLE := NETGEAR WNR2000V4
   DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport
+  DEFAULT := n
 endef
 LEGACY_DEVICES += WNR2000V4
 
 define LegacyDevice/REALWNR612V2
   DEVICE_TITLE := NETGEAR WNR612V2
+  DEFAULT := n
 endef
 LEGACY_DEVICES += REALWNR612V2
 
 define LegacyDevice/N150R
   DEVICE_TITLE := On Networks N150
+  DEFAULT := n
 endef
 LEGACY_DEVICES += N150R
 

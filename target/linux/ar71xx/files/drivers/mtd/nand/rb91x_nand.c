@@ -8,10 +8,15 @@
  *  by the Free Software Foundation.
  */
 
+#include <linux/version.h>
 #include <linux/kernel.h>
 #include <linux/spinlock.h>
 #include <linux/module.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 #include <linux/mtd/nand.h>
+#else
+#include <linux/mtd/rawnand.h>
+#endif
 #include <linux/mtd/mtd.h>
 #include <linux/mtd/partitions.h>
 #include <linux/platform_device.h>
@@ -19,7 +24,6 @@
 #include <linux/slab.h>
 #include <linux/gpio.h>
 #include <linux/platform_data/rb91x_nand.h>
-#include <linux/version.h>
 
 #include <asm/mach-ath79/ar71xx_regs.h>
 #include <asm/mach-ath79/ath79.h>
@@ -430,7 +434,7 @@ static int rb91x_nand_probe(struct platform_device *pdev)
 	return 0;
 
 err_release_nand:
-	nand_release(mtd);
+	nand_release(&rbni->chip);
 	return ret;
 }
 
@@ -438,7 +442,7 @@ static int rb91x_nand_remove(struct platform_device *pdev)
 {
 	struct rb91x_nand_info *info = platform_get_drvdata(pdev);
 
-	nand_release(rbinfo_to_mtd(info));
+	nand_release(&info->chip);
 
 	return 0;
 }

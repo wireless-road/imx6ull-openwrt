@@ -24,20 +24,13 @@ $(eval $(call TestHostCommand,case-sensitive-fs, \
 
 $(eval $(call TestHostCommand,proper-umask, \
 	Please build with umask 022 - other values produce broken packages, \
-	umask | grep -xE 00[012][012]))
+	umask | grep -xE 0?0[012][012]))
 
 $(eval $(call SetupHostCommand,gcc, \
-	Please install the GNU C Compiler (gcc) 4.8 or later \
-	$(CC) -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?)', \
-	gcc -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?)', \
-	gcc48 --version | grep gcc, \
-	gcc49 --version | grep gcc, \
-	gcc5 --version | grep gcc, \
-	gcc6 --version | grep gcc, \
-	gcc7 --version | grep gcc, \
-	gcc8 --version | grep gcc, \
-	gcc9 --version | grep gcc, \
-	gcc --version | grep Apple.LLVM ))
+	Please install the GNU C Compiler (gcc) 4.8 or later, \
+	$(CC) -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?|10\.?)', \
+	gcc -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?|10\.?)', \
+	gcc --version | grep -E 'Apple.(LLVM|clang)' ))
 
 $(eval $(call TestHostCommand,working-gcc, \
 	\nPlease reinstall the GNU C Compiler (4.8 or later) - \
@@ -46,17 +39,10 @@ $(eval $(call TestHostCommand,working-gcc, \
 		gcc -x c -o $(TMP_DIR)/a.out -))
 
 $(eval $(call SetupHostCommand,g++, \
-	Please install the GNU C++ Compiler (g++) 4.8 or later \
-	$(CXX) -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?)', \
-	g++ -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?)', \
-	g++48 --version | grep g++, \
-	g++49 --version | grep g++, \
-	g++5 --version | grep g++, \
-	g++6 --version | grep g++, \
-	g++7 --version | grep g++, \
-	g++8 --version | grep g++, \
-	g++9 --version | grep g++, \
-	g++ --version | grep Apple.LLVM ))
+	Please install the GNU C++ Compiler (g++) 4.8 or later, \
+	$(CXX) -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?|10\.?)', \
+	g++ -dumpversion | grep -E '^(4\.[8-9]|[5-9]\.?|10\.?)', \
+	g++ --version | grep -E 'Apple.(LLVM|clang)' ))
 
 $(eval $(call TestHostCommand,working-g++, \
 	\nPlease reinstall the GNU C++ Compiler (4.8 or later) - \
@@ -138,18 +124,15 @@ $(eval $(call SetupHostCommand,bzip2,Please install 'bzip2', \
 $(eval $(call SetupHostCommand,wget,Please install GNU 'wget', \
 	wget --version | grep GNU))
 
-$(eval $(call SetupHostCommand,time,Please install GNU 'time' or BusyBox 'time' that supports -f, \
-	gtime --version 2>&1 | grep GNU, \
-	time --version 2>&1 | grep GNU, \
-	busybox time 2>&1 | grep -- '-f FMT'))
-
 $(eval $(call SetupHostCommand,perl,Please install Perl 5.x, \
 	perl --version | grep "perl.*v5"))
 
+$(eval $(call CleanupPython3))
+
 $(eval $(call SetupHostCommand,python,Please install Python 2.x, \
-	python2.7 -V 2>&1 | grep Python, \
-	python2 -V 2>&1 | grep Python, \
-	python -V 2>&1 | grep Python))
+	python2.7 -V 2>&1 | grep 'Python 2.7', \
+	python2 -V 2>&1 | grep 'Python 2', \
+	python -V 2>&1 | grep 'Python 2'))
 
 $(eval $(call SetupHostCommand,git,Please install Git (git-core) >= 1.7.12.2, \
 	git --exec-path | xargs -I % -- grep -q -- --recursive %/git-submodule))

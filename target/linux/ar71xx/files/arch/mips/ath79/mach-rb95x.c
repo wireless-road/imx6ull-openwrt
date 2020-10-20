@@ -12,13 +12,18 @@
 
 #define pr_fmt(fmt) "rb95x: " fmt
 
+#include <linux/version.h>
 #include <linux/phy.h>
 #include <linux/delay.h>
 #include <linux/platform_device.h>
 #include <linux/ath9k_platform.h>
 #include <linux/ar8216_platform.h>
 #include <linux/mtd/mtd.h>
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 #include <linux/mtd/nand.h>
+#else
+#include <linux/mtd/rawnand.h>
+#endif
 #include <linux/mtd/partitions.h>
 #include <linux/spi/spi.h>
 #include <linux/spi/flash.h>
@@ -114,7 +119,7 @@ static struct ar8327_platform_data rb95x_ar8327_data = {
 static struct mdio_board_info rb95x_mdio0_info[] = {
 	{
 		.bus_id = "ag71xx-mdio.0",
-		.phy_addr = 0,
+		.mdio_addr = 0,
 		.platform_data = &rb95x_ar8327_data,
 	},
 };
@@ -261,6 +266,7 @@ static void __init rb951g_setup(void)
 		return;
 
 	ath79_setup_ar934x_eth_cfg(AR934X_ETH_CFG_RGMII_GMAC0 |
+				   AR934X_ETH_CFG_RXD_DELAY |
 				   AR934X_ETH_CFG_SW_ONLY_MODE);
 
 	ath79_register_mdio(0, 0x0);
@@ -271,6 +277,7 @@ static void __init rb951g_setup(void)
 	ath79_init_mac(ath79_eth0_data.mac_addr, ath79_mac_base, 0);
 	ath79_eth0_data.phy_if_mode = PHY_INTERFACE_MODE_RGMII;
 	ath79_eth0_data.phy_mask = BIT(0);
+	ath79_eth0_pll_data.pll_1000 = 0x6f000000;
 
 	ath79_register_eth(0);
 
