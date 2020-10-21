@@ -10,7 +10,8 @@ board=$(board_name)
 board_config_update
 
 case "$board" in
-flexcan_ethernet)
+flexcan_ethernet|\
+flexcan_wifi)
 	ip link set can0 down
 	ip link set can0 up type can bitrate 500000
 	ip link set can1 down

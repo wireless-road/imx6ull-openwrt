@@ -28,10 +28,18 @@ imx6ull_board_detect() {
 	"Audio Stream Ethernet")
 		name="audio_stream_ethernet";
 		;;
+	"Audio Stream WiFi")
+		name="audio_stream_wifi";
+		;;
 	"FlexCAN Ethernet")
 		name="flexcan_ethernet";
 		;;
 	*)
+	"FlexCAN WiFi")
+		name="flexcan_wifi";
+		;;
+	*)
+
 		name="generic"
 		;;
 	esac
