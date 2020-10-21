@@ -1,0 +1,29 @@
+#
+# Normal rules
+#
+.*
+*.o
+*.o.*
+*.s
+*.ko
+*.mod
+*.mod.c
+*.patch
+*.gcno
+*.dwo
+modules.order
+modules.builtin
+Module.symvers
+
+#
+# git files that we don't want to ignore even it they are dot-files
+#
+!.gitignore
+!.gitmodules
+!.mailmap
+
+*.orig
+*~
+\#*#
+
+wfx_version.h

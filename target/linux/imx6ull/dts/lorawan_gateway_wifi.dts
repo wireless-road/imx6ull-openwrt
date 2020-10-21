@@ -40,6 +40,7 @@
 		usbotg1 = &usbotg1;
 		usbotg2 = &usbotg2;
 		usdhc1 = &usdhc1;
+		usdhc2 = &usdhc2;
 		wdog1 = &wdog1;
 	};
 	
@@ -72,6 +73,13 @@
 				compatible = "fsl,imx6ull-iomuxc-snvs";
 				reg = <0x02290000 0x10000>;
 				pinctrl-names = "default_snvs";
+			};
+
+			wfx_pwrseq: wfx_pwrseq {
+				compatible = "mmc-pwrseq-simple";
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_wfx_reset>;
+				reset-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
 			};
 
 		};
@@ -346,6 +354,33 @@
 			>;
 		};
 		
+		pinctrl_usdhc2: usdhc2grp {
+			fsl,pins = <
+				MX6UL_PAD_LCD_DATA18__USDHC2_CMD        0x1b0b0
+				MX6UL_PAD_LCD_DATA19__USDHC2_CLK        0x100b0
+				MX6UL_PAD_LCD_DATA20__USDHC2_DATA0      0x1b0b0
+				MX6UL_PAD_LCD_DATA21__USDHC2_DATA1      0x1b0b0
+				MX6UL_PAD_LCD_DATA22__USDHC2_DATA2      0x1b0b0
+				MX6UL_PAD_LCD_DATA23__USDHC2_DATA3      0x1b0b0
+				/* W_IRQ */
+				MX6UL_PAD_LCD_DATA06__GPIO3_IO11        0x1b0b0
+			>;
+		};
+
+		pinctrl_wfx_reset: wfx_reset_grp {
+			fsl,pins = <
+				/* W_RESET */
+				MX6UL_PAD_LCD_DATA14__GPIO3_IO19        0x1b0b0
+			>;
+		};
+
+		pinctrl_wfx_wakeup: wfx_wakeup_grp {
+			fsl,pins = <
+				/* W_UP */
+				MX6UL_PAD_LCD_DATA08__GPIO3_IO13        0x130b0
+			>;
+		};
+
 		pinctrl_wdog: wdoggrp {
 			fsl,pins = <
 				MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
@@ -430,6 +465,24 @@
 	keep-power-in-suspend;
 	enable-sdio-wakeup;
 	status = "okay";
+};
+
+&usdhc2 {  /* Wifi SDIO */
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	no-1-8-v;
+	non-removable;
+	keep-power-in-suspend;
+	wakeup-source;
+	mmc-pwrseq = <&wfx_pwrseq>;
+	status = "okay";
+	usdhc2@1 {
+		compatible = "silabs,wf200";
+		reg = <1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wfx_wakeup>;
+		wakeup-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+	};
 };
 
 &wdog1 {

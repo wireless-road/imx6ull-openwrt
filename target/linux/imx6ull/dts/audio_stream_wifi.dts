@@ -1,0 +1,447 @@
+/*
+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/input/input.h>
+#include "imx6ull.dtsi"
+
+/ {
+	model = "Audio Stream WiFi";
+	compatible = "wirelessroad,gw-imx6ull", "fsl,imx6ull";
+
+	chosen {
+		stdout-path = &uart1;
+		bootargs = "console=ttymxc0,115200 rootwait fixrtc quiet";
+	};
+
+	memory {
+		reg = <0x80000000 0x20000000>;
+	};
+
+	aliases {
+		cpu0 = &cpu0;
+		can1 = &can1;
+		can2 = &can2;
+		clks = &clks;
+		fec1 = &fec1;
+		ecspi3 = &ecspi3;
+		gpc = &gpc;
+		gpmi = &gpmi;
+		iomuxc = &iomuxc;
+		pwm4 = &pwm4;
+		adc1 = &adc1;
+		usbotg1 = &usbotg1;
+		usbotg2 = &usbotg2;
+		usdhc1 = &usdhc1;
+		usdhc2 = &usdhc2;
+		wdog1 = &wdog1;
+	};
+	
+	soc {
+		aips3: aips-bus@02200000 {
+			compatible = "fsl,aips-bus", "simple-bus";
+			#address-cells = <1>;
+			#size-cells = <1>;
+			reg = <0x02200000 0x100000>;
+			ranges;
+
+			dcp: dcp@02280000 {
+				compatible = "fsl,imx6sl-dcp";
+				reg = <0x02280000 0x4000>;
+				interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
+					     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+					     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+				clocks = <&clks IMX6ULL_CLK_DCP_CLK>;
+				clock-names = "dcp";
+			};
+
+			rngb: rngb@02284000 {
+				compatible = "fsl,imx6sl-rng", "fsl,imx-rng", "imx-rng";
+				reg = <0x02284000 0x4000>;
+				interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+				clocks =  <&clks IMX6UL_CLK_DUMMY>;
+			};
+
+			iomuxc_snvs: iomuxc-snvs@02290000 {
+				compatible = "fsl,imx6ull-iomuxc-snvs";
+				reg = <0x02290000 0x10000>;
+				pinctrl-names = "default_snvs";
+			};
+
+			wfx_pwrseq: wfx_pwrseq {
+				compatible = "mmc-pwrseq-simple";
+				pinctrl-names = "default";
+				pinctrl-0 = <&pinctrl_wfx_reset>;
+				reset-gpios = <&gpio3 19 GPIO_ACTIVE_LOW>;
+			};
+
+		};
+	};
+
+	sound {
+		compatible = "simple-audio-card";
+		simple-audio-card,name = "mx6ul-wm8960";
+		simple-audio-card,format = "i2s";
+		simple-audio-card,bitclock-master = <&dailink_master>;
+		simple-audio-card,frame-master = <&dailink_master>;
+		simple-audio-card,widgets =
+			"Microphone", "Mic Jack",
+			"Line", "Line In",
+			"Line", "Line Out",
+			"Speaker", "Speaker",
+			"Headphone", "Headphone Jack";
+		simple-audio-card,routing =
+			"Headphone Jack", "HP_L",
+			"Headphone Jack", "HP_R",
+			"Speaker", "SPK_LP",
+			"Speaker", "SPK_LN",
+			"Speaker", "SPK_RP",
+			"Speaker", "SPK_RN",
+			"LINPUT1", "Mic Jack",
+			"LINPUT2", "Mic Jack",
+			"RINPUT2", "Line In";
+
+		simple-audio-card,cpu {
+			sound-dai = <&sai2>;
+		};
+
+		dailink_master: simple-audio-card,codec {
+			sound-dai = <&codec>;
+			clocks = <&clks IMX6UL_CLK_SAI2>;
+		};
+	};
+};
+
+&cpu0 {
+	operating-points = <
+		/* kHz  uV */
+		900000  1275000
+		792000  1225000
+		528000  1175000
+		396000  1025000
+		198000  950000
+	>;
+	fsl,soc-operating-points = <
+		/* KHz  uV */
+		900000  1250000
+		792000  1175000
+		528000  1175000
+		396000  1175000
+		198000  1175000
+	>;
+};
+
+&clks {
+	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+	assigned-clock-rates = <786432000>;
+};
+
+&fec1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_enet1>;
+	phy-mode = "rmii";
+	phy-handle = <&ethphy0>;
+	status = "okay";
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		ethphy0: ethernet-phy@0 {
+			compatible = "ethernet-phy-ieee802.3-c22";
+			reg = <0>;
+		};
+
+	};
+};
+
+&ecspi3 {
+	fsl,spi-num-chipselects = <1>;
+	cs-gpios = <&gpio1 20 0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi3_0>;
+	status = "okay";
+	dma-names = "rx", "tx";
+	dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
+
+	flash@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		status = "okay";
+		compatible = "m25p80";
+		spi-max-frequency = <40000000>;
+		reg = <0>;
+		partition@0 {
+			label = "u-boot";
+			reg = <0x000000 0x0c0000>;
+		};
+		partition@1 {
+			label = "u-boon-env";
+			reg = <0x0c0000 0x040000>;
+		};
+		partition@2 {
+			label = "firmware";
+			reg = <0x100000 0xf00000>;
+		};
+		partition@3 {
+			label = "factory";
+			reg = <0x000000 0x1000000>;
+		};
+	};
+};
+
+
+&can1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_flexcan0>;
+	status = "okay";
+};
+
+
+&gpc {
+	fsl,cpu_pupscr_sw2iso = <0x1>;
+	fsl,cpu_pupscr_sw = <0x0>;
+	fsl,cpu_pdnscr_iso2sw = <0x1>;
+	fsl,cpu_pdnscr_iso = <0x1>;
+	fsl,ldo-bypass = <0>; /* DCDC, ldo-enable */
+};
+
+&iomuxc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_hog_1>;
+	imx6ul-evk {
+		pinctrl_hog_1: hoggrp-1 {
+			fsl,pins = <
+				MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059 /* SD1 CD */
+			>;
+		};
+
+		pinctrl_adc1: adc1grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO08__GPIO1_IO08        0xb0
+				MX6UL_PAD_GPIO1_IO09__GPIO1_IO09        0xb0
+			>;
+		};
+		
+		pinctrl_ecspi3_0: ecspi3grp-0 {
+			fsl,pins = <
+				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x110b1
+				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x110b1
+				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x110b1
+				MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0
+			>;
+		};
+
+		pinctrl_i2c1: i2c1grp {
+			fsl,pins = <
+				MX6UL_PAD_UART4_TX_DATA__I2C1_SCL	0x4001b8b0
+				MX6UL_PAD_UART4_RX_DATA__I2C1_SDA	0x4001b8b0
+			>;
+		};
+
+		pinctrl_usb_otg1_id: usbotg1idgrp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO00__ANATOP_OTG1_ID	0x17059
+			>;
+		};
+		
+		pinctrl_enet1: enet1grp {
+			fsl,pins = <
+				MX6UL_PAD_ENET1_RX_EN__ENET1_RX_EN	0x1b0b0
+				MX6UL_PAD_ENET1_RX_ER__ENET1_RX_ER	0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA0__ENET1_RDATA00	0x1b0b0
+				MX6UL_PAD_ENET1_RX_DATA1__ENET1_RDATA01	0x1b0b0
+				MX6UL_PAD_ENET1_TX_EN__ENET1_TX_EN	0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA0__ENET1_TDATA00	0x1b0b0
+				MX6UL_PAD_ENET1_TX_DATA1__ENET1_TDATA01	0x1b0b0
+				MX6UL_PAD_ENET1_TX_CLK__ENET1_REF_CLK1	0x4001b031
+			>;
+		};
+
+
+		pinctrl_flexcan0: flexcan0grp{
+			fsl,pins = <
+				MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
+				MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
+			>;
+		};
+
+		pinctrl_pwm4: pwm4grp {
+			fsl,pins = <
+				MX6UL_PAD_GPIO1_IO05__PWM4_OUT   0x110b0
+			>;
+		};
+
+
+		pinctrl_uart1: uart1grp {
+			fsl,pins = <
+				MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
+				MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX 0x1b0b1
+			>;
+		};
+
+		pinctrl_usdhc1: usdhc1grp {
+			fsl,pins = <
+			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170b9
+			MX6UL_PAD_SD1_CLK__USDHC1_CLK     0x100b9
+			MX6UL_PAD_SD1_DATA0__USDHC1_DATA0 0x170b9
+			MX6UL_PAD_SD1_DATA1__USDHC1_DATA1 0x170b9
+			MX6UL_PAD_SD1_DATA2__USDHC1_DATA2 0x170b9
+			MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170b9
+
+			>;
+		};
+
+		pinctrl_usdhc2: usdhc2grp {
+			fsl,pins = <
+				MX6UL_PAD_LCD_DATA18__USDHC2_CMD        0x1b0b0
+				MX6UL_PAD_LCD_DATA19__USDHC2_CLK        0x100b0
+				MX6UL_PAD_LCD_DATA20__USDHC2_DATA0      0x1b0b0
+				MX6UL_PAD_LCD_DATA21__USDHC2_DATA1      0x1b0b0
+				MX6UL_PAD_LCD_DATA22__USDHC2_DATA2      0x1b0b0
+				MX6UL_PAD_LCD_DATA23__USDHC2_DATA3      0x1b0b0
+				/* W_IRQ */
+				MX6UL_PAD_LCD_DATA06__GPIO3_IO11        0x1b0b0
+			>;
+		};
+
+		pinctrl_wfx_reset: wfx_reset_grp {
+			fsl,pins = <
+				/* W_RESET */
+				MX6UL_PAD_LCD_DATA14__GPIO3_IO19        0x1b0b0
+			>;
+		};
+
+		pinctrl_wfx_wakeup: wfx_wakeup_grp {
+			fsl,pins = <
+				/* W_UP */
+				MX6UL_PAD_LCD_DATA08__GPIO3_IO13        0x130b0
+			>;
+		};
+
+		pinctrl_wdog: wdoggrp {
+			fsl,pins = <
+				MX6UL_PAD_LCD_RESET__WDOG1_WDOG_ANY    0x30b0
+			>;
+		};
+
+		pinctrl_sai2: sai2grp {
+			fsl,pins = <
+				MX6UL_PAD_JTAG_TDI__SAI2_TX_BCLK    0x17088
+				MX6UL_PAD_JTAG_TDO__SAI2_TX_SYNC    0x17088
+				MX6UL_PAD_JTAG_TRST_B__SAI2_TX_DATA 0x11088
+				MX6UL_PAD_JTAG_TCK__SAI2_RX_DATA    0x11088
+				MX6UL_PAD_JTAG_TMS__SAI2_MCLK       0x17088
+			>;
+		};
+
+	};
+};
+
+&pwm4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_pwm4>;
+	status = "okay";
+};
+
+
+&sai2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_sai2>;
+
+	assigned-clocks = <&clks IMX6UL_CLK_SAI2_SEL>,
+			  <&clks IMX6UL_CLK_SAI2>;
+	assigned-clock-parents = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
+	assigned-clock-rates = <0>, <24000000>;
+
+	status = "okay";
+};
+
+&adc1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_adc1>;
+/*	vref-supply = <&reg_vref_3v3>; */
+	status = "okay";
+};
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart1>;
+	status = "okay";
+};
+
+&usbotg1 {
+	dr_mode = "otg";
+	srp-disable;
+	hnp-disable;
+	adp-disable;
+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+	disable-over-current;
+	status = "okay";
+};
+
+&usbotg2 {
+	dr_mode = "host";
+	disable-over-current;
+	status = "okay";
+};
+
+&usbphy1 {
+	tx-d-cal = <0x5>;
+};
+
+&usbphy2 {
+	tx-d-cal = <0x5>;
+};
+
+&usdhc1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc1>;
+	cd-gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
+	keep-power-in-suspend;
+	wakeup-source;
+	status = "okay";
+};
+
+&usdhc2 {  /* Wifi SDIO */
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_usdhc2>;
+	no-1-8-v;
+	non-removable;
+	keep-power-in-suspend;
+	wakeup-source;
+	mmc-pwrseq = <&wfx_pwrseq>;
+	status = "okay";
+	usdhc2@1 {
+		compatible = "silabs,wf200";
+		reg = <1>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&pinctrl_wfx_wakeup>;
+		wakeup-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+	};
+};
+
+&wdog1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_wdog>;
+	fsl,wdog_b;
+};
+
+&i2c1 {
+	clock_frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_i2c1>;
+	status = "okay";
+
+	codec: wm8960@1a {
+		#sound-dai-cells = <0>;
+		compatible = "wlf,wm8960";
+		reg = <0x1a>;
+		wlf,shared-lrclk;
+	};
+};

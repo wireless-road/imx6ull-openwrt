@@ -11,8 +11,8 @@ state.mx6ulwm8960 {
 			range '0 - 63'
 			dbmin -1725
 			dbmax 3000
-			dbvalue.0 300
-			dbvalue.1 300
+			dbvalue.0 1200
+			dbvalue.1 1200
 		}
 	}
 	control.2 {

@@ -1,0 +1,507 @@
+Changes in 2.7
+--------------
+
+  * Improve QoS when bus is slow.
+  * Add a section in the README about possible scheduling improvements when the
+    CPU of the host is slow.
+
+Changes in 2.6.2
+----------------
+
+  * TKIP/CCMP replay protection is now fully enabled. It may cause some
+    bandwidth drop down with firmware older than 3.11.
+  * Fix reporting of MMIC errors. The frames with MMIC errors were dropped to
+    early and the EAP session was not renegotiated as expected.
+  * Fix documentation about nl80211 interface
+
+Changes in 2.6.1
+----------------
+
+  * Fix process error during delivery of release 2.6
+
+Changes in 2.6 (not released)
+-----------------------------
+
+  * Module parameters 'gpio_reset' and 'gpio_wakeup' are not supported
+    anymore. These variables were considered obsolete by the mainstream. User
+    has to deal with Device Tree.
+  * Powersave is now enabled by default. There is no more impact of powersave on
+    Rx bandwidth for a while.
+  * Add a workaround for the error 'timeout while wake up chip'.
+    (WHIFER_FW-1442)
+  * Secure link does not accept unexpected unencrypted packets anymore (only for
+    API >= 3.4).
+  * Fix support for sending of protected multicast management frames.
+    (IPWHIFER-636)
+  * Fix potential race during interface initialization.
+  * Allow to scan while acting as an AP. The firmware support this feature but
+    it was unfairly disabled in the driver.
+
+Changes in 2.5.2
+----------------
+
+  * Fix BlockAck negotiation when the device is AP and MFP is enabled. This fix
+    support for WPA3. (IPWHIFER-627)
+  * Fix BlockAck negotiation when MFP is disabled but BSS is MFP capable.
+    (IPWHIFER-229)
+
+Changes in 2.5.1
+----------------
+
+  * Fix potential failure during firmware loading. The bug was introduced in
+    2.5.
+
+Changes in 2.5
+--------------
+
+  * Enable A-MDPU reordering. This change relies on the BlockAck sessions
+    forwarded by the firmware. The firmware API < 3.4 don't forward this
+    information and cannot benefit of this feature (IPWHIFER-409)
+  * Enable TKIP/CCMP replay protection in kernel < 4.3. This change relies on
+    A-MPDU reordering. It will cause a performance hit on firmware API < 3.4.
+    This change will be also applied to kernel >= 4.3 in a next version of the
+    driver. (IPWHIFER-410)
+  * Fix potential wrong TIM value when a station fall asleep (IPWHIFER-561,
+    IPWHIFER-590)
+  * Introduce nl80211 vendor interface with these commands:
+     - burn anti-rollback bit (IPWHIFER-586)
+     - change the PTA settings (IPWHIFER-576, IPWHIFER-573)
+  * Add way to force FastPs mode and duration from debugfs (IPWHIFER-587)
+  * When using combo with a firmware >= 3.8, enable FastPS (PS-Poll was
+    preferred until now)
+  * Fix interfaces balancing while using combo mode (IPWHIFER-616)
+  * The file "tx_power_loop", in debugfs, provides an access to the status of
+    the amplifier for the calibration process.
+  * Load the firmware a little faster:
+      - in 64ms instead of 130ms using SDIO bus
+      - in 78ms instead of 115ms using SPI bus
+  * Improve robusteness against malformed HIF messages
+  * Fix handling of frames without valid RSSI
+  * Add a tracepoint to check balancing of the interfaces
+
+Changes in 2.4.3
+----------------
+
+  * Fix 'scan timeout' issue (introduced in 2.4.2)
+  * Fix AC priority (introduced in 2.4)
+
+Changes in 2.4.2
+----------------
+
+  * Fix dead lock when scan fail
+  * Fix compilation for some kernels < 4.6
+
+Changes in 2.4.1
+----------------
+
+  * Fix potential dead lock between join and scan (IPWHIFER-610)
+  * Fix PS parameters when multiple vif are in use (IPWHIFER-605)
+  * Fix error report whan stating AP
+  * Fix output of rx_stats (IPWHIFER-602)
+  * Remove false positive warnings (IPWHIFER-607)
+  * Add a knob to force LGI/SGI in internal version
+
+Changes in 2.4
+--------------
+
+  * Improve display of the exception and errors indications. They are now always
+    dumped (IPWHIFER-596)
+  * Fix support for Out-Of-Band IRQ when using SDIO bus (IOTPA_WIFI-286)
+  * Allow to use edge or level triggered IRQs (in SPI or in SDIO OOB). This can
+    be defined in device tree. If nothing is specified (or if IRQ controller
+    doesn't report trigger correctly), use level IRQ. You can check the
+    configuration in /proc/interrupts.
+  * Support for new Suspend/Resume indication sent for firmware 3.5 when chip
+    is too hot (IPWHIFER-591)
+  * Improve output of the file "counters" in debugfs. It now shows counters for
+    all interfaces. It also displays not yet named counters.
+  * In combo mode, legacy PS is automatically enabled. Now, it also
+    automatically switches to FastPS if AP does not support legacy PS
+    (IPWHIFER-588)
+  * Drop the prefix "WFX_" from driver version (displayed in dmesg and in
+    /sys/module/wfx/version)
+  * In combo mode, greatly improve bandwidth if both interfaces use same channel
+    PS is not enforced anymore. (IPWHIFER-485)
+  * Fix Block Ack usage in combo mode (IPWHIFER-562)
+  * Fix RTS threshold == 0, it disabled RTS instead of always enabling
+    (IPWHIFER-470)
+  * Support for associate/disassociate has been re-written (IPWHIFER-566,
+    IPWHIFER-257, IPWHIFER-262, IPWHIFER-568)
+  * Fix potential dead lock during unjoin (IPWHIFER-539, IPWHIFER-569,
+    IPWHIFER-580)
+  * Fix association with hidden SSID (IPWHIFER-542)
+  * Correctly take into account keep alive period provided by AP(IPWHIFER-307)
+  * Fix false "all retries were not consumed" errors
+  * Fix warning about potential mutex in use during driver unload
+  * Improve compliance with Open Firmware policy by adding support for
+    compatible string "silabs,wf200"
+  * MbedTLS library has been updated to release 2.16.5
+  * Support for hardware scan has been re-written (IPWHIFER-466, IPWHIFER-259,
+    IPWHIFER-380)
+  * Fix potential wrong output power after scan (IPWHIFER-311)
+  * Support for start/stop AP has been re-written (IPWHIFER-517, IPWHIFER-262,
+    IPWHIFER-570)
+  * Support for IBSS has been re-written (IPWHIFER-558)
+  * Support for filtering has been re-written (IPWHIFER-574, IPWHIFER-545)
+  * Support for beacon loss has been re-written (IPWHIFER-494)
+  * Support for power save has been re-written (IPWHIFER-554)
+  * Support for power save stations while AP (mainly the link-id handling) has
+    been re-written (IPWHIFER-493, IPWHIFER-492, IPWHIFER-564)
+  * Support for QoS queues (and Content After DTIM Beacon) has been re-written.
+    Fix warning "Vifs disagree about queue priority" (IPWHIFER-495,
+    IPWHIFER-565, IPWHIFER-337, IPWHIFER-567)
+  * Fix maximum reception throughput declared in ieee80211_supported_band.
+
+Changes in 2.3.5
+----------------
+
+  * Fix support of secure link
+  * Fix change in rx_stats output introduced in 2.3.3
+  * This version is more-or-less aligned on wfx driver included in Linux kernel
+    5.5
+
+Changes in 2.3.4
+----------------
+
+  * Improve throughput by changing the way to build tx_retry_policies requests
+    (IPWHIFER-537, IPWHIFER-503)
+
+Changes in 2.3.3
+----------------
+
+  * Fix some throughput issues caused by:
+     - wrong tx_retry_policy reset
+     - overflow in the usage counter of tx_retry_policies
+  * Backport changes accepted in kernel 5.5. It contains mainly cosmetics
+    changes
+  * Update architecture in documentation
+
+Changes in 2.3.2
+----------------
+
+  * Do not use tx_retry_policy 15 that is reserved for firmware internal usage
+  * Add parameter slk_unsecure_cmds to exclude some commands from encryption set
+    when secure link is used (mainly for debug purpose)
+  * Add parameter slk_renew_period to reduce key renew period (mainly for debug
+    purpose)
+  * Parameter slk_key is no more visible when module is compiled without secure
+    link
+  * Add a way to reset "frozen_chip" state in internal version
+  * Replace BUG_ON() with simple warnings
+  * Fix setting MAC address from DT (IPWHIFER-510)
+  * Fix Oops when CONFIG_OF_NET is not enabled
+  * Fix error code when using burn_slk_key and send_hif_msg return errors
+  * Fix memory initialisation in send_hif_msg
+  * Fix various compilation problems related to big-endian targets
+  * Fix potential vulnerability to spectre
+  * Various improvement in continuous integration recipe
+
+Changes in 2.3.1
+----------------
+
+  * Fix regression introduced in 2.3 about RSSI measurement
+
+Changes in 2.3
+--------------
+
+  * Include support for secure link. A firmware > 3.0 is necessary
+    (IPWHIFER-376)
+  * Driver does not follow short_frame_max_tx_count and long_frame_max_tx_count
+    anymore. These properties should be take into account by mac80211. This
+    change improve upstream TCP throughput.
+  * Clean up and improvement of Rate Control algorithm (aka minstrel
+    algorithm). Also add sanity checks in received Tx confirmations.
+    Improvements in noisy environments are expected (IPWHIFER-408,
+    IPWHIFER-341)
+  * Previous item should also fix SGI usage in corner cases (IPWHIFER-323)
+  * IBSS works now (IPWHIFER-88, IPWHIFER-480)
+  * Interface is now faster to start. Indeed 100ms delay at start is useless
+    since firmware 2.0
+  * Drop support for P2P since it is not yet functionnal (IPWHIFER-374)
+  * Drop support for mesh since it is not yet tested
+  * Drop support for legacy DT compatible "siliconlabs,wfx-wlan-spi"
+  * Drop legacy aliases "wfx-*-intern", "wfx-core*" and "wfx-wlan-*"
+  * Drop testmode (internal driver only)
+  * Drop development code that check acesses to control register
+  * Drop inaccurate "status" file from debugfs (IPWHIFER-260, IPWHIFER-345)
+  * Fix NULL pointer dereference when firmware version is not supported
+  * Fix errors when maximum number of accepted station is reached
+  * Fix support for short preamble in some circumstances (IPWHIFER-327)
+  * When rts_threshold is -1, RTS is now correctly disabled (it was always
+    enabled) (IPWHIFER-470)
+  * Fix output of fw_version in ethtool -i
+  * Fix potential deadlock during scan (IPWHIFER-384)
+  * Fix interface and rates used of self-generated frames (null-frames in case
+    of bss loss)
+  * Fix polarity of rx_filter.bssid. Expect to receive less useless data.
+  * Fix shutdown handling when gpio_reset is not used (IPWHIFER-467,
+    IPWHIFER-501)
+  * Make API compliant with kernel coding style (IPWHIFER-353, IPWHIFER-248,
+    IPWHIFER-253)
+  * Synchronize API headers with firmware
+  * Unify naming rules for driver internal API and clarify architecture:
+      - "hif" is now the prefered terminology for messages between host and chip
+      - "mcast" is now prefered over "multicast"
+      - multiple files were been renamed
+  * Tracepoints wsm_* has been renamed in hif_*
+  * Add "tx_status" tracepoint
+  * Multiple cosmetics fixes for upstream submission (IPWHIFER-371)
+
+Changes in 2.2.5
+----------------
+
+  * Add support for "Certified parts". These parts restrict usage of channels
+    12, 13 and 14 (IPWHIFER-460, IPWHIFER-359).
+  * Consider NO_IR flag when joining an AP
+  * Fix potential freeze when CCA is enabled.
+
+Changes in 2.2.4
+----------------
+
+  * Fix potential reset failure. Increase delay after reset to 2ms.
+  * Expose send_hif_msg in debugfs. This debug feature allow to send any HIF
+    request to chip.
+
+Changes in 2.2.3
+----------------
+
+  * Fix queue IDs exchange introduced in firmware API 2.0
+  * Fix potential dead lock when scan timeout occurs
+
+Changes in 2.2.2
+----------------
+
+  * Fix false error "success read after X failures"
+  * Add fill level of Tx buffers to WSM traces
+  * In internal versions, allow send_hif_msg to send not-yet-known API messages
+    (internal driver only)
+  * Fix potential buffer overflow in send_hif_msg
+  * Prepare continuous integration for secure link
+
+Changes in 2.2.1
+----------------
+
+  * Fix keys handling with multiple interfaces (aka "combo mode")
+    (IPWHIFER-439)
+  * Fix power save handling with multiple interfaces (IPWHIFER-450)
+  * High Throughput (HT) channels was not correctly detected since release 2.1
+    (IPWHIFER-461)
+  * Fix potential mishandling of wake-up gpio during shut down request.
+  * Fix packet size displayed in wsm tracepoints. It is now full packet size
+    including header.
+  * Increase size of displayed payload in tracepoints wsm_*. Traces for TX_REQ
+    and RX_IND now include TCP headers.
+
+Changes in 2.2
+--------------
+
+  * Increase internal queue size. This improves aggregation performances and so
+    Tx performances.
+  * Re-work IRQ handling and device wake up process (IPWHIFER-264, IPWHIFER-284):
+       - fix periodic (every 10sec) wake up of chip (IPWHIFER-349)
+       - fix race condition between control register and IRQ (IPWHIFER-420,
+         IPWHIFER-330)
+       - fix potential race condition between wake_up interrupt and data_ready
+         interrupt (IPWHIFER-433)
+       - use new wake-up notification mechanism introduced in API 1.4 (supported
+         by not-yet-released firmware 2.3)
+  * Check if access to control register from SPI is valid and recover error
+    if not (IPWHIFER-420).
+  * SPI bus is now configured to use MODE2 of Ineo chipset. Byte swapping
+    before/after SPI bus access is no more necessary (IPWHIFER-368,
+    IPWHIFER-416).
+  * Device now shut down when unbinded (IPWHIFER-442)
+  * Remove support for monitor mode since it has never worked (IPWHIFER-378).
+  * Remove support for /sys/kernel/debug/ieee80211/phy0/wfx/wsm_params. It was a
+    hack and was never really used.
+  * Start to clean up API and synchronize it with firmware (IPWHIFER-369).
+  * Improve tolerance to firmware freeze.
+  * Normal users are now allowed to access counters, rx_stats and status.
+    However, user have to access to debugfs itself. Administrators have to run:
+        chmod 755 /sys/kernel/debug
+  * Allow to trace piggyback values.
+  * Allow to trace BH stats.
+  * Allow to trace TX stats.
+  * Fix values returned in /sys/kernel/debug/ieee80211/phy0/wfx/counters
+    (IPWHIFER-443)
+  * Fix wrong error message if user interrupts device probing.
+  * Fix warning about register access issued during device unbind.
+  * Fix message payload displayed by tracepoints wsm_*
+  * If frames are stuck in firmware, driver is able to dump their IDs.
+  * In internal versions, add a way to send arbitrary HIF commands to chip
+    (IPWHIFER-447).
+  * Driver is now compatible with kernel >= 3.18 (it was >= 4.4 before)
+  * Use SPDX standard for licence headers.
+  * Support for secondary interface (aka "combo mode") is now proposed as
+    in-development preview.
+
+Changes in 2.1.2
+----------------
+
+  * Driver included a workaround for Raspberry SPI driver described here: [1].
+    However, it was not enabled. This release improve this workaround and
+    enable it when necessary.
+  * In internal versions, testmode did not return correct error code
+
+[1]: https://github.com/raspberrypi/linux/issues/2200
+
+Changes in 2.1.1
+----------------
+
+  * Show firmware keyset in startup banner
+  * Update testmode API in internal versions
+
+Changes in 2.1
+--------------
+
+  * Driver does not accept power_mode parameter anymore. Chip power save mode
+    is now set dynamically using native Linux API. So, command below is
+    equivalent to power_mode=0:
+        iw dev wlan set power_save off
+    Enabling power_save is equivalent to power_mode=2 if wakeup_gpio is defined
+    (in DT).  Else, if wakeup_gpio is not defined, it is equivalent to
+    power_mode=1.
+  * Driver tries now to load a firmware with keyset in its name (i.e.
+    wfm_wf200_C0.sec). If it is not found, it fallbacks to legacy firmware name
+    (wfm_wf200.sec). This feature allows installing firmware for multiple chips
+    alongside.
+  * Testmode was removed from public releases. Indeed, driver relied on
+    NL80211_TESTMODE but did not provide any useful testmode commands.
+  * Uniformize debug traces
+  * Fix race condition during chip identification on SPI
+  * Scan now waits longer for AP response
+  * Fix UAPSD that was broken since 2.0
+  * Fix listening mode (that created an unsolicited AP)
+  * Fix some errors pointed by checkpatch.pl
+
+Changes in 2.0.3
+----------------
+
+  * Show power_mode value in debugfs (in
+    /sys/kernel/debug/ieee80211/phy0/wfx/status)
+  * Show rx_stats in debugfs (in /sys/kernel/debug/ieee80211/phy0/wfx/rx_stats)
+  * Improve concurrency robustness while removing interface
+  * Fix support for DTIM > 1s
+  * Fix support for development hardware
+
+Changes in 2.0.2
+----------------
+
+  * Improve README content and Markdown rendering
+  * The revision 2.0.1 does not exists because of a tagging error
+
+Changes in 2.0
+--------------
+
+  * Use new API to communicate with WFx00 firmware. Thus, version 2.0 is
+    incompatible with firmwares < 2.0
+  * New architecture for API handling
+  * API error handling improvements
+  * CHANGES and README files are now in public release
+  * Fix multiple timing issues in AP when stations enable power saving
+  * Fix compatibility with CONFIG_VMAP_STACK
+  * Fix possible race conditions during chip initialization
+  * Fix issue with Short GI negotiation. Short GI was not enabled even if
+    remote support it
+  * Fix issue with Tx power. Tx power was correctly restored after a scan
+  * Fix issue with HT features. HT features was not always reset between
+    sessions
+  * Report error if configured MTU is not supported (> 1500 bytes)
+
+Changes in 1.6
+--------------
+
+  * Fix maximum bitrate in IBSS mode
+  * Show interface id in traces
+  * Improve SDIO bandwidth by improving usage of block mode
+  * Improve SPI bandwidth by ensuring that buffer size are 32bits aligned
+  * Fix crash during join when BSS is NULL
+  * Fix possible race condition while calling ieee80211_bss_get_ie()
+  * Fix driver stuck during unbind (mainly with SDIO, but also with SPI)
+
+Changes in 1.5 (not released)
+-----------------------------
+
+  * Introduce a framework to change arbitrary fields in WSM messages
+  * Replace ldpc and sgi module parameters with dynamic parameters in debugfs:
+      /sys/kernel/debug/ieee80211/phy0/wfx/wsm_params
+  * Add files in debugfs to change content of WSM_MIB_ID_BEACON_WAKEUP_PERIOD
+  * Add files in debugfs to change content of WSM_MIB_ID_BLOCK_ACK_POLICY
+  * Enable LDPC with hardware revision >= A2
+  * Replace traces for SDIO/SPI messages with tracepoints (see README for usage)
+  * Replace traces for WSM send/receive messages with tracepoints (see README
+    for usage)
+  * Remove traces related to wake-up. They can be replaced by tracespoints (see
+    README for examples)
+  * Fix beacon wakeup period that was (loudly) ignored by firmware
+  * Fix bug with unaligned buffers and SDIO access
+  * Fix badly detected flags in received frames.
+  * Bump API to 0.6.7
+  * Implement a better work-around for SDIO messages of 512 bytes length
+  * Change error reported when a WSM message fail
+
+Changes in 1.4.2
+----------------
+
+  * Fix bug with SDIO message of 512 bytes introduced in 1.4
+  * Support hardware revision A2
+
+Changes in 1.4.1
+----------------
+
+  * Do not hide ldpc and sgi module parameter in ppublic version (revert change
+    from 1.4)
+
+Changes in 1.4
+--------------
+
+  * Reset and Wake-up gpios should been declared from device tree. Process is
+    described in README. YOU HAVE TO UPDATE YOUR DEVICE TREE (IPWHIFER-275,
+    IPWHIFER-274)
+  * Driver is now packed in one module named wfx.ko. Module aliases allow to
+    provide a bit compatibility but this change may break external processes.
+  * MAC address is fetched from chip OTP memory. macadress module parameter
+    does not exist anymore. It is possible to change macadress using standard
+    Linux tools (or DT). Notice you need firmware >= 1.2.13 to make this work
+    properly
+  * Allow to use an external IRQ pin instead of SDIO native one (not yet
+    supported by firmware)
+  * Drop wfx_refclk module parameter
+  * Drop bssloss_mitigation module parameter
+  * Drop wfx_ba_*x_tids module parameters
+  * Module parameters ldpc and sgi was now available only for internal versions
+  * Fix race condition during firmware loading
+  * Fix buffer overflow while printing bootloader label
+  * Fix potential memory allocation failure during firmware loading
+  * Faster chip init (350ms vs 600ms previously)
+  * Network interface does not appears if PDS does not correctly load
+  * PDS name can now been overloaded from DT
+  * Driver try to test bus communication and report useful errors during
+    probing
+  * Only useful messages are emitted during driver probing
+  * Device name in DT has been changed to follow upstream rules from
+    vendor-prefixes.txt (legacy naming are also recognized)
+  * Documentation explain how to properly setup SDIO host to allow to reset
+    chip without reboot whole target
+  * Add documentation about debug features
+  * Add documentation about driver architecture
+  * Driver now build if kernel does enable SPI or MMC support
+  * You can now run 'make clean modules' without race condition between targets
+  * Driver now build without warning on various architecture/kernel versions
+  * Checkpatch results are now reported during continuous integration (but
+    there is yet plenty of errors)
+  * Spinlock bss_loss_lock is now a mutex
+
+Changes in 1.3.0
+----------------
+
+  * Driver is now maintained outside of reference kernel. This prominent change
+    may break some process.
+  * PDS format changes. It is now necessary to use a compressed PDS.
+  * Driver now compiles with kernels from 4.4 to 4.18
+  * Driver now autoloads when chip is detected on SDIO bus
+  * Chipset CW1200 is no more supported by this driver
+  * Testmode is automatically enabled if kernel enables NL80211_TESTMODE
+  * Jenkins recipe is now versioned with this driver
+  * When compiled with "_NO_PROD", output files does not have different name
+
