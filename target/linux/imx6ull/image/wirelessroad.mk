@@ -98,7 +98,7 @@ TARGET_DEVICES += lorawan_gateway_ethernet
 
 define Device/lorawan_gateway_wifi
 	DEVICE_TITLE := Lorawan Gateway WiFi
-	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-mt7601u iwinfo wpad-mini
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-wfx iwinfo wpad-mini
 	DEVICE_NAME := lorawan_gateway_wifi
 	DEVICE_DTS := lorawan_gateway_wifi
 	BOARDNAME := WIRELESSROAD_GW_WIFI_IMX6ULL
@@ -136,29 +136,9 @@ endef
 TARGET_DEVICES += video_stream_ethernet
 
 
-define Device/flexcan_ethernet
-        DEVICE_TITLE := FlexCAN Ethernet
-        DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
-        DEVICE_NAME := flexcan_ethernet
-        DEVICE_DTS := flexcan_ethernet
-        BOARDNAME := WIRELESSROAD_STREAM_IMX6ULL
-        SUPPORTED_DEVICES := wirelessroad_stream-imx6ull flexcan_ethernet
-        IMAGE_SIZE := 15m
-        IMAGE_SIZE_FACTORY := 16m
-        CONSOLE := ttymxc0,115200
-        KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
-        IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
-        IMAGE/u-boot.bin := imx6ull-ubootimg
-        IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
-        IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
-        IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
-endef
-TARGET_DEVICES += flexcan_ethernet
-
-
 define Device/video_stream_wifi
 	DEVICE_TITLE := Video Stream Wifi
-	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-mt7601u iwinfo wpad-mini
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-wfx iwinfo wpad-mini
 	DEVICE_NAME := video_stream_wifi
 	DEVICE_DTS := video_stream_wifi
 	BOARDNAME := WIRELESSROAD_STREAM_WIFI_IMX6ULL
@@ -174,6 +154,47 @@ define Device/video_stream_wifi
 	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
 endef
 TARGET_DEVICES += video_stream_wifi
+
+
+define Device/flexcan_ethernet
+        DEVICE_TITLE := FlexCAN Ethernet
+        DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-can-flexcan
+        DEVICE_NAME := flexcan_ethernet
+        DEVICE_DTS := flexcan_ethernet
+        BOARDNAME := WIRELESSROAD_FLEXCAN_ETHERNET_IMX6ULL
+        SUPPORTED_DEVICES := wirelessroad_stream-imx6ull flexcan_ethernet
+        IMAGE_SIZE := 15m
+        IMAGE_SIZE_FACTORY := 16m
+        CONSOLE := ttymxc0,115200
+        KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+        IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+        IMAGE/u-boot.bin := imx6ull-ubootimg
+        IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+        IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+        IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += flexcan_ethernet
+
+
+define Device/flexcan_wifi
+        DEVICE_TITLE := FlexCAN WiFi
+        DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-can-flexcan kmod-wfx iwinfo wpad-mini
+        DEVICE_NAME := flexcan_wifi
+        DEVICE_DTS := flexcan_wifi
+        BOARDNAME := WIRELESSROAD_FLEXCAN_WIFI_IMX6ULL
+        SUPPORTED_DEVICES := wirelessroad_stream-imx6ull flexcan_wifi
+        IMAGE_SIZE := 15m
+        IMAGE_SIZE_FACTORY := 16m
+        CONSOLE := ttymxc0,115200
+        KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+        IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+        IMAGE/u-boot.bin := imx6ull-ubootimg
+        IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+        IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+        IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += flexcan_wifi
+
 
 define Device/audio_stream_ethernet
 	DEVICE_TITLE := Audio Stream Ethernet
@@ -193,5 +214,25 @@ define Device/audio_stream_ethernet
 	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
 endef
 TARGET_DEVICES += audio_stream_ethernet
+
+define Device/audio_stream_wifi
+	DEVICE_TITLE := Audio Stream WiFi
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-wfx iwinfo wpad-mini
+	DEVICE_NAME := audio_stream_wifi
+	DEVICE_DTS := audio_stream_wifi
+	BOARDNAME := WIRELESSROAD_AUDIOSTREAM_WIFI_IMX6ULL
+	SUPPORTED_DEVICES:= audio_stream_wifi
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += audio_stream_wifi
+
 
 endif
