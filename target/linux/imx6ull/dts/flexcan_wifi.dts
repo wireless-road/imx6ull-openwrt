@@ -12,8 +12,8 @@
 #include "imx6ull.dtsi"
 
 / {
-	model = "LoraWan Gateway WiFi";
-	compatible = "wirelessroad,gw-imx6ull", "fsl,imx6ull";
+	model = "FlexCAN WiFi";
+	compatible = "wirelessroad,stream-imx6ull", "fsl,imx6ull";
 
 	chosen {
 		stdout-path = &uart1;
@@ -30,8 +30,8 @@
 		can2 = &can2;
 		clks = &clks;
 		fec1 = &fec1;
-		ecspi1 = &ecspi1;
-		ecspi4 = &ecspi4;
+		csi = &csi;
+		ecspi3 = &ecspi3;
 		gpc = &gpc;
 		gpmi = &gpmi;
 		iomuxc = &iomuxc;
@@ -86,6 +86,7 @@
 	};
 };
 
+
 &cpu0 {
 	operating-points = <
 		/* kHz  uV */
@@ -104,6 +105,7 @@
 		198000  1175000
 	>;
 };
+
 
 &clks {
 	assigned-clocks = <&clks IMX6UL_CLK_PLL4_AUDIO_DIV>;
@@ -128,23 +130,22 @@
 	};
 };
 
-&ecspi1 {
+&ecspi3 {
 	fsl,spi-num-chipselects = <1>;
-	cs-gpios = <&gpio4 26 0>;
+	cs-gpios = <&gpio1 20 0>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_ecspi1_0>;
+	pinctrl-0 = <&pinctrl_ecspi3_0>;
 	status = "okay";
 	dma-names = "rx", "tx";
-	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+	dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
 
 	flash@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
 		status = "okay";
-		compatible = "jedec,spi-nor";
+		compatible = "m25p80";
 		spi-max-frequency = <40000000>;
 		reg = <0>;
-
 		partition@0 {
 			label = "u-boot";
 			reg = <0x000000 0x0c0000>;
@@ -161,25 +162,6 @@
 			label = "factory";
 			reg = <0x000000 0x1000000>;
 		};
-
-	};
-};
-
-&ecspi4 {
-	fsl,spi-num-chipselects = <1>;
-	cs-gpios = <&gpio4 9 0>;
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_ecspi4_0>;
-	status = "okay"; 
-
-	dma-names = "rx", "tx";
-	dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
-
-	spidev1: spidev@1 {
-		status = "okay";
-		compatible = "semtech,sx1301";
-		spi-max-frequency = <1000000>;
-		reg = <0>;
 	};
 };
 
@@ -191,20 +173,19 @@
 };
 
 
+&can2 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&pinctrl_flexcan1>;
+        status = "okay";
+};
+
+
 &gpc {
 	fsl,cpu_pupscr_sw2iso = <0x1>;
 	fsl,cpu_pupscr_sw = <0x0>;
 	fsl,cpu_pdnscr_iso2sw = <0x1>;
 	fsl,cpu_pdnscr_iso = <0x1>;
 	fsl,ldo-bypass = <0>; /* DCDC, ldo-enable */
-};
-
-&gpmi {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_gpmi_nand_1>;
-	status = "okay";
-	nand-on-flash-bbt;
-	fsl,legacy-bch-geometry;
 };
 
 &iomuxc {
@@ -216,27 +197,6 @@
 				MX6UL_PAD_UART1_RTS_B__GPIO1_IO19	0x17059 /* SD1 CD */
 			>;
 		};
-
-		pinctrl_gpmi_nand_1: gpmi-nand-1 {
-			fsl,pins = <
-				MX6UL_PAD_NAND_CLE__RAWNAND_CLE         0xb0b1
-				MX6UL_PAD_NAND_ALE__RAWNAND_ALE         0xb0b1
-				MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B       0xb0b1
-				MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B 0xb000
-				MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B     0xb0b1
-				MX6UL_PAD_NAND_CE1_B__RAWNAND_CE1_B     0xb0b1
-				MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B       0xb0b1
-				MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B       0xb0b1
-				MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00   0xb0b1
-				MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01   0xb0b1
-				MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02   0xb0b1
-				MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03   0xb0b1
-				MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04   0xb0b1
-				MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05   0xb0b1
-				MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06   0xb0b1
-				MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07   0xb0b1
-			>;
-		};
 		
 		pinctrl_adc1: adc1grp {
 			fsl,pins = <
@@ -244,22 +204,32 @@
 				MX6UL_PAD_GPIO1_IO09__GPIO1_IO09        0xb0
 			>;
 		};
-		
-		pinctrl_ecspi1_0: ecspi1grp-0 {
+
+		pinctrl_ecspi3_0: ecspi3grp-0 {
 			fsl,pins = <
-				MX6UL_PAD_CSI_DATA06__ECSPI1_MOSI 0x110b1
-				MX6UL_PAD_CSI_DATA07__ECSPI1_MISO 0x110b1
-				MX6UL_PAD_CSI_DATA04__ECSPI1_SCLK 0x110b1
-				MX6UL_PAD_CSI_DATA05__GPIO4_IO26 0x10b0
+				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI	0x110b1
+				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO	0x110b1
+				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK	0x110b1
+				MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20	0x10b0
 			>;
 		};
 
-		pinctrl_ecspi4_0: ecspi2grp-0 {
+		pinctrl_csi1: csi1grp {
 			fsl,pins = <
-				MX6UL_PAD_NAND_DATA05__ECSPI4_MOSI 0x110b1 //0x100b1
-				MX6UL_PAD_NAND_DATA06__ECSPI4_MISO 0x110b1 //0x100b1
-				MX6UL_PAD_NAND_DATA04__ECSPI4_SCLK 0x110b1 //0x100b1
-				MX6UL_PAD_NAND_DATA07__GPIO4_IO09 0x10b0
+				MX6UL_PAD_CSI_MCLK__CSI_MCLK            0x1b088
+				MX6UL_PAD_CSI_PIXCLK__CSI_PIXCLK        0x1b088
+				MX6UL_PAD_CSI_VSYNC__CSI_VSYNC          0x1b088
+				MX6UL_PAD_CSI_HSYNC__CSI_HSYNC          0x1b088
+				MX6UL_PAD_CSI_DATA00__CSI_DATA02        0x1b088
+				MX6UL_PAD_CSI_DATA01__CSI_DATA03        0x1b088
+				MX6UL_PAD_CSI_DATA02__CSI_DATA04        0x1b088
+				MX6UL_PAD_CSI_DATA03__CSI_DATA05        0x1b088
+				MX6UL_PAD_CSI_DATA04__CSI_DATA06        0x1b088
+				MX6UL_PAD_CSI_DATA05__CSI_DATA07        0x1b088
+				MX6UL_PAD_CSI_DATA06__CSI_DATA08        0x1b088
+				MX6UL_PAD_CSI_DATA07__CSI_DATA09        0x1b088
+				MX6UL_PAD_SNVS_TAMPER2__GPIO5_IO02      0x10b0
+				MX6UL_PAD_SNVS_TAMPER3__GPIO5_IO03      0x10b0
 			>;
 		};
 
@@ -282,11 +252,17 @@
 			>;
 		};
 
-
 		pinctrl_flexcan0: flexcan0grp{
 			fsl,pins = <
 				MX6UL_PAD_UART3_RTS_B__FLEXCAN1_RX	0x1b020
 				MX6UL_PAD_UART3_CTS_B__FLEXCAN1_TX	0x1b020
+			>;
+		};
+
+		pinctrl_flexcan1: flexcan1grp{
+			fsl,pins = <
+				MX6UL_PAD_LCD_DATA11__FLEXCAN2_RX      0x1b020
+				MX6UL_PAD_LCD_DATA10__FLEXCAN2_TX      0x1b020
 			>;
 		};
 
@@ -295,7 +271,6 @@
 				MX6UL_PAD_GPIO1_IO05__PWM4_OUT   0x110b0
 			>;
 		};
-
 
 		pinctrl_sai2: sai2grp {
 			fsl,pins = <
@@ -311,13 +286,6 @@
 			fsl,pins = <
 				MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
 				MX6UL_PAD_UART1_RX_DATA__UART1_DCE_RX 0x1b0b1
-			>;
-		};
-
-		pinctrl_uart3: uart3grp {
-			fsl,pins = <
-				MX6UL_PAD_NAND_READY_B__UART3_DCE_TX 0x1b0b1
-				MX6UL_PAD_NAND_CE0_B__UART3_DCE_RX 0x1b0b1
 			>;
 		};
 
@@ -353,7 +321,7 @@
 				MX6UL_PAD_SD1_DATA3__USDHC1_DATA3 0x170f9
 			>;
 		};
-		
+
 		pinctrl_usdhc2: usdhc2grp {
 			fsl,pins = <
 				MX6UL_PAD_LCD_DATA18__USDHC2_CMD        0x1b0b0
@@ -422,31 +390,19 @@
 	status = "okay";
 };
 
-&uart3 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_uart3>;
-	status = "okay";
-};
-
 &usbotg1 {
-	dr_mode = "host";
+	dr_mode = "otg";
+	srp-disable;
+	hnp-disable;
+	adp-disable;
+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
 	disable-over-current;
-	external-vbus-divider;
-	phy_type = "utmi";
-	phys = <&usbphy1>;
-	phy-names = "usb-phy";
-	maximum-speed;
 	status = "okay";
 };
 
 &usbotg2 {
 	dr_mode = "host";
 	disable-over-current;
-	external-vbus-divider;
-	phy_type = "utmi";
-	phys = <&usbphy2>;
-	phy-names = "usb-phy";
-	maximum-speed;
 	status = "okay";
 };
 
@@ -490,3 +446,4 @@
 	pinctrl-0 = <&pinctrl_wdog>;
 	fsl,wdog_b;
 };
+
