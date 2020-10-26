@@ -21,7 +21,7 @@ platform_do_upgrade() {
 
 	if [ "$magic" == "27051956" ]; then
 		PART_NAME="firmware";
-		default_do_upgrade "$ARGV";
+		default_do_upgrade "$1";
 		return 0;
 	fi
 
