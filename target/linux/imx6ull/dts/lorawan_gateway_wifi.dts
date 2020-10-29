@@ -30,7 +30,7 @@
 		can2 = &can2;
 		clks = &clks;
 		fec1 = &fec1;
-		ecspi1 = &ecspi1;
+		ecspi3 = &ecspi3;
 		ecspi4 = &ecspi4;
 		gpc = &gpc;
 		gpmi = &gpmi;
@@ -128,14 +128,14 @@
 	};
 };
 
-&ecspi1 {
+&ecspi3 {
 	fsl,spi-num-chipselects = <1>;
-	cs-gpios = <&gpio4 26 0>;
+	cs-gpios = <&gpio1 20 0>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_ecspi1_0>;
+	pinctrl-0 = <&pinctrl_ecspi3_0>;
 	status = "okay";
 	dma-names = "rx", "tx";
-	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+	dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
 
 	flash@0 {
 		#address-cells = <1>;
@@ -244,13 +244,13 @@
 				MX6UL_PAD_GPIO1_IO09__GPIO1_IO09        0xb0
 			>;
 		};
-		
-		pinctrl_ecspi1_0: ecspi1grp-0 {
+
+		pinctrl_ecspi3_0: ecspi3grp-0 {
 			fsl,pins = <
-				MX6UL_PAD_CSI_DATA06__ECSPI1_MOSI 0x110b1
-				MX6UL_PAD_CSI_DATA07__ECSPI1_MISO 0x110b1
-				MX6UL_PAD_CSI_DATA04__ECSPI1_SCLK 0x110b1
-				MX6UL_PAD_CSI_DATA05__GPIO4_IO26 0x10b0
+				MX6UL_PAD_UART2_CTS_B__ECSPI3_MOSI      0x110b1
+				MX6UL_PAD_UART2_RTS_B__ECSPI3_MISO      0x110b1
+				MX6UL_PAD_UART2_RX_DATA__ECSPI3_SCLK    0x110b1
+				MX6UL_PAD_UART2_TX_DATA__GPIO1_IO20     0x10b0
 			>;
 		};
 
