@@ -30,7 +30,7 @@
 		can2 = &can2;
 		clks = &clks;
 		fec1 = &fec1;
-		ecspi1 = &ecspi1;
+		ecspi3 = &ecspi3;
 		ecspi4 = &ecspi4;
 		gpc = &gpc;
 		gpmi = &gpmi;
