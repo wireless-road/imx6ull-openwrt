@@ -7,9 +7,13 @@ In this manual we use tftp-server IPv4 address **192.168.0.100**, board IPv4 add
 1. Hit any key while uboot running.
 
 2. Setup addresses for uboot:
+
 > setenv serverip 192.168.0.100
+
 > setenv ipaddr 192.168.0.99
+
 > setenv ethaddr 00:11:22:33:44:55
+
 
 3. Execute load to memory to loadaddr (default 0x82000000)
 >tftpboot fw.bin
