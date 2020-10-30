@@ -1,4 +1,7 @@
 
+include $(TOPDIR)/rules.mk
+include $(INCLUDE_DIR)/image.mk
+
 ifeq ($(SUBTARGET),cortexa7)
 
 FAT32_BLOCK_SIZE=1024
