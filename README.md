@@ -1,14 +1,19 @@
 
 # WirelessRoad IMX6ULL
 
-[Пример сборки прошивки с тонкой настройкой на примере LoraWan(GW)](README.lorawan-details.md)
-[Детальное описание собранной прошивки на примере LoraWan(GW)](README.lorawan-details.md)
+[Uboot update](Documentation/README.uboot.md)
 
-[Детальное описание конфигурации ffmpeg для прошивок STREAM и STREAM-WIFI](README.ffmpeg.md)
+[Пример сборки прошивки с тонкой настройкой на примере LoraWan(GW)](Documentation/README.lorawan-details.md)
 
-[Описание настройки аудиокодека WM8960 (английский язык)](README_audio.md)
+[Детальное описание собранной прошивки на примере LoraWan(GW)](Documentation/README.lorawan-details.md)
 
-[Описание настройки SIP для работы в прошивке](README.sip.md)
+[Детальное описание конфигурации ffmpeg для прошивок STREAM и STREAM-WIFI](Documentation/README.ffmpeg.md)
+
+[Описание настройки аудиокодека WM8960 (английский язык)](Documentation/README.audio.md)
+
+[Описание настройки SIP для работы в прошивке](Documentation/README.sip.md)
+
+[WiFi station Dual Setup (AP+STA)](Documentation/README.wifi-sta-dualsetup.md)
 
 ### Автоматическая сборка прошивки.
 Для простоты сборки можно использовать скрипт, который использует готовые конфигурационные файлы openwrt для автоматической загрузки исходных текстов пакетов и компиляции прошивки.
