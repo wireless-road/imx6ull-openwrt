@@ -1,6 +1,6 @@
 [Back to Main Readme](../README.md)
 
-# WiFi DualStack setup (AP+Sta)
+# WiFi DualStack setup (AP+STA)
 
 In this document we'll describe how to setup second virtual 
 wireless interface with LuCi (web-interface) to connect to 
@@ -19,16 +19,16 @@ work on same channel.
 ***PHY*** - physical interface not showed in network interfaces but can be 
 shown by `iw list` command with all information about interface available.
 
-**VIF** - virtual interface, that is presented in system as wlan*. 
-There can be several *vifs* for each *phy* interface.
+***VIF*** - virtual interface, that is presented in system as wlan* network
+interfaces. There can be several *vifs* for each *phy* interface.
 
-**radio** - just *phy* interface name in terms of openwrt naming scheme.
+***radio*** - just *phy* interface name in terms of openwrt naming scheme.
 
 
 ## Setup
 
 **1.** Login to web-page of device using it's IP address (default 192.168.1.1).
-Username is `root` password by default is blank.
+Username is `root` password by default is blank, so leave it empty.
 ![Login Page](images/wifi-sta-dualsetup/01-login_page.png)
 
 **2.** Navigate to network interfaces page with menu on top of page.
@@ -51,9 +51,10 @@ added to bridge.
 
 **7.** On this page we creating new firewall zone for our station named `wsta`. 
 Be sure, that `Input` set to `accept` and `Masquerading` is enabled for outgoing 
-traffic.
+traffic. We doing `accept` on `Input` to make configuration available (LuCi/telnet)
+from our uplink network.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/07-firewall-addzone1.png)
-Here we set `conected networks` to our previously created interface 
+Here we set `Covered networks` to our previously created interface `wsta`
 and enable forwarding with `lan` zone to enable access to uplink for our 
 own stations connected to our AP *vif*.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/07-firewall-addzone2.png)
@@ -71,12 +72,12 @@ describing *phy/radio* interface.
 We don't need to change anything on `Device Configuration` section.
 Scroll down to Last one
 ![Network Interfaces menu](images/wifi-sta-dualsetup/10-wireless-addif1.png)
-Here we set `mode` to Client, setup `ESSID` with your wireless network name to 
-connect to. Don't forget to set `Network` to our newly created *wsta* interface.
+Here we set `mode` to `Client`, setup `ESSID` with your wireless network name to 
+connect to. Don't forget to set `Network` to our newly created `wsta` interface.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/10-wireless-addif2.png)
 
 **11.** Switch to `Wireless Security` tab and setup parameters of uplink network.
-Usually `Encryption` set to *WPA-PSK/WPA2-PSK Mixed Mode* is universal. 
+Usually `Encryption` set to `WPA-PSK/WPA2-PSK Mixed Mode` is universal. 
 Set `Encryption` and `Key` according to your uplink network.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/11-wireless-addif-enc.png)
 After done, just push `Save` button.
@@ -85,7 +86,7 @@ After done, just push `Save` button.
 corresponding row.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/12-wireless-checkap-edit.png)
 
-**13.** Be sure that our AP interface is set to `Network` *lan*.
+**13.** Be sure that our AP interface `Network` is set to `lan`.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/13-wireless-checkap-netif.png)
 After finished push `Save` button.
 
