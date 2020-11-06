@@ -1,7 +1,7 @@
 [Back to Main Readme](../README.md)
 
 #### Speaker 
-![Image of Yaktocat](images/audio/speaker.JPG)
+![Image of Yaktocat](images/audio/speaker.jpg)
 
 To initialize:
 ```
@@ -16,8 +16,8 @@ aplay /tmp/sample.wav
 ```
 
 #### Microphone
-![Image of Yaktocat](images/audio/microphone1.JPG)
-![Image of Yaktocat](images/audio/microphone2.JPG)
+![Image of Yaktocat](images/audio/microphone1.jpg)
+![Image of Yaktocat](images/audio/microphone2.jpg)
 
 To initialize:
 ```
