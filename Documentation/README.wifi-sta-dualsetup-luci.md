@@ -1,6 +1,6 @@
 [Back to Main Readme](../README.md)
 
-# WiFi DualStack setup (AP+STA)
+# WiFi DualStack setup (AP+STA) LuCi (Web-interface)
 
 In this document we'll describe how to setup second virtual 
 wireless interface with LuCi (web-interface) to connect to 
