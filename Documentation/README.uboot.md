@@ -40,5 +40,6 @@ After executing command *tftpboot fw.bin* on success you will get line like this
 
 You can use HEX number in sf erase and sf write command as last argument (instead of 0xf00000) to make things faster. For erase we need to round up this number in higher order. So in this example we can use this commands:
 >sf erase 0x100000 0x790000
+
 >sf write 0x82000000 0x100000 0x78011e
 
