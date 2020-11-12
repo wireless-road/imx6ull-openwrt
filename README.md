@@ -13,7 +13,9 @@
 
 [Описание настройки SIP для работы в прошивке](Documentation/README.sip.md)
 
-[WiFi station Dual Setup (AP+STA)](Documentation/README.wifi-sta-dualsetup.md)
+[WiFi station Dual Setup (AP+STA) UCI (console)](Documentation/README.wifi-sta-dualsetup-uci.md)
+
+[WiFi station Dual Setup (AP+STA) LuCi (Web-interface)](Documentation/README.wifi-sta-dualsetup-luci.md)
 
 ### Автоматическая сборка прошивки.
 Для простоты сборки можно использовать скрипт, который использует готовые конфигурационные файлы openwrt для автоматической загрузки исходных текстов пакетов и компиляции прошивки.
