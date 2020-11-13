@@ -17,11 +17,11 @@ lorawan_gateway_wifi)
 	touch /etc/config/wireless;
 	uci set wireless.default_radio0=wifi-iface
 	uci set wireless.@wifi-iface[0].mode="ap";
-	uci set wireless.@wifi-iface[0].ifname="wlan0";
 	uci set wireless.@wifi-iface[0].network="lan";
 #	touch /etc/config/network;
 #	uci set network.wlan='interface';
 #	uci set network.wlan.proto='dhcp';
+	uci commit;
 	;;
 *)
 	;;
