@@ -15,6 +15,9 @@
 
 [WiFi station Dual Setup (AP+STA)](Documentation/README.wifi-sta-dualsetup.md)
 
+[Amazon Voice Service SDK Setup](Documentation/README.amazon-voice-service.md)
+
+
 ### Автоматическая сборка прошивки.
 Для простоты сборки можно использовать скрипт, который использует готовые конфигурационные файлы openwrt для автоматической загрузки исходных текстов пакетов и компиляции прошивки.
 > ./compile.sh
