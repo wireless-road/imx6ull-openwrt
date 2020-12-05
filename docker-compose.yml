@@ -1,0 +1,12 @@
+version: "2"
+services:
+  openwrt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: openwrt_imx6ull
+    volumes: 
+      - /home/al/docker/openwrt_imx6ull/:/home/build/bin
+#    command: bash -c "cp -R /home/build/openwrt/bin/targets/imx6ull/cortexa7/ /home/build/bin/"
+    command: bash -c "./docker_compile_all.sh"
+
