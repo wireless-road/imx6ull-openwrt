@@ -1,0 +1,10 @@
+--- a/hardware.txt
++++ b/hardware.txt
+@@ -1,6 +1,7 @@
+ # libiwinfo hardware database
+ # vendor id | device id | subsystem vendor id | subsystem device id |
+ # txpower offset | frequency offset | "vendor name" | "device name"
++0xffff 0xffff 0xffff 0x0200    0      0  "SiliconLabs" "WFX200"
+ 0xffff 0xffff 0xffff 0xb102    0      0  "Ubiquiti" "PowerStation2 (18V)"
+ 0xffff 0xffff 0xffff 0xb202    0      0  "Ubiquiti" "PowerStation2 (16D)"
+ 0xffff 0xffff 0xffff 0xb302    0      0  "Ubiquiti" "PowerStation2 (EXT)"
