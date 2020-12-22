@@ -1,0 +1,36 @@
+--- a/iwinfo_nl80211.c
++++ b/iwinfo_nl80211.c
+@@ -3045,6 +3045,8 @@ static int nl80211_get_hardware_id(const
+ 	struct iwinfo_hardware_id *id = (struct iwinfo_hardware_id *)buf;
+ 	char *phy, num[8], path[PATH_MAX];
+ 	int i;
++	FILE *f_oc;
++	char oc_buf[256];
+ 
+ 	struct { const char *path; uint16_t *dest; } lookup[] = {
+ 		{ "vendor", &id->vendor_id },
+@@ -3058,6 +3060,24 @@ static int nl80211_get_hardware_id(const
+ 	/* Try to determine the phy name from the given interface */
+ 	phy = nl80211_ifname2phy(ifname);
+ 
++	memset(oc_buf, 0, sizeof(oc_buf));
++	snprintf(path, sizeof(path), "/sys/class/%s/%s/device/of_node/compatible",
++			phy ? "ieee80211" : "net",
++			phy ? phy : ifname);
++	if ( f_oc = fopen(path, "r") ){
++		fgets(oc_buf, sizeof(oc_buf) - 1, f_oc);
++		if ( !strcasecmp(oc_buf, "silabs,wf200") ) {
++			/* All the data for this IDs stored in internal DB 'hardware.txt' */
++			id->vendor_id = 0xffff;
++			id->device_id = 0xffff;
++			id->subsystem_vendor_id = 0xffff;
++			id->subsystem_device_id = 0x0200;
++			/* Do not apply full MTD scan, just return. */
++			return 0;
++		}
++	}
++	
++
+ 	for (i = 0; i < ARRAY_SIZE(lookup); i++)
+ 	{
+ 		snprintf(path, sizeof(path), "/sys/class/%s/%s/device/%s",
