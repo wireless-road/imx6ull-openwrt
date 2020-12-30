@@ -37,11 +37,15 @@ Username is `root` password by default is blank, so leave it empty.
 3. Push `Add new interface...` button.
 ![Add new interface](images/wifi-sta-dualsetup/03-interfaces-page.png)
 
-**4.** Here we add our outgoing network interface with name `wsta` and DHCP-client.
+**4.1** Here we add our outgoing network interface with name `wwan` and DHCP-client.
 After finished just push `Create interface` button.
+
 **WARNING!** Don't enable bridge on this interface as station *vif* cannot be 
 added to bridge.
-![New interface tab](images/wifi-sta-dualsetup/04-interfaces-addif.png)
+![New interface tab](images/wifi-sta-dualsetup/04-1-interfaces-addif.png)
+
+**4.2** On next screen just Press `Save`
+![New interface tab](images/wifi-sta-dualsetup/04-2-interfaces-addif-save.png)
 
 **5.** Navigate to firewall configuration with menu on top of page.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/05-firewall-menu.png)
@@ -49,49 +53,47 @@ added to bridge.
 **6.** Push `Add` button to add new firewall zone.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/06-firewall-page.png)
 
-**7.** On this page we creating new firewall zone for our station named `wsta`. 
+**7.** On this page we creating new firewall zone for our station named `wwan`. 
 Be sure, that `Input` set to `accept` and `Masquerading` is enabled for outgoing 
 traffic. We doing `accept` on `Input` to make configuration available (LuCi/telnet)
 from our uplink network.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/07-firewall-addzone1.png)
-Here we set `Covered networks` to our previously created interface `wsta`
+Here we set `Covered networks` to our previously created interface `wwan`
 and enable forwarding with `lan` zone to enable access to uplink for our 
 own stations connected to our AP *vif*.
 ![Network Interfaces menu](images/wifi-sta-dualsetup/07-firewall-addzone2.png)
 After finished push `Save` button.
 
-**8.** Navigate to Wireless configuration with menu on top of page.
-![Network Interfaces menu](images/wifi-sta-dualsetup/08-wireless-menu.png)
+**8.** Here push `Save & Apply` button to save network and firewall configuration
+at once.
+![Save and Apply](images/wifi-sta-dualsetup/08-firewall-n-net-save-n-apply.png)
 
-**9.** In order to add new *vif* push `Add` button on first row last cell
+**9.** Navigate to Wireless configuration with menu on top of page.
+![Wireless menu](images/wifi-sta-dualsetup/09-wireless-menu.png)
+
+**10.** In order to add new station *vif* push `Scan` button on first row middle cell
 describing *phy/radio* interface.
-![Network Interfaces menu](images/wifi-sta-dualsetup/09-wireless-page.png)
+![Scan Button](images/wifi-sta-dualsetup/10-wireless-scan-button.png)
 
-**10.** This window is separated with `Device Configuration` which describes 
-*phy/radio* and `Interface Configuration` which describes *vif*. 
-We don't need to change anything on `Device Configuration` section.
-Scroll down to Last one
-![Network Interfaces menu](images/wifi-sta-dualsetup/10-wireless-addif1.png)
-Here we set `mode` to `Client`, setup `ESSID` with your wireless network name to 
-connect to. Don't forget to set `Network` to our newly created `wsta` interface.
-![Network Interfaces menu](images/wifi-sta-dualsetup/10-wireless-addif2.png)
+**11.** In openned window you will see scan results. Here you have to remember
+`channel` of your uplink network (in this case it is 3) 
+and can select it by pressing `Join Network` button.
+![WiFi Scan Results](images/wifi-sta-dualsetup/11-wireless-scan-results.png)
 
-**11.** Switch to `Wireless Security` tab and setup parameters of uplink network.
-Usually `Encryption` set to `WPA-PSK/WPA2-PSK Mixed Mode` is universal. 
-Set `Encryption` and `Key` according to your uplink network.
-![Network Interfaces menu](images/wifi-sta-dualsetup/11-wireless-addif-enc.png)
-After done, just push `Save` button.
+**12.** In this window you need to setup WPA/WPA2 encryption key of your uplink netowrk
+and Assign previously created `wwan` firewall zone. Name of the network should be
+`wwan`. At the end push `Submit` button.
+![WiFi Station Setup](images/wifi-sta-dualsetup/12-wireless-sta-setup.png)
 
-**12.** Recheck downstream AP *vif* parameters by pressing `Edit` button on
-corresponding row.
-![Network Interfaces menu](images/wifi-sta-dualsetup/12-wireless-checkap-edit.png)
+**13.** In this window you only need to setup proper channel number from step **11**.
+In this example we set channel `3`.
+![WiFi Channel Setup](images/wifi-sta-dualsetup/13-wireless-dev-channel-setup.png)
 
-**13.** Be sure that our AP interface `Network` is set to `lan`.
-![Network Interfaces menu](images/wifi-sta-dualsetup/13-wireless-checkap-netif.png)
-After finished push `Save` button.
+**14.** Scroll down and press `Save` button.
+![WiFi Station save](images/wifi-sta-dualsetup/14-wireless-sta-save.png)
 
-**14.** At the end press `Save & Apply` button at the bottom of page.
-![Network Interfaces menu](images/wifi-sta-dualsetup/14-wireless-save-n-apply.png)
+**15.** At the end just push `Save & Apply` button athe bottom of main page.
+![WiFi Save & Apply](images/wifi-sta-dualsetup/15-wireless-save-n-apply.png)
 
 After parameters is applied everything should work fine. 
 AP interface will go up after station interface successfully connects to uplink.
