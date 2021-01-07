@@ -1,0 +1,113 @@
+#!/bin/sh
+
+cd `dirname $0`
+
+usage_help()
+{
+	echo "$0 
+	prepare <prepare docker container>
+	build <build firmware>
+	start <start docker container>
+	stop <stop docker container>
+	login <login to docker container>
+	backup <backup container image>
+	status <status of docker container>"
+}
+
+ENV=openwrtbuildenv
+
+if [ $# -lt 1 ]; then
+	usage_help
+	exit 1
+fi
+
+ACTION=$1
+shift
+args=$@
+
+GIT_REPO=$PWD
+DOCKER_DIR="/source"
+
+get_container_id()
+{
+	CONTAINER_ID=$(docker ps | awk '{ if ( $2 == "'$ENV'" ) {print $1};}')
+	if [ x$CONTAINER_ID == x ]; then
+		echo "No instance found"
+		echo "run \"$ENV start\""
+		exit 1
+	fi
+}
+
+docker_run()
+{
+	get_container_id
+	docker exec -it $CONTAINER_ID $@
+}
+
+
+prepare_container()
+{
+	docker build -t $ENV docker
+}
+
+start_container()
+{
+	docker run -it -d --privileged -v $GIT_REPO:$DOCKER_DIR $ENV bash
+}
+
+login_to_container()
+{
+	get_container_id
+	docker_run bash
+}
+
+stop_container()
+{
+	get_container_id
+	docker stop $CONTAINER_ID
+}
+
+backup_container()
+{
+	BACKUP_IMAGE=~/$ENV.docker
+	docker save $ENV -o $BACKUP_IMAGE
+	echo "Container backup in $BACKUP_IMAGE"
+}
+
+container_status()
+{
+	docker_run ps -w -eaf
+}
+
+build()
+{
+	docker_run "$DOCKER_DIR/compile.sh $@"
+}
+
+case $ACTION in
+	"prepare")
+		prepare_container
+		;;
+	"start")
+		start_container
+		;;
+	"stop")
+		stop_container
+		;;
+	"login")
+		login_to_container
+		;;
+	"backup")
+		backup_container
+		;;
+	"status")
+		container_status
+		;;
+	"build")
+		build $@
+		;;
+	*)
+		usage_help
+		exit 1
+		;;
+esac

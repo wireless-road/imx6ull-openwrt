@@ -38,7 +38,7 @@ show_usage() {
 	echo;
 };
 
-compile() {
+compile_board() {
 	local boardname="$1";
 	local configfile="$boardsdir/$boardname.config";
 	if [ ! -f "$configfile" ];then
@@ -63,6 +63,27 @@ compile() {
 	make -j $(nproc --ignore=3);
 	echo "   Done.";
 };
+
+compile_all()
+{
+	local board
+
+	for l in $boardsdir/*.config;do
+		board="$(echo $l | sed -e 's:.*/::g' -e 's:\..*::')"
+		compile_board "$board"
+	done
+}
+
+compile()
+{
+	local boardname=$1
+
+	if [ "$boardname" == "all" ]; then
+		compile_all
+	else
+		compile_board "$boardname"
+	fi
+}
 
 
 if [ X"$1" = X"" ]; then
