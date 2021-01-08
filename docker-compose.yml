@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     container_name: openwrt_imx6ull
     volumes: 
+      - /home/al/docker/openwrt_imx6ull/:/home/build/bin
       - .:/source
-#    command: bash -c "cp -R /home/build/openwrt/bin/targets/imx6ull/cortexa7/ /home/build/bin/"
     command: bash -c "./compile.sh all"
 
