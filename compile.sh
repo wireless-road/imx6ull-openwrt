@@ -6,6 +6,7 @@
 
 name="$0";
 boardsdir="./openwrt-configs";
+FINAL_PATH="/home/build/bin"
 
 show_boards() {
 	echo -n "Available board names:";
@@ -61,6 +62,10 @@ compile_board() {
 		rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
 	fi
 	make -j $(nproc --ignore=3);
+	if [ $? -eq 0 ] && [ -n "$FINAL_PATH" ]; then
+		cp -R ./bin/targets/imx6ull/cortexa7/ "$FINAL_PATH"
+	fi
+
 	echo "   Done.";
 };
 
