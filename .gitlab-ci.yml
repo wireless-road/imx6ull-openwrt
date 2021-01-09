@@ -1,7 +1,6 @@
 build_image:
   script:
-  - ./ci.sh
-  - docker openwrt_imx6ull || true
+  - docker stop openwrt_imx6ull || true
   - docker rm openwrt_imx6ull || true
   - docker-compose up -d
   tags:
