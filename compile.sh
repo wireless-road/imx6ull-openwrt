@@ -6,6 +6,7 @@
 
 name="$0";
 boardsdir="./openwrt-configs";
+FINAL_PATH="/home/build/bin"
 
 show_boards() {
 	echo -n "Available board names:";
@@ -38,7 +39,7 @@ show_usage() {
 	echo;
 };
 
-compile() {
+compile_board() {
 	local boardname="$1";
 	local configfile="$boardsdir/$boardname.config";
 	if [ ! -f "$configfile" ];then
@@ -61,8 +62,33 @@ compile() {
 		rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
 	fi
 	make -j $(nproc --ignore=3);
+	if [ $? -eq 0 ] && [ -n "$FINAL_PATH" ]; then
+		cp -R ./bin/targets/imx6ull/cortexa7/ "$FINAL_PATH"
+	fi
+
 	echo "   Done.";
 };
+
+compile_all()
+{
+	local board
+
+	for l in $boardsdir/*.config;do
+		board="$(echo $l | sed -e 's:.*/::g' -e 's:\..*::')"
+		compile_board "$board"
+	done
+}
+
+compile()
+{
+	local boardname=$1
+
+	if [ "$boardname" == "all" ]; then
+		compile_all
+	else
+		compile_board "$boardname"
+	fi
+}
 
 
 if [ X"$1" = X"" ]; then
