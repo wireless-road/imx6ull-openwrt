@@ -2,6 +2,7 @@ build_image:
   script:
   - docker stop openwrt_imx6ull || true
   - docker rm openwrt_imx6ull || true
+  - docker rmi lorawan-imx6ull_openwrt || true
   - docker-compose up -d
   tags:
   - openwrt
