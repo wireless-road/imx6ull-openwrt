@@ -18,4 +18,7 @@ ENV FORCE_UNSAFE_CONFIGURE 1
 # Create Working Directory
 RUN mkdir -p /home/build/bin
 RUN mkdir -p /source
+
+COPY . /source
+
 WORKDIR /source
