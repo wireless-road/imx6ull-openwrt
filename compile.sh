@@ -6,7 +6,7 @@
 
 name="$0";
 boardsdir="./openwrt-configs";
-FINAL_PATH="/home/build/bin"
+FINAL_PATH="/home/build/bin/"$(date '+%Y_%m_%d_%H_%M_%S/');
 
 show_boards() {
 	echo -n "Available board names:";
@@ -82,6 +82,8 @@ compile_all()
 compile()
 {
 	local boardname=$1
+	echo "$FINAL_PATH"
+	mkdir -p "$FINAL_PATH"
 
 	if [ "$boardname" == "all" ]; then
 		compile_all
