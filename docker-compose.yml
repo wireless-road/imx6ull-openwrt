@@ -8,5 +8,5 @@ services:
     volumes: 
       - /home/al/docker/openwrt_imx6ull/:/home/build/bin
 #      - .:/source
-    command: bash -c "./compile.sh lorawan_gateway_ethernet"
+    command: bash -c "./compile.sh all"
 
