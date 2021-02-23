@@ -101,9 +101,9 @@ diff -Nru u-boot-2017.07-001/arch/arm/dts/wirelessroad_ecspi3.dts u-boot-2017.07
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		ethphy0: ethernet-phy@2 {
++		ethphy0: ethernet-phy@0 {
 +			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <2>;
++			reg = <0>;
 +		};
 +
 +	};
