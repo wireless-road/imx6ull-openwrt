@@ -76,7 +76,7 @@ describing *phy/radio* interface.
 ![Scan Button](images/wifi-sta-dualsetup/10-wireless-scan-button.png)
 
 **11.** In openned window you will see scan results. Here you have to remember
-`channel` of your uplink network (in this case it is 3) 
+`channel` of your uplink network (in this case it is 1) 
 and can select it by pressing `Join Network` button.
 ![WiFi Scan Results](images/wifi-sta-dualsetup/11-wireless-scan-results.png)
 
@@ -86,7 +86,7 @@ and Assign previously created `wwan` firewall zone. Name of the network should b
 ![WiFi Station Setup](images/wifi-sta-dualsetup/12-wireless-sta-setup.png)
 
 **13.** In this window you only need to setup proper channel number from step **11**.
-In this example we set channel `3`.
+In this example we set channel `1`.
 ![WiFi Channel Setup](images/wifi-sta-dualsetup/13-wireless-dev-channel-setup.png)
 
 **14.** Scroll down and press `Save` button.
