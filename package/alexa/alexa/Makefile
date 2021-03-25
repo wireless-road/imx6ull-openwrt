@@ -28,7 +28,7 @@ define Package/alexa
   CATEGORY:=ALEXA software
   TITLE:=Alexa
   URL:=
-  DEPENDS:=+libpthread +libcurl +glib2 +libnghttp2 +liboil +libgst1app-alexa +gst1-alexa-mod-playback +gstreamer1 +libstdcpp +libsqlite3 +libatomic +libopenssl +portaudio
+  DEPENDS:=+libpthread +libcurl +glib2 +libnghttp2 +liboil +libgst1app-alexa +gst1-alexa-mod-playback +gstreamer1 +libstdcpp +libsqlite3 +libatomic +libopenssl +portaudio-alexa
 #  DEPENDS:=+libpthread +LIBCURL_NGHTTP2:libcurl +glib2 +libnghttp2 +liboil +libgst1app-alexa +gst1-alexa-mod-playback +gstreamer1 +libstdcpp +SQLITE3_SESSION:libsqlite3 +libatomic +libopenssl +portaudio
 #  DEPENDS:=+libpthread @LIBCURL_TLS_SRP @LIBCURL_NGHTTP2 +glib2 +libnghttp2 +liboil +libgst1app-alexa +gst1-alexa-mod-playback +gstreamer1 +libstdcpp @SQLITE3_SESSION +libatomic +libopenssl +portaudio
 endef
@@ -61,5 +61,5 @@ define Package/alexa/install
 endef
 
 #$(eval $(call BuildPackage,$(PKG_NAME)))
-$(eval $(call BuildPackage,$(PKG_NAME),libpthread,libcurl,glib2,libnghttp2,liboil,libgst1app-alexa,gst1-alexa-mod-playback,gstreamer1,libsqlite3,libatomic,libopenssl,portaudio))
+$(eval $(call BuildPackage,$(PKG_NAME),libpthread,libcurl,glib2,libnghttp2,liboil,libgst1app-alexa,gst1-alexa-mod-playback,gstreamer1,libsqlite3,libatomic,libopenssl,portaudio-alsa))
 #$(eval $(call BuildPackage,alexa,+libpthread,+libcurl,+glib2,+libnghttp2,+liboil,+uclibcxx,+libgstapp,+libgstbase,+libgstreamer))
