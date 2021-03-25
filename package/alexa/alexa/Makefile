@@ -53,6 +53,7 @@ endef
 define Package/alexa/install
 	$(INSTALL_DIR) $(1)/etc/alexa $(1)/etc/alexa/database $(1)/usr/lib $(1)/etc/ssl $(1)/etc/ssl/certs $(1)/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
+	$(CP) ./files/* $(1)/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/SampleApp/src/SampleApp $(1)/bin/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/SampleApp/src/libLibSampleApp.so $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/Integration/test/SpeechSynthesizerIntegrationTest $(1)/bin/
