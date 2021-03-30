@@ -12,6 +12,7 @@ board_config_update
 case "$board" in
 lorawan_gateway_ethernet|\
 lorawan_gateway_wifi|\
+lorawan_gateway_3g|\
 video_stream_ethernet|\
 video_stream_wifi|\
 flexcan_ethernet|\
