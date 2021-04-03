@@ -1,0 +1,25 @@
+#!/bin/sh /etc/rc.common
+
+#Start must be before network which is 20
+START=10
+STOP=99
+USE_PROCD=0
+
+
+do_usbreset_for_all(){
+	for u in $(lsusb | awk '{print $6}'|grep -v 1d6b:);do
+		usbreset $u;
+	done;
+}
+
+boot(){
+	do_usbreset_for_all;
+}
+
+start_service(){
+	do_usbreset_for_all;
+}
+
+stop_service(){
+	echo "nothing to stop for usbreset";
+}
