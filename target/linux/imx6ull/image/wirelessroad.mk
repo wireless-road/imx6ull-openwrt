@@ -99,6 +99,25 @@ define Device/lorawan_gateway_ethernet
 endef
 TARGET_DEVICES += lorawan_gateway_ethernet
 
+define Device/lorawan_gateway_3g
+	DEVICE_TITLE := Lorawan Gateway 3G
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
+	DEVICE_NAME := lorawan_gateway_3g
+	DEVICE_DTS := lorawan_gateway_3g
+	BOARDNAME := WIRELESSROAD_GW_IMX6ULL
+	SUPPORTED_DEVICES:= wirelessroad_gw-imx6ull lorawan_gateway_3g
+	IMAGE_SIZE := 15m
+	IMAGE_SIZE_FACTORY := 16m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += lorawan_gateway_3g
+
 define Device/lorawan_gateway_wifi
 	DEVICE_TITLE := Lorawan Gateway WiFi
 	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-wfx iwinfo wpad-mini
