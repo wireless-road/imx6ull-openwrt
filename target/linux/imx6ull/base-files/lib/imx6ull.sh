@@ -16,6 +16,9 @@ imx6ull_board_detect() {
 	"LoraWan Gateway Ethernet")
 		name="lorawan_gateway_ethernet";
 		;;
+	"LoraWan Gateway 3G")
+		name="lorawan_gateway_3g";
+		;;
 	"LoraWan Gateway WiFi")
 		name="lorawan_gateway_wifi";
 		;;

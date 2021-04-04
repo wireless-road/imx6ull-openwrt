@@ -189,7 +189,8 @@ proto_qmi_setup() {
 		echo "Y" > /sys/class/net/$ifname/qmi/raw_ip
 	fi
 
-	uqmi -s -d "$device" --sync > /dev/null 2>&1
+#	uqmi -s -d "$device" --sync > /dev/null 2>&1
+	/sbin/ip link set dev $ifname up
 
 	echo "Waiting for network registration"
 	local registration_timeout=0
@@ -210,7 +211,7 @@ proto_qmi_setup() {
 
 	echo "Starting network $interface"
 
-	pdptype=$(echo "$pdptype" | awk '{print tolower($0)}')
+	pdptype="$(echo "$pdptype" | awk '{print tolower($0)}')"
 	[ "$pdptype" = "ip" -o "$pdptype" = "ipv6" -o "$pdptype" = "ipv4v6" ] || pdptype="ip"
 
 	if [ "$pdptype" = "ip" ]; then
