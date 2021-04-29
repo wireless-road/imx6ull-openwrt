@@ -31,6 +31,8 @@ endef
 define Package/gpio/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/gpio $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/etc
+	$(INSTALL_DATA) ./files/gpio_conf.json $(1)/etc/gpio_conf.json
 endef
 
 $(eval $(call BuildPackage,gpio))

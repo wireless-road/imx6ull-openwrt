@@ -1,0 +1,9 @@
+{
+	"gpios": [
+		{
+			"controller_number": "4",
+			"pad_number": "10",
+			"direction": "out"
+		}
+	]
+}
