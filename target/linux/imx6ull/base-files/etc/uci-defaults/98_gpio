@@ -1,0 +1,41 @@
+#!/bin/sh
+
+. /lib/functions/uci-defaults.sh
+. /usr/share/libubox/jshn.sh
+
+board=$(board_name)
+board_config_update
+
+case "$board" in
+flexcan_wifi)
+
+	json_init
+	json_load_file /etc/gpio_conf.json
+	json_select "gpios"
+	idx=1
+
+	function init_gpio {
+        	echo $1 $2 $3
+        	gpio_number=$(( ($1 - 1) * 32 + $2 ))
+        	echo $gpio_number
+		echo $gpio_number > /sys/class/gpio/export
+        	echo $direction > "/sys/class/gpio/gpio${gpio_number}/direction"
+	}
+
+	while json_is_a ${idx} object
+	do
+        	json_select $idx
+        	json_get_var pad_number pad_number
+        	json_get_var controller_number controller_number
+        	json_get_var direction direction
+        	init_gpio $controller_number $pad_number $direction
+        	idx=$(( idx + 1 ))
+        	json_select ".."
+	done
+
+	json_select ".."
+esac
+
+board_config_flush
+
+exit 1

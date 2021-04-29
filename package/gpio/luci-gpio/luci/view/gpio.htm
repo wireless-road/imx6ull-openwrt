@@ -1,0 +1,242 @@
+<%+header%>
+
+<script type="text/javascript">
+//<![CDATA[
+
+let gpio_cnt = 0
+
+function handleSubmit(ev){
+        let rows = document.getElementById("table").children
+
+        let data = { token: '<%=token%>', gpios: [] };
+        var xhr = new XHR();
+
+        for (let i = 1; i < rows.length; i++) {
+                let fields = rows[i].children
+                const gpio = {
+                        'controller_number': fields[0].children[0].value,
+                        'pad_number': fields[1].children[0].value,
+                        'direction': fields[2].children[0].value
+                }
+                data.gpios.push(gpio)
+        }
+
+        xhr.post("/cgi-bin/luci/admin/gpio/configuration_set", data, function(xhr,j){
+                                setTimeout(get_show_data, 500)
+                        }
+                )
+ }
+
+function get_show_data(){
+
+         XHR.get('/cgi-bin/luci/admin/gpio/configuration_get', { token: '<%=token%>' }, function(xhr, j) {
+                let table = document.getElementById("table")
+                while(table.firstChild)
+                {
+                        table.removeChild(table.lastChild)
+                }
+                gpio_cnt = 0
+                generateGpioHead(table);
+
+                 for(const gpio of j.gpios) {
+                        XHR.get('/cgi-bin/luci/admin/gpio/value_get', { token: '<%=token%>', controller_number: gpio.controller_number, pad_number: gpio.pad_number }, function(xhr, j) {
+                                 generateGpio(gpio.controller_number,
+                                         gpio.pad_number,
+                                         gpio.direction,
+                                         parseInt(j.value)
+                                 )
+                         });
+                 }
+         });
+}
+
+function generateHeadField(class_name, text) {
+        let col = document.createElement("div")
+        col.className = class_name
+        let col_text = document.createTextNode(text)
+        col.appendChild(col_text)
+        return col
+}
+
+function generateGpioOption(class_name, text)  {
+        let col = document.createElement("div")
+        col.className = class_name
+        col.appendChild(text)
+        return col
+}
+
+function generateGpioValue(class_name, text)  {
+        let col = document.createElement("div")
+        col.className = class_name
+        col.appendChild(text)
+        return col
+}
+
+function change_controller(e) {
+        // console.log('change controller: ', e.target.value, e.target.id)
+}
+function change_pad(e) {
+        // console.log('change pad: ', e.target.value, e.target.id)
+}
+function change_direction(e) {
+        // console.log('change direction: ', e.target.value, e.target.id)
+}
+
+function generateGpioControllersList(value = 1, id) {
+        let select = document.createElement("select")
+        select.id = 'controller.' + id
+        select.onchange = change_controller
+
+        for (i=1; i<=5; i++) {
+                let opt = document.createElement("option")
+                opt.value = i
+                opt.text = 'GPIO['+i+']'
+                select.add(opt, null)
+        }
+
+        select.value = value
+        return select
+}
+
+function generateGpioPadsList(value = 1, id) {
+        let select = document.createElement("select")
+        select.id = 'pad.' + id
+        select.onchange = change_pad
+
+        for (i=1; i<=32; i++) {
+                let opt = document.createElement("option")
+                opt.value = i
+                opt.text = i
+                select.add(opt, null)
+        }
+
+        select.value = value
+        return select
+}
+
+function generateGpioDirection(value = 'out', id) {
+        let select = document.createElement("select")
+        select.id = 'direction.' + id
+        select.onchange = change_direction
+
+        let opt = document.createElement("option")
+        opt.value = 'out'
+        opt.text = 'out'
+        select.add(opt, null)
+
+        opt = document.createElement("option")
+        opt.value = 'in'
+        opt.text = 'in'
+        select.add(opt, null)
+
+        select.value = value
+        return select
+}
+
+function gpioToggled(e) {
+        const cnt = e.target.id.split('.')[1]
+        let controller = document.getElementById("controller." + cnt).value
+        let pad = document.getElementById("pad." + cnt).value
+        let data = { token: '<%=token%>', gpio: {} };
+        var xhr = new XHR();
+        data.gpio.controller_number = controller
+        data.gpio.pad_number = pad
+        data.gpio.value = e.target.checked ? 1 : 0
+
+        xhr.post("/cgi-bin/luci/admin/gpio/value_set", data, function(xhr,j) {
+                }
+        );
+}
+
+function generateGpioVal(controller_number, gpio_number, direction, value = 1, gpio_cnt) {
+        let label = document.createElement("label")
+        label.className = "switch"
+        let input = document.createElement("input")
+        input.type = "checkbox"
+        // input.id = controller_number + '.' + gpio_number
+        input.id = 'value.' + gpio_cnt
+        input.addEventListener('input', gpioToggled)
+        input.checked = !!value
+        let span = document.createElement("span")
+        span.className = "slider round"
+        label.appendChild(input)
+        label.appendChild(span)
+        return label
+}
+
+function generateGpioNew() {
+        generateGpio(controller_number = 1, gpio_number = 1, direction = 'out', value = 0, disabled = true)
+}
+
+function generateGpio(controller_number = 1, gpio_number = 1, direction = 'out', value = 0, disabled = false) {
+        let table = document.getElementById("table")
+        let trow = document.createElement("div")
+        trow.className = "tr"
+        trow.id = gpio_cnt
+
+        table.appendChild(trow)
+        trow.appendChild(generateGpioOption("td", generateGpioControllersList(controller_number, gpio_cnt)))
+        trow.appendChild(generateGpioOption("td center", generateGpioPadsList(gpio_number, gpio_cnt)))
+        trow.appendChild(generateGpioOption("td", generateGpioDirection(direction, gpio_cnt)))
+        if(disabled === false) {
+                trow.appendChild(generateGpioValue("td center", generateGpioVal(controller_number, gpio_number, direction, value, gpio_cnt)))
+        } else {
+                trow.appendChild(generateGpioValue("td center disabled", generateGpioVal(controller_number, gpio_number, direction, value, gpio_cnt)))
+        }
+        gpio_cnt = gpio_cnt + 1
+}
+
+function generateGpioHead(table) {
+        let thead = document.createElement("div")
+        thead.className = "tr table-titles"
+        table.appendChild(thead)
+
+        thead.appendChild(generateHeadField("th col-1 middle center", "Controller"))
+        thead.appendChild(generateHeadField("th col-2 middle center", "Pad"))
+        thead.appendChild(generateHeadField("th col-3 middle center", "Direction"))
+        thead.appendChild(generateHeadField("th col-2 middle center", "Value"))
+}
+
+window.requestAnimationFrame(function() {
+        let table = document.getElementById("table")
+        // generateGpioHead(table);
+        get_show_data();
+
+        setInterval(function () {
+                let rows = document.getElementById("table").children
+                for (let i = 1; i < rows.length; i++) {
+                        let fields = rows[i].children
+                        let controller = document.getElementById("controller." + (i - 1)).value
+                        let pad = document.getElementById("pad." + (i - 1)).value
+
+                        XHR.get('/cgi-bin/luci/admin/gpio/value_get', { token: '<%=token%>', controller_number: fields[0].children[0].value, pad_number: fields[1].children[0].value }, function(xhr, j) {
+                                let value = document.getElementById("value." + (i - 1))
+                                let new_val = (j.value === '1') ? true : false
+                                if (value.checked !== new_val) {
+                                        value.checked = new_val
+                                }
+                        })
+                }
+
+        },500)
+
+});
+//]]>
+</script>
+
+<div style="display: flex; flex-direction: row; justify-content: space-between">
+        <h2 name="content"><%:GPIO Configuration%></h2>
+        <button class="btn cbi-button cbi-button-action" onclick="generateGpioNew()"> <%:Add Gpio %> </button>
+</div>
+<div style="display: flex; flex-direction: row; justify-content: space-between">
+        <link rel="stylesheet" href="<%=resource%>/switch.css" type="text/css" />
+        <div id="table" class="table">
+        </div>
+</div>
+
+<div class="cbi-page-actions">
+        <div class="right" style="width: 100%; height: 100%">
+        <button class="btn cbi-button cbi-button-action" onclick="handleSubmit(event)"> <%:Save & Apply %> </button>
+        </div>
+</div>
+<br>
