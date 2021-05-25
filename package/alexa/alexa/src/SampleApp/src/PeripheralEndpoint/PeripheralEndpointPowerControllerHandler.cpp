@@ -13,6 +13,10 @@
  * permissions and limitations under the License.
  */
 
+#include <iostream>
+#include <stdlib.h>
+#include <string.h>
+
 #include <AVSCommon/Utils/Configuration/ConfigurationNode.h>
 #include <AVSCommon/Utils/JSON/JSONUtils.h>
 #include <AVSCommon/Utils/Logger/Logger.h>
@@ -77,7 +81,10 @@ std::pair<AlexaResponseType, std::string> PeripheralEndpointPowerControllerHandl
     if (m_currentPowerState != state) {
         std::string stateStr = state ? "ON" : "OFF";
         ConsolePrinter::prettyPrint({"ENDPOINT: " + m_endpointName, "POWER STATE: " + stateStr});
-
+	if(state)
+		system("echo '$(date) ON' > /tmp/alexa.log");
+	else
+		system("echo '$(date) OFF' > /tmp/alexa.log");
         m_currentPowerState = state;
         copyOfObservers = m_observers;
         notifyObserver = true;
