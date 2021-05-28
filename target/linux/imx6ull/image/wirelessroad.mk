@@ -6,8 +6,8 @@ ifeq ($(SUBTARGET),cortexa7)
 
 FAT32_BLOCK_SIZE=1024
 
-#Max flash is 16MiB
-MAXFWSIZE := $(shell echo $$(( ( 16 * 1024 * 1024 ) / $(FAT32_BLOCK_SIZE) )) )
+#Max flash is 32MiB
+MAXFWSIZE := $(shell echo $$(( ( 32 * 1024 * 1024 ) / $(FAT32_BLOCK_SIZE) )) )
 
 #On FAT32 there's restriction to pad FS to this value.
 # SECTOR size is 512 and we need to pad to 32 sectors.
@@ -255,6 +255,44 @@ define Device/audio_stream_wifi
 	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
 endef
 TARGET_DEVICES += audio_stream_wifi
+
+define Device/amazon_voice_service_ethernet
+	DEVICE_TITLE := Amazon Voice Service Ethernet
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
+	DEVICE_NAME := amazon_voice_service_ethernet
+	DEVICE_DTS := amazon_voice_service_ethernet
+	BOARDNAME := WIRELESSROAD_AMAZON_VOICE_SERVICE_IMX6ULL
+	SUPPORTED_DEVICES:= amazon_voice_service_ethernet
+	IMAGE_SIZE := 31m
+	IMAGE_SIZE_FACTORY := 32m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += amazon_voice_service_ethernet
+
+define Device/amazon_voice_service_wifi
+	DEVICE_TITLE := Amazon Voice Service WiFi
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-wfx iwinfo wpad-mini
+	DEVICE_NAME := amazon_voice_service_wifi
+	DEVICE_DTS := amazon_voice_service_wifi
+	BOARDNAME := WIRELESSROAD_AMAZON_VOICE_SERVICE_WIFI_IMX6ULL
+	SUPPORTED_DEVICES:= amazon_voice_service_wifi
+	IMAGE_SIZE := 31m
+	IMAGE_SIZE_FACTORY := 32m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += amazon_voice_service_wifi
 
 
 endif
