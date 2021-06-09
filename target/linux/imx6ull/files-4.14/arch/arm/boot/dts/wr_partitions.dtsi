@@ -1,0 +1,35 @@
+
+&ecspi3 {
+	fsl,spi-num-chipselects = <1>;
+	cs-gpios = <&gpio1 20 0>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_ecspi3_0>;
+	status = "okay";
+	dma-names = "rx", "tx";
+	dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
+
+	flash@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		status = "okay";
+		compatible = "m25p80";
+		spi-max-frequency = <40000000>;
+		reg = <0>;
+		partition@0 {
+			label = "u-boot";
+			reg = <0x000000 0x0c0000>;
+		};
+		partition@1 {
+			label = "u-boon-env";
+			reg = <0x0c0000 0x040000>;
+		};
+		partition@2 {
+			label = "firmware";
+			reg = <0x100000 0x1f00000>;
+		};
+		partition@3 {
+			label = "factory";
+			reg = <0x000000 0x2000000>;
+		};
+	};
+};

@@ -1,0 +1,32 @@
+
+&usbotg1 {
+	dr_mode = "otg";
+	srp-disable;
+	hnp-disable;
+	adp-disable;
+	pinctrl-0 = <&pinctrl_usb_otg1_id>;
+	disable-over-current;
+	external-vbus-divider;
+	phys = <&usbphy1>;
+	phy-names = "usb-phy";
+	maximum-speed;
+	status = "okay";
+};
+
+&usbotg2 {
+	dr_mode = "host";
+	disable-over-current;
+	external-vbus-divider;
+	phys = <&usbphy2>;
+	phy-names = "usb-phy";
+	status = "okay";
+};
+
+&usbphy1 {
+	tx-d-cal = <0x5>;
+};
+
+&usbphy2 {
+	tx-d-cal = <0x5>;
+};
+

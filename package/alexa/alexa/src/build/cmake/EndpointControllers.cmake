@@ -22,7 +22,7 @@
 #
 
 # Default is OFF
-option(ENABLE_ALL_ENDPOINT_CONTROLLERS "Enable all endpoint controller capabilities" OFF)
+option(ENABLE_ALL_ENDPOINT_CONTROLLERS "Enable all endpoint controller capabilities" ON)
 
 # Enable controller capabilities based on the 'ENABLE_ALL_ENDPOINT_CONTROLLERS'
 if(ENABLE_ALL_ENDPOINT_CONTROLLERS)

@@ -17,7 +17,7 @@ PKG_BUILD_PARALLEL:=1
 CMAKE_BINARY_SUBDIR=alexa-sdk-build
 CMAKE_SOURCE_SUBDIR=alexa-sdk-source
 
-CMAKE_OPTIONS=-DCMAKE_BUILD_TYPE=DEBUG -DPORTAUDIO=ON -DGSTREAMER_MEDIA_PLAYER=ON -DPORTAUDIO_LIB_PATH=$(STAGING_DIR)/usr/lib/libportaudio.so -DPORTAUDIO_INCLUDE_DIR=$(STAGING_DIR)/usr/include/
+CMAKE_OPTIONS=-DCMAKE_BUILD_TYPE=DEBUG -DPORTAUDIO=ON -DGSTREAMER_MEDIA_PLAYER=ON -DPORTAUDIO_LIB_PATH=$(STAGING_DIR)/usr/lib/libportaudio.so -DPORTAUDIO_INCLUDE_DIR=$(STAGING_DIR)/usr/include/ -DENDPOINT_CONTROLLERS_POWER_CONTROLLER=ON
 EXTRA_CFLAGS+=-Wno-error=format=
 
 include $(INCLUDE_DIR)/package.mk
@@ -54,8 +54,9 @@ define Package/alexa/install
 	$(INSTALL_DIR) $(1)/etc/alexa $(1)/etc/alexa/database $(1)/usr/lib $(1)/etc/ssl $(1)/etc/ssl/certs $(1)/bin
 	$(CP) $(PKG_INSTALL_DIR)/usr/lib/* $(1)/usr/lib/
 	$(CP) ./files/* $(1)/
+	$(STRIP) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/SampleApp/src/SampleApp
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/SampleApp/src/SampleApp $(1)/bin/
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/SampleApp/src/libLibSampleApp.so $(1)/usr/lib/
+#	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/SampleApp/src/libLibSampleApp.so $(1)/usr/lib/
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/Integration/test/SpeechSynthesizerIntegrationTest $(1)/bin/
 #	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(CMAKE_BINARY_SUBDIR)/Integration/AlexaClientSDKConfig.json $(1)/etc/alexa
 endef
