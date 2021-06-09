@@ -2213,7 +2213,7 @@ diff -Nru u-boot-2017.07-001/configs/wirelessroad_ecspi3_defconfig u-boot-2017.0
 +# SPI Flash Support
 +#
 +CONFIG_SPI_FLASH=y
-+# CONFIG_SPI_FLASH_BAR is not set
++CONFIG_SPI_FLASH_BAR=y
 +# CONFIG_SF_DUAL_FLASH is not set
 +CONFIG_SPI_FLASH_ATMEL=y
 +CONFIG_SPI_FLASH_EON=y
