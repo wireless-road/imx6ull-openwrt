@@ -91,7 +91,6 @@
 #include "wr_partitions.dtsi"
 #include "wr_ethernet.dtsi"
 #include "wr_usb.dtsi"
-#include "wr_watchdog.dtsi"
 
 
 &clks {
@@ -403,4 +402,10 @@
 		pinctrl-0 = <&pinctrl_wfx_wakeup>;
 		wakeup-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
 	};
+};
+
+&wdog1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_wdog>;
+	fsl,wdog_b;
 };

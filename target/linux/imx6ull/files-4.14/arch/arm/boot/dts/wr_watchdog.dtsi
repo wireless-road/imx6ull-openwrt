@@ -1,6 +1,0 @@
-
-&wdog1 {
-	pinctrl-names = "default";
-	pinctrl-0 = <&pinctrl_wdog>;
-	timeout-sec = <10>;
-};
