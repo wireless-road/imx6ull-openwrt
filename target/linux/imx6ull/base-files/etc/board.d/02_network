@@ -17,6 +17,9 @@ video_stream_ethernet|\
 video_stream_wifi|\
 flexcan_ethernet|\
 flexcan_wifi|\
+amazon_voice_service_wifi|\
+amazon_voice_service_3g|\
+amazon_voice_service|\
 audio_stream_ethernet|\
 audio_stream_wifi)
 	ucidef_set_interface_lan 'eth0'

@@ -43,6 +43,9 @@ imx6ull_board_detect() {
 	"Amazon Voice Service Ethernet")
 		name="amazon_voice_service_ethernet";
 		;;
+	"Amazon Voice Service 3G")
+		name="amazon_voice_service_3g";
+		;;
 	"Amazon Voice Service WiFi")
 		name="amazon_voice_service_wifi";
 		;;
