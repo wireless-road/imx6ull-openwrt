@@ -157,6 +157,24 @@ define Device/video_stream_ethernet
 endef
 TARGET_DEVICES += video_stream_ethernet
 
+define Device/video_stream_3g
+	DEVICE_TITLE := Video Stream 3G
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev
+	DEVICE_NAME := video_stream_3g
+	DEVICE_DTS := video_stream_3g
+	BOARDNAME := WIRELESSROAD_STREAM_3G_IMX6ULL
+	SUPPORTED_DEVICES := wirelessroad_stream-imx6ull video_stream_3g
+	IMAGE_SIZE := 31m
+	IMAGE_SIZE_FACTORY := 32m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += video_stream_3g
 
 define Device/video_stream_wifi
 	DEVICE_TITLE := Video Stream Wifi

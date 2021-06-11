@@ -25,6 +25,9 @@ imx6ull_board_detect() {
 	"Video Stream Ethernet")
 		name="video_stream_ethernet";
 		;;
+	"Video Stream 3G")
+		name="video_stream_3g";
+		;;
 	"Video Stream WiFi")
 		name="video_stream_wifi";
 		;;
