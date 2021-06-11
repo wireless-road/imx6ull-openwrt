@@ -1,36 +1,36 @@
 [Back to Main Readme](../README.md)
 
-### Параметры OpenWrt по-умолчанию.
+### OpenWrt default parameters.
 
-##### IP-адрес, протокол удалённого управления, пользователь и пароль.
+##### IP-address, remote access, user and password.
 
-При первой загрузке прошивки устройство использует стандартный для openwrt IP-адрес `192.168.1.1`.
-Удалённый доступ к устройству предоставляется по протоколу SSH.
+On first boot device uses default IP address - `192.168.1.1`.
+It can be remotely accessed via `ssh`.
 
-Имя пользователя: root <br>
-Пароль: не требуется. 
+default user - `root`
+default password - no password.
 
-##### Конфигурация LoraWan.
+##### LoraWan configuration.
 
-Файл конфигурации packet-forwarder находится в директории /etc, полный путь к файлу:
+`packet-forwarder` utility configuration file might be found here:
 > /etc/global_conf.json
 
-Управление службой производится стандартным механизмом прошивки openwrt. Для запуска демона вручную необходимо выполнить на устройстве команду:
+`lora_pkt_fwd` service that implements LoRaWAN gateway functionality might be driven in following way. To start daemon manually type following:
 > /etc/init.d/lora_pkt_fwd start
 
-Для включения службы в автозагрузку (автоматический запуск при включении устройства) необходимо выполнить команду:
+To enable autostart of daemon on powering up the device:
 > /etc/init.d/lora_pkt_fwd enable
 
 
-При запуске службы в первый раз, после включения, скрипт `/etc/init.d/lora_pkt_fwd` производит сброс устройства SX1301 используя GPIO. Конфигурация номеров выводов GPIO для сброса находится в файле 
+On first load, after powering up `/etc/init.d/lora_pkt_fwd` script resets `SX1301's` RESET GPIO. GPIO configuration might be found here: 
 > /etc/config/lora
 
-По-умолчанию, файл содержит такую конфигурацию:
+By default, following gpio pins used:
 > config sx1301 'SX1301_conf'
 >        option chipreset_pin '1'
 >        option pllreset_pin '11'
 
-Для устройства GW-IMX6ULL при первой загрузке после перепрошивки опция `pllreset_pin` удаляется, а опции `chipreset_pin` назначается значение 130 (GPIO номер пина).
+`pllreset_pin` not used currently, `chipreset_pin` transforms to `IMX6's` GPIO pad number (130).
 
 
 ##### Детальное описание изменений.

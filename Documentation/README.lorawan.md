@@ -2,96 +2,72 @@
 
 # WirelessRoad GW-IMX6ULL
 
-[Детальное описание собранной прошивки LoraWan](README.lorawan-details.md)
+[Build image description](README.lorawan-details.md)
 
-### Порядок сборки прошивки.
-**1.** Установите ситемные утилиты сборки для вашего дистрибутива. Для Ubuntu в консоли выполните команды:
+### Image build process.
+**1.** Install all required tools. For Ubuntu:
 > sudo apt-get update
 
 > sudo apt-get install git-core build-essential libssl-dev libncurses5-dev unzip gawk zlib1g-dev subversion mercurial
 
-**2.** Клонируйте репозиторий исходных текстов командой:
+**2.** Clone source code:
 > git clone https://github.com/wireless-road/lorawan-imx6ull
 
-**3.** Перейдите в директорию c исходными текстами:
+**3.** Enter cloned folder:
 > cd lorawan-imx6ull
 
-**4.** Установите для возможности выбора все доступные пакеты командами:
+**4.** Install all available packages:
 > ./scripts/feeds update -a
 
 > ./scripts/feeds install -a
 
-**5.** Скопируйте конфигурационный файл openwrt для устройства GW-IMX6ULL:
-> cp openwrt-configs/gw-imx6ull.config ./.config
+**5.** Clone one of available configuration file:
+> cp openwrt-configs/amazon_voice_service.config ./.config
 
-**6.** _Этот шаг можно пропустить, если вам не нужны дополнительные опции_
+**6.** _This step might be missed if nothing unusual required for you_
 
-  Для тонкой настройки выполните команду:
+  To change configuration:
 > make menuconfig
 
-**7.** Предварительно загрузите все необходимые исходные тексты пакетов командой:
+**7.** Dowload all required packages:
 > make download
 
-**8.** Выберите один из вариантов, приведённых ниже, и запустите процесс сборки командой:
+**8.** Start image compilation by:
 > make
 
-или командой с указанием количества параллельных процессов для меньшего времени сборки, в примере указано 4 параллельных процесса:
+or by setting amount of parallel processes to speed up build process:
 > make -j 4
 
-**9.** После завершения сборки в директории `bin/targets/imx6ull/cortexa7/` будут находится образы прошивки и загрузчика для записи/обновления:
+**9.** Check `bin/targets/imx6ull/cortexa7/` folder after build process finished. Here you can find resulted binaries you may use to update your hardware:
+`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.sdcard.bin` - image to write on SD/MMC-card.
 
-`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.sdcard.bin` - образ для записи на SD/MMC-карту.
+`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin` - image to update SPI flash IC. Used for remote firmware upgrade.
 
-`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin` - образ прошивки для использования на spi-flash, этот файл используется для удалённого обновления.
+`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin` - SPI flash IC image to burn flash IC using programmators.
 
-`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin` - образ spi-flash для записи при производстве или полного обновления прошивки и загрузчика один файлом.
-
-`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin` - образ загрузчика.
+`openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin` - U-boot image.
 
 
-### Обновление и запись образа.
+### Firmware upgrade.
 
-##### Первичная запись.
+###### Copy firmware image using SCP.
 
-Для использования прошивки необходимо записать образ на внешний накопитель (SD-карта) командой
-> dd if=openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.sdcard.bin of=/dev/sdX
+For example, if your target hardware IP address is 192.168.1.100.
+Type following from your host machine you used to compile firmware image:
+> scp ./bin/targets/imx6ull/cortexa7/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin root@192.168.1.100:/tmp/
 
-Вместо /dev/sdX укажите путь к устройству с SD-картой.
-
-После этого необходимо загрузить устройство с openwrt на SD-карте. Далее скачиваем файл прошивки для SPI-NOR (MTD) на устройство. Для этого можно воспользоваться FTP- или HTTP-сервером на локальном компьютере, или воспользоваться SCP-протоколом.
-
-###### Загрузка с FTP- или HTTP-сервера.
-
-Положите файл прошивки в директорию, к которой даёт доступ сервер. Для FTP используйте пользователя anonymous для обмена файлами по этому протоколу.
-Допустим, IP-адрес сервера 192.168.1.100. Скачиваем файл в директорию /tmp на устройстве командой (для FTP):
-> wget ftp://192.168.1.100/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin -O /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin
-
-Или командой (для HTTP):
-> wget http://192.168.1.100/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin -O /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin
-
-Далее нам необходимо записать прошивку на SPI-NOR (MTD) флеш командой
-> mtd write /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin factory
-
-Важно, команда mtd из состава openwrt перед записью проверяет название разделов в файле /proc/mtd, последний аргумент в команде указывает название раздела для записи, т.к. блочное устройство может отличаться при каждой загрузке.
-После выполнения этой команды устройство готово для работы без SD-карты.
-
-###### Загрузка с использованием SCP.
-
-Допустим, IP-адрес устройства после загрузки 192.168.1.1.
-Для выгрузки файла на устройство необходимо на компьютере выполнить команду
-> scp openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin root@192.168.1.1:/tmp/
-
-После этого необходимо выполнить команду записи прошивки на флеш с самого устройства.
+###### Burn firmware to flash IC:
+Then start firmware burning to flash IC from target hardware console by typing:
 > mtd write openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-factory.bin factory
 
-##### Обновление.
+##### Upgrade firmware using sysupgrade utility.
 
-Как загружать файлы на устройство смотрите в предыдущем разделе.
+Deliver firmware image using SCP as described above.
 
-Для обновления UBoot раздела скачайте файл `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin` на устройство в директорию /tmp и выполните команду
+To upgrade U-boot you have to download `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin` file to `/tmp` folder of target hardware and run:
 > mtd write /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.u-boot.bin u-boot
 
-Для обновления прошивки загрузите файл прошивки `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin` на устройство с использованием wget (FTP или HTTP протокол) или scp, как в предыдущем разделе (первичная запись) и выполните команду 
+To upgrade Linux kernel image download `openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin` to target hardware and run: 
 > sysupgrade -с /tmp/openwrt-imx6ull-cortexa7-wirelessroad_gw-imx6ull-squashfs.mtd-sysupgrade.bin
 
-Команда sysupgrade обновит прошивку с сохранением текущей конфигурации устройства. Ключ '-c' указывает команде найти все изменения в директории /etc/ на устройстве и сохранить их для следующей загрузки (по-умолчанию сохраняются только файлы из списка /etc/sysupgrade.conf, в основном, это конфигурационные файлы в /etc/config/).
+`sysupgrade` updates firmware while keeps (key '-c') current configuration (`/etc` directory, files from `/etc/sysupgrade.conf` list, `/etc/config/` files mostly).
