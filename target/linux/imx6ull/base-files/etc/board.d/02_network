@@ -17,6 +17,7 @@ video_stream_ethernet|\
 video_stream_3g|\
 video_stream_wifi|\
 flexcan_ethernet|\
+flexcan_3g|\
 flexcan_wifi|\
 amazon_voice_service_wifi|\
 amazon_voice_service_3g|\

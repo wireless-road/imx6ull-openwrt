@@ -43,6 +43,9 @@ imx6ull_board_detect() {
 	"FlexCAN Ethernet")
 		name="flexcan_ethernet";
 		;;
+	"FlexCAN 3G")
+		name="flexcan_3g";
+		;;
 	"FlexCAN WiFi")
 		name="flexcan_wifi";
 		;;

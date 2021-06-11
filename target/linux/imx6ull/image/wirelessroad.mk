@@ -216,6 +216,26 @@ endef
 TARGET_DEVICES += flexcan_ethernet
 
 
+define Device/flexcan_3g
+        DEVICE_TITLE := FlexCAN 3G
+        DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-can-flexcan
+        DEVICE_NAME := flexcan_3g
+        DEVICE_DTS := flexcan_3g
+        BOARDNAME := WIRELESSROAD_FLEXCAN_3G_IMX6ULL
+        SUPPORTED_DEVICES := wirelessroad_stream-imx6ull flexcan_3g
+        IMAGE_SIZE := 31m
+        IMAGE_SIZE_FACTORY := 32m
+        CONSOLE := ttymxc0,115200
+        KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+        IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+        IMAGE/u-boot.bin := imx6ull-ubootimg
+        IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+        IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+        IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += flexcan_3g
+
+
 define Device/flexcan_wifi
         DEVICE_TITLE := FlexCAN WiFi
         DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-can-flexcan kmod-wfx iwinfo wpad-mini
