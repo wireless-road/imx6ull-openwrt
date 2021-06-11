@@ -25,11 +25,17 @@ imx6ull_board_detect() {
 	"Video Stream Ethernet")
 		name="video_stream_ethernet";
 		;;
+	"Video Stream 3G")
+		name="video_stream_3g";
+		;;
 	"Video Stream WiFi")
 		name="video_stream_wifi";
 		;;
 	"Audio Stream Ethernet")
 		name="audio_stream_ethernet";
+		;;
+	"Audio Stream 3G")
+		name="audio_stream_3g";
 		;;
 	"Audio Stream WiFi")
 		name="audio_stream_wifi";
@@ -37,11 +43,17 @@ imx6ull_board_detect() {
 	"FlexCAN Ethernet")
 		name="flexcan_ethernet";
 		;;
+	"FlexCAN 3G")
+		name="flexcan_3g";
+		;;
 	"FlexCAN WiFi")
 		name="flexcan_wifi";
 		;;
 	"Amazon Voice Service Ethernet")
 		name="amazon_voice_service_ethernet";
+		;;
+	"Amazon Voice Service 3G")
+		name="amazon_voice_service_3g";
 		;;
 	"Amazon Voice Service WiFi")
 		name="amazon_voice_service_wifi";
