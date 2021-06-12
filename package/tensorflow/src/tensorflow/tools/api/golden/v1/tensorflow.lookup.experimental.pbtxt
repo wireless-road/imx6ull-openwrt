@@ -1,0 +1,11 @@
+path: "tensorflow.lookup.experimental"
+tf_module {
+  member {
+    name: "DenseHashTable"
+    mtype: "<type \'type\'>"
+  }
+  member {
+    name: "MutableHashTable"
+    mtype: "<type \'type\'>"
+  }
+}
