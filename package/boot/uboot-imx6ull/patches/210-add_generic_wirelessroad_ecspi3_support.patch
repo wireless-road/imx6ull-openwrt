@@ -603,7 +603,7 @@ diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/README u-boot-2
 diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c
 --- u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c	1970-01-01 03:00:00.000000000 +0300
 +++ u-boot-2017.07-002-generic_ecspi3/board/freescale/wirelessroad_ecspi3/wirelessroad_ecspi3.c	2020-03-28 01:18:12.821831652 +0200
-@@ -0,0 +1,851 @@
+@@ -0,0 +1,854 @@
 +/*
 + * Copyright (C) 2015 Freescale Semiconductor, Inc.
 + *
@@ -691,7 +691,6 @@ diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ec
 +	MX6_PAD_SNVS_TAMPER7__GPIO5_IO07 | MUX_PAD_CTRL(NO_PAD_CTRL),
 +	/* IOX_nOE */
 +	MX6_PAD_SNVS_TAMPER8__GPIO5_IO08 | MUX_PAD_CTRL(NO_PAD_CTRL),
-+	MX6_PAD_ENET2_TX_CLK__GPIO2_IO14 | MUX_PAD_CTRL(NO_PAD_CTRL),
 +};
 +
 +/*
@@ -914,7 +913,8 @@ diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ec
 +}
 +#endif
 +
-+#define ENET_RESET IMX_GPIO_NR(2, 14)
++#define ENET_RESET IMX_GPIO_NR(3, 18)
++#define ENET2_RESET IMX_GPIO_NR(3, 5)
 +
 +#ifdef CONFIG_FEC_MXC
 +/*
@@ -964,29 +964,32 @@ diff -Nru u-boot-2017.07-001/board/freescale/wirelessroad_ecspi3/wirelessroad_ec
 +#endif
 +}
 +
-+int eth_reset(void)
++int eth_reset(int gpio, const char *name, iomux_v3_cfg_t pad, int enable)
 +{
-+
-+	gpio_request(ENET_RESET,"enet reset");
-+	imx_iomux_v3_setup_pad(MX6_PAD_ENET2_TX_CLK__GPIO2_IO14|MUX_PAD_CTRL(NO_PAD_CTRL));
++	gpio_request(gpio, name);
++	imx_iomux_v3_setup_pad(pad);
 +
 +	/* Set Low */
-+	//gpio_set_value(ENET_RESET, 0);
-+	gpio_direction_output(ENET_RESET, 0);
++	//gpio_set_value(gpio, 0);
++	gpio_direction_output(gpio, 0);
 +	udelay(50000);
-+	/* Set High */
-+	gpio_direction_output(ENET_RESET, 1);
-+	//gpio_set_value(ENET_RESET, 1);
-+	udelay(10000);
++
++	if (enable) {
++		/* Set High */
++		gpio_direction_output(gpio, 1);
++		//gpio_set_value(gpio, 1);
++		udelay(10000);
++	}
 +}
 +
 +int board_eth_init(bd_t *bis)
 +{
-+	eth_reset();
++	eth_reset(ENET_RESET, "enet reset", MX6_PAD_LCD_DATA13__GPIO3_IO18|MUX_PAD_CTRL(NO_PAD_CTRL), 1);
++	eth_reset(ENET2_RESET, "enet2 reset", MX6_PAD_LCD_DATA00__GPIO3_IO05|MUX_PAD_CTRL(NO_PAD_CTRL), 0);
++
 +	setup_iomux_fec(CONFIG_FEC_ENET_DEV);
 +
-+	return fecmxc_initialize_multi(bis, CONFIG_FEC_ENET_DEV,
-+				       CONFIG_FEC_MXC_PHYADDR, IMX_FEC_BASE);
++	return fecmxc_initialize(bis);
 +}
 +
 +static int setup_fec(int fec_id)
@@ -1933,7 +1936,7 @@ diff -Nru u-boot-2017.07-001/configs/wirelessroad_ecspi3_defconfig u-boot-2017.0
 +# CONFIG_CMD_FPGA is not set
 +# CONFIG_CMD_FPGAD is not set
 +CONFIG_CMD_FUSE=y
-+# CONFIG_CMD_GPIO is not set
++CONFIG_CMD_GPIO=y
 +# CONFIG_CMD_FDC is not set
 +
 +#
@@ -2036,7 +2039,7 @@ diff -Nru u-boot-2017.07-001/configs/wirelessroad_ecspi3_defconfig u-boot-2017.0
 +# CONFIG_OF_EMBED is not set
 +# CONFIG_OF_BOARD is not set
 +CONFIG_NET=y
-+# CONFIG_NET_RANDOM_ETHADDR is not set
++CONFIG_NET_RANDOM_ETHADDR=y
 +# CONFIG_NETCONSOLE is not set
 +CONFIG_NET_TFTP_VARS=y
 +CONFIG_BOOTP_PXE_CLIENTARCH=0x15
@@ -2501,7 +2504,7 @@ diff -Nru u-boot-2017.07-001/configs/wirelessroad_ecspi3_defconfig u-boot-2017.0
 diff -Nru u-boot-2017.07-001/include/configs/wirelessroad_ecspi3.h u-boot-2017.07-002-generic_ecspi3/include/configs/wirelessroad_ecspi3.h
 --- u-boot-2017.07-001/include/configs/wirelessroad_ecspi3.h	1970-01-01 03:00:00.000000000 +0300
 +++ u-boot-2017.07-002-generic_ecspi3/include/configs/wirelessroad_ecspi3.h	2020-03-19 04:47:08.202714768 +0200
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,237 @@
 +/*
 + * Copyright (C) 2020 WirelessRoad.
 + *
@@ -2587,9 +2590,6 @@ diff -Nru u-boot-2017.07-001/include/configs/wirelessroad_ecspi3.h u-boot-2017.0
 +#endif
 +
 +#ifdef CONFIG_CMD_SF
-+#define CONFIG_SPI_FLASH
-+#define CONFIG_SPI_FLASH_SST
-+#define CONFIG_SPI_FLASH_USE_4K_SECTORS
 +#define CONFIG_MXC_SPI
 +#define CONFIG_SF_DEFAULT_BUS		2
 +#define CONFIG_SF_DEFAULT_CS		0
