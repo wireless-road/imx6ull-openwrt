@@ -17,8 +17,7 @@ CMAKE_BINARY_SUBDIR=tensorflow-sdk-build
 SOURCE_SUBDIR=tensorflow-sdk-source
 CMAKE_SOURCE_SUBDIR=tensorflow-sdk-source/tensorflow/lite/examples/minimal
 
-#CMAKE_SYSTEM_PROCESSOR=armv7
-CMAKE_OPTIONS=-DCMAKE_BUILD_TYPE=MINSIZEREL -DTFLITE_ENABLE_XNNPACK=OFF
+CMAKE_OPTIONS=-DCMAKE_BUILD_TYPE=MINSIZEREL -DCMAKE_SYSTEM_PROCESSOR=armv7 #-DTFLITE_ENABLE_XNNPACK=OFF
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/cmake.mk
@@ -42,6 +41,11 @@ endef
 
 define Package/tensorflow/description
  Tensorflow-lite for embedded linux minimal working example.
+endef
+
+define Build/Configure
+	$(Build/Configure/Default)
+	$(Build/Patch)
 endef
 
 define Build/Compile
