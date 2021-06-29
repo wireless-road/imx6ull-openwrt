@@ -1,0 +1,3 @@
+[submodule "package/tensorflow/src"]
+	path = package/tensorflow/src
+	url = https://github.com/wireless-road/tensorflow
