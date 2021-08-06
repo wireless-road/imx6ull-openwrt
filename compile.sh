@@ -55,13 +55,13 @@ compile_board() {
 	fi
 	
 	cp "$configfile" ./.config;
-	yes "" | make -j64 oldconfig;
+	yes "" | make -j $(nproc) oldconfig;
 	#make -j64 download;
 	# Rebuild linux kernel to prevent incompatibility list between targets.
 	#if [ -d "build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7" ];then
 	#	rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
 	#fi
-	make -j64;
+	make -j $(nproc);
 	if [ $? -eq 0 ] && [ -n "$FINAL_PATH" ]; then
 		cp -R ./bin/targets/imx6ull/cortexa7/ "$FINAL_PATH"
 	fi
