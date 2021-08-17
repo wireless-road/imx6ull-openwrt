@@ -1,0 +1,10 @@
+    version: '3.4'
+    services:
+      tftpd-hpa:
+        container_name: tftp      
+        image: danrue/tftpd-hpa
+        volumes:
+          - ./volume:/srv/tftp
+        ports:
+          - 69:69/udp
+        restart: always
