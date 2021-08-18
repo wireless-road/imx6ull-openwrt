@@ -2,7 +2,7 @@
     services:
       tftpd-hpa:
         container_name: tftp      
-        image: danrue/tftpd-hpa
+        build: .
         volumes:
           - ./volume:/srv/tftp
         ports:
