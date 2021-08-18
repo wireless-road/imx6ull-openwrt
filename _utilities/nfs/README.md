@@ -11,7 +11,7 @@ $ docker-compose up -d
 ## Test on client side
 
 ```
-$ sudo mount -v -o vers=3 192.168.31.37/nfs /home/al/nfs
+$ sudo mount -v -o vers=3 192.168.31.37/nfsshare /home/al/nfs
 $ ls /home/al/nfs
 $ umount /home/al/nfs
 ```
