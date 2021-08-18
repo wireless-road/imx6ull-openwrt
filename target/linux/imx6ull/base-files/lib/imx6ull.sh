@@ -34,6 +34,9 @@ imx6ull_board_detect() {
 	"Tensorflow WiFi")
 		name="tensorflow_wifi";
 		;;
+	"Tensorflow WiFi Dev")
+		name="tensorflow_wifi_dev";
+		;;
 	"Audio Stream Ethernet")
 		name="audio_stream_ethernet";
 		;;

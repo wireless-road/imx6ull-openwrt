@@ -214,6 +214,25 @@ define Device/tensorflow_wifi
 endef
 TARGET_DEVICES += tensorflow_wifi
 
+define Device/tensorflow_wifi_dev
+	DEVICE_TITLE := Tensorflow Wifi Dev
+	DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-spi-dev kmod-wfx iwinfo wpad-mini
+	DEVICE_NAME := tensorflow_wifi_dev
+	DEVICE_DTS := tensorflow_wifi
+	BOARDNAME := WIRELESSROAD_TENSORFLOW_WIFI_DEV_IMX6ULL
+	SUPPORTED_DEVICES := wirelessroad_tensorflow_wifi_dev-imx6ull tensorflow_wifi_dev
+	IMAGE_SIZE := 31m
+	IMAGE_SIZE_FACTORY := 32m
+	CONSOLE := ttymxc0,115200
+	KERNEL := kernel-bin | buildDtb | append-dtb | uImage none | imx6ull-bootscript
+	IMAGES := u-boot.bin sdcard.bin mtd-sysupgrade.bin mtd-factory.bin
+	IMAGE/u-boot.bin := imx6ull-ubootimg
+	IMAGE/sdcard.bin := imx6ull-sdcard | append-metadata
+	IMAGE/mtd-sysupgrade.bin := append-kernel | append-rootfs | pad-rootfs | append-metadata | check-size $$$$(IMAGE_SIZE)
+	IMAGE/mtd-factory.bin := append-kernel | append-rootfs | pad-rootfs | imx6ull-mtd-factory | append-metadata | check-size $$$$(IMAGE_SIZE_FACTORY)
+endef
+TARGET_DEVICES += tensorflow_wifi_dev
+
 
 define Device/flexcan_ethernet
         DEVICE_TITLE := FlexCAN Ethernet
