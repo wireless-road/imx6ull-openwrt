@@ -1,0 +1,7 @@
+[submodule "package/tensorflow/src"]
+	path = package/tensorflow/src
+	url = https://github.com/wireless-road/tensorflow
+[submodule "package/detector/src"]
+	path = package/detector/src
+	url = https://github.com/wireless-road/detector.git
+	branch = m2m

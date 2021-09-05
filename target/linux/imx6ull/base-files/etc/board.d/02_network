@@ -16,6 +16,7 @@ lorawan_gateway_3g|\
 video_stream_ethernet|\
 video_stream_3g|\
 video_stream_wifi|\
+tensorflow_wifi|\
 flexcan_ethernet|\
 flexcan_3g|\
 flexcan_wifi|\

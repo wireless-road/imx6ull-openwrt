@@ -1,0 +1,56 @@
+diff --git a/makefile_build/Makefile b/makefile_build/Makefile
+index ef7d290..5a4399d 100644
+--- a/makefile_build/Makefile
++++ b/makefile_build/Makefile
+@@ -30,8 +30,8 @@ LIBEDGETPU_LDFLAGS := \
+ 	-shared \
+ 	-Wl,--soname,libedgetpu.so.1 \
+ 	-Wl,--version-script=$(BUILDROOT)/tflite/public/libedgetpu.lds \
+-	-fuse-ld=gold \
+ 	-lflatbuffers \
++	-Wl,--whole-archive \
+ 	-labsl_flags \
+ 	-labsl_flags_internal \
+ 	-labsl_flags_reflection \
+@@ -40,6 +40,28 @@ LIBEDGETPU_LDFLAGS := \
+ 	-labsl_hashtablez_sampler \
+ 	-labsl_raw_hash_set \
+ 	-labsl_str_format_internal \
++	-labsl_bad_optional_access \
++	-labsl_stacktrace \
++	-labsl_flags_config \
++	-labsl_synchronization \
++	-labsl_strings \
++	-labsl_int128 \
++	-labsl_flags_private_handle_accessor \
++	-labsl_spinlock_wait \
++	-labsl_city \
++	-labsl_flags_commandlineflag \
++	-labsl_flags_commandlineflag_internal \
++	-labsl_throw_delegate \
++	-labsl_wyhash \
++	-labsl_raw_logging_internal \
++	-labsl_time \
++	-labsl_time_zone \
++	-labsl_base \
++	-labsl_strings_internal \
++	-labsl_flags_program_name \
++	-labsl_malloc_internal \
++	-labsl_symbolize \
++	-Wl,--no-whole-archive \
+ 	-lusb-1.0
+ 
+ LIBEDGETPU_FLATC_SRCS := \
+@@ -205,10 +227,10 @@ libedgetpu: | firmware $(LIBEDGETPU_FLATC_OBJS) $(LIBEDGETPU_COBJS) $(LIBEDGETPU
+ 	@mkdir -p $(BUILDDIR)/direct/k8
+ 	@echo "Building libedgetpu.so"
+ 	@$(CXX) $(LIBEDGETPU_CCFLAGS) $(LIBEDGETPU_LDFLAGS) $(LIBEDGETPU_COBJS) $(LIBEDGETPU_CCOBJS) $(LIBEDGETPU_MAX_CCOBJS) -o $(BUILDDIR)/direct/k8/libedgetpu.so.1.0
+-	@ln -sf $(BUILDDIR)/direct/k8/libedgetpu.so.1.0 $(BUILDDIR)/direct/k8/libedgetpu.so.1
++	@cd $(BUILDDIR)/direct/k8 && ln -sf libedgetpu.so.1.0 libedgetpu.so.1 && ln -sf libedgetpu.so.1 libedgetpu.so && cd -
+ 
+ libedgetpu-throttled: | firmware $(LIBEDGETPU_FLATC_OBJS) $(LIBEDGETPU_COBJS) $(LIBEDGETPU_CCOBJS) $(LIBEDGETPU_STD_CCOBJS)
+ 	@mkdir -p $(BUILDDIR)/throttled/k8
+ 	@echo "Building throttled libedgetpu.so"
+ 	@$(CXX) $(LIBEDGETPU_CCFLAGS) $(LIBEDGETPU_LDFLAGS) $(LIBEDGETPU_COBJS) $(LIBEDGETPU_CCOBJS) $(LIBEDGETPU_STD_CCOBJS) -o $(BUILDDIR)/throttled/k8/libedgetpu.so.1.0
+-	@ln -sf $(BUILDDIR)/throttled/k8/libedgetpu.so.1.0 $(BUILDDIR)/throttled/k8/libedgetpu.so.1
++	@cd $(BUILDDIR)/throttled/k8/ && ln -sf libedgetpu.so.1.0 libedgetpu.so.1 && ln -sf libedgetpu.so.1 libedgetpu.so && cd -

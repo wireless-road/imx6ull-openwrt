@@ -1,0 +1,57 @@
+[  1%] Building CXX object CMakeFiles/yuv_shared.dir/source/row_neon.cc.o
+/root/imx6ull-openwrt/staging_dir/toolchain-arm_cortex-a7+neon-vfpv4_gcc-7.5.0_musl_eabi/bin/arm-openwrt-linux-muslgnueabi-g++  -Dyuv_shared_EXPORTS -I/root/imx6ull-openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/libyuv-2021-07-19-639dd4ea/include  -Os -pipe -fno-caller-saves -fno-plt -fhonour-copts -Wno-error=unused-but-set-variable -Wno-error=unused-result -mfloat-abi=hard -iremap/root/imx6ull-openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/libyuv-2021-07-19-639dd4ea:libyuv-2021-07-19-639dd4ea -Wformat -Werror=format-security -fstack-protector -D_FORTIFY_SOURCE=1 -Wl,-z,now -Wl,-z,relro -DNDEBUG -fPIC   -o CMakeFiles/yuv_shared.dir/source/row_neon.cc.o -c /root/imx6ull-openwrt/build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/libyuv-2021-07-19-639dd4ea/source/row_neon.cc
+{standard input}: Assembler messages:
+{standard input}:3624: Error: Neon quad precision register expected -- `vld1.8 q4,[r3]'
+{standard input}:3704: Error: instruction does not accept this addressing mode -- `vld1.8 d8,[r3,#16]'
+
+--- ./include/libyuv/row.h.orig	2021-07-20 05:50:40.456898642 +0000
++++ ./include/libyuv/row.h	2021-07-20 05:53:34.378294140 +0000
+@@ -399,10 +399,10 @@
+ #define HAS_ARGBTORGB24ROW_NEON
+ #define HAS_ARGBTORGB565DITHERROW_NEON
+ #define HAS_ARGBTORGB565ROW_NEON
+-#define HAS_ARGBTOAR64ROW_NEON
+-#define HAS_ARGBTOAB64ROW_NEON
++//#define HAS_ARGBTOAR64ROW_NEON
++//#define HAS_ARGBTOAB64ROW_NEON
+ #define HAS_AR64TOARGBROW_NEON
+-#define HAS_AB64TOARGBROW_NEON
++//#define HAS_AB64TOARGBROW_NEON
+ #define HAS_ARGBTOUV444ROW_NEON
+ #define HAS_ARGBTOUVJROW_NEON
+ #define HAS_ARGBTOUVROW_NEON
+
+--- ./source/row_neon.cc.orig	2021-07-20 05:45:06.334533306 +0000
++++ ./source/row_neon.cc	2021-07-20 05:44:03.268576835 +0000
+@@ -2342,6 +2342,7 @@ void ARGBToAR64Row_NEON(const uint8_t* src_argb,
+       : "cc", "memory", "q0", "q1", "q2", "q3");
+ }
+ 
++#if 0
+ void ARGBToAB64Row_NEON(const uint8_t* src_argb,
+                         uint16_t* dst_ab64,
+                         int width) {
+@@ -2366,6 +2367,7 @@ void ARGBToAB64Row_NEON(const uint8_t* src_argb,
+       : "m"(kShuffleARGBToABGR)  // %3
+       : "cc", "memory", "q0", "q1", "q2", "q3", "q4");
+ }
++#endif
+ 
+ void AR64ToARGBRow_NEON(const uint16_t* src_ar64,
+                         uint8_t* dst_argb,
+@@ -2393,6 +2395,7 @@ void AR64ToARGBRow_NEON(const uint16_t* src_ar64,
+ 
+ static const uvec8 kShuffleAB64ToARGB = {5, 3, 1, 7, 13, 11, 9, 15};
+ 
++#if 0
+ void AB64ToARGBRow_NEON(const uint16_t* src_ab64,
+                         uint8_t* dst_argb,
+                         int width) {
+@@ -2417,6 +2420,7 @@ void AB64ToARGBRow_NEON(const uint16_t* src_ab64,
+       : "m"(kShuffleAB64ToARGB)  // %3
+       : "cc", "memory", "q0", "q1", "q2", "q3", "q4");
+ }
++#endif
+ 
+ void BGRAToYRow_NEON(const uint8_t* src_bgra, uint8_t* dst_y, int width) {
+   asm volatile(

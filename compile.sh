@@ -39,9 +39,28 @@ show_usage() {
 	echo;
 };
 
+compiled_successful_flag=0;
+
+compilei() {
+	compiled_successful_flag=0;
+	if make -j $(nproc); then
+		compiled_successful_flag=1;
+		return
+	else
+		return
+	fi
+}
+
 compile_board() {
+	compiled_successful_flag=0;
 	local boardname="$1";
 	local configfile="$boardsdir/$boardname.config";
+
+	if [ -d "build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7" ];then
+		echo "-- removing all built packages.";
+		rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
+	fi
+	
 	if [ ! -f "$configfile" ];then
 		echo;
 		echo "   No such config file found. Use 'list' argument to see available configs.";
@@ -55,17 +74,17 @@ compile_board() {
 	fi
 	
 	cp "$configfile" ./.config;
-	yes "" | make oldconfig;
-	make download;
-	# Rebuild linux kernel to prevent incompatibility list between targets.
-	if [ -d "build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7" ];then
-		rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
-	fi
-	make -j $(nproc --ignore=3);
+	yes "" | make -j $(nproc) oldconfig;
+	while [ $compiled_successful_flag -eq 0 ];
+	do
+		compilei;
+		sleep 1;
+	done
 	if [ $? -eq 0 ] && [ -n "$FINAL_PATH" ]; then
 		cp -R ./bin/targets/imx6ull/cortexa7/ "$FINAL_PATH"
 	fi
 
+	compiled_successful_flag=1;
 	echo "   Done.";
 };
 
@@ -74,8 +93,11 @@ compile_all()
 	local board
 
 	for l in $boardsdir/*.config;do
+		compiled_successful_flag=0;
 		board="$(echo $l | sed -e 's:.*/::g' -e 's:\..*::')"
-		compile_board "$board"
+		# Rebuild linux kernel to prevent incompatibility list between targets.
+		echo "------------------ Compile $board configuration";
+		compile_board "$board"; 
 	done
 }
 
