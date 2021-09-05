@@ -55,6 +55,12 @@ compile_board() {
 	compiled_successful_flag=0;
 	local boardname="$1";
 	local configfile="$boardsdir/$boardname.config";
+
+	if [ -d "build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7" ];then
+		echo "-- removing all built packages.";
+		rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
+	fi
+	
 	if [ ! -f "$configfile" ];then
 		echo;
 		echo "   No such config file found. Use 'list' argument to see available configs.";
@@ -90,10 +96,6 @@ compile_all()
 		compiled_successful_flag=0;
 		board="$(echo $l | sed -e 's:.*/::g' -e 's:\..*::')"
 		# Rebuild linux kernel to prevent incompatibility list between targets.
-		if [ -d "build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7" ];then
-			echo "-- removing all built packages.";
-			rm -rf ./build_dir/target-arm_cortex-a7+neon-vfpv4_musl_eabi/linux-imx6ull_cortexa7;
-		fi
 		echo "------------------ Compile $board configuration";
 		compile_board "$board"; 
 	done
