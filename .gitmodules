@@ -3,5 +3,5 @@
 	url = https://github.com/wireless-road/tensorflow
 [submodule "package/detector/src"]
 	path = package/detector/src
-	url = https://github.com/soylent-io/detector.git
+	url = https://github.com/wireless-road/detector.git
 	branch = m2m
