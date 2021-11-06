@@ -1,0 +1,91 @@
+--- linux-4.14.199_back/Makefile	2021-10-31 00:00:33.777845447 +0400
++++ linux-4.14.199/Makefile	2021-10-31 00:08:59.324393782 +0400
+@@ -656,11 +656,16 @@
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, address-of-packed-member)
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, attribute-alias)
+ 
++ifdef CONFIG_CC_OPTIMIZE_FOR_DEBUGGING
++KBUILD_CFLAGS	+= -Og
++KBUILD_CFLAGS	+= $(call cc-disable-warning,maybe-uninitialized,)
++else
+ ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+ KBUILD_CFLAGS   += -Os $(EXTRA_OPTIMIZATION)
+ else
+ KBUILD_CFLAGS   += -O2 -fno-reorder-blocks -fno-tree-ch $(EXTRA_OPTIMIZATION)
+ endif
++endif
+ 
+ # Tell gcc to never replace conditional load with a non-conditional one
+ KBUILD_CFLAGS	+= $(call cc-option,--param=allow-store-data-races=0)
+--- linux-4.14.199_back/include/linux/compiler-gcc.h	2021-10-31 00:00:33.449843685 +0400
++++ linux-4.14.199/include/linux/compiler-gcc.h	2021-10-31 00:09:33.112555675 +0400
+@@ -206,7 +206,7 @@
+ 
+ #define __UNIQUE_ID(prefix) __PASTE(__PASTE(__UNIQUE_ID_, prefix), __COUNTER__)
+ 
+-#ifndef __CHECKER__
++#if !defined(__CHECKER__) && !defined(CONFIG_CC_OPTIMIZE_FOR_DEBUGGING)
+ # define __compiletime_warning(message) __attribute__((warning(message)))
+ # define __compiletime_error(message) __attribute__((error(message)))
+ #endif /* __CHECKER__ */
+--- linux-4.14.199_back/include/linux/compiler.h	2020-09-23 12:46:37.000000000 +0400
++++ linux-4.14.199/include/linux/compiler.h	2021-10-31 00:09:48.792630562 +0400
+@@ -296,7 +296,7 @@
+  * sparse see a constant array size without breaking compiletime_assert on old
+  * versions of GCC (e.g. 4.2.4), so hide the array from sparse altogether.
+  */
+-# ifndef __CHECKER__
++#if !defined(__CHECKER__) && !defined(CONFIG_CC_OPTIMIZE_FOR_DEBUGGING)
+ #  define __compiletime_error_fallback(condition) \
+ 	do { ((void)sizeof(char[1 - 2 * condition])); } while (0)
+ # endif
+--- linux-4.14.199_back/init/Kconfig	2021-10-31 00:00:33.817845662 +0400
++++ linux-4.14.199/init/Kconfig	2021-10-31 00:10:29.912826261 +0400
+@@ -1054,6 +1054,26 @@
+ 
+ 	  If unsure, say N.
+ 
++config CC_OPTIMIZE_FOR_DEBUGGING
++	bool "Optimize for better debugging experience (-Og)"
++	#depends on $(cc-option,-Og)
++	select NO_AUTO_INLINE
++	help
++	  This will apply GCC '-Og' optimization level which is supported
++	  since GCC 4.8. This optimization level offers a reasonable level
++	  of optimization while maintaining fast compilation and a good
++	  debugging experience. It is similar to '-O1' while preferring to
++	  keep debug ability over runtime speed. The overall performance
++	  will drop a bit (~6%).
++
++	  Use only if you want to debug the kernel, especially if you want
++	  to have better kernel debugging experience with gdb facilities
++	  like kgdb or qemu. If enabling this option breaks your kernel,
++	  you should either disable this or find a fix (mostly in the arch
++	  code).
++
++	  If unsure, select N.
++
+ endchoice
+ 
+ config SYSCTL
+--- linux-4.14.199_back/kernel/configs/tiny.config	2020-09-23 12:46:37.000000000 +0400
++++ linux-4.14.199/kernel/configs/tiny.config	2021-10-31 00:10:46.292903954 +0400
+@@ -1,5 +1,6 @@
+ # CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE is not set
+ CONFIG_CC_OPTIMIZE_FOR_SIZE=y
++# CONFIG_CC_OPTIMIZE_FOR_DEBUGGING is not set
+ # CONFIG_KERNEL_GZIP is not set
+ # CONFIG_KERNEL_BZIP2 is not set
+ # CONFIG_KERNEL_LZMA is not set
+--- linux-4.14.199_back/include/asm-generic/fixmap.h	2021-10-31 01:13:04.507069748 +0400
++++ linux-4.14.199/include/asm-generic/fixmap.h	2021-10-31 01:14:02.112032931 +0400
+@@ -28,7 +28,9 @@
+  */
+ static __always_inline unsigned long fix_to_virt(const unsigned int idx)
+ {
++#ifndef  CONFIG_CC_OPTIMIZE_FOR_DEBUGGING
+ 	BUILD_BUG_ON(idx >= __end_of_fixed_addresses);
++#endif
+ 	return __fix_to_virt(idx);
+ }
+ 
