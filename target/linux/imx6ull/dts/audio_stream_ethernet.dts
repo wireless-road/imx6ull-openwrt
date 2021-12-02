@@ -227,6 +227,13 @@
 			>;
 		};
 
+		pinctrl_uart5: uart5grp {
+			fsl,pins = <
+				MX6UL_PAD_UART5_TX_DATA__UART5_DCE_TX 0x1b0b1
+				0x00c0 0x034c 0x0644 0 7    0x1b0b1
+			>;
+		};
+
 		pinctrl_usdhc1: usdhc1grp {
 			fsl,pins = <
 			MX6UL_PAD_SD1_CMD__USDHC1_CMD     0x170b9
@@ -312,3 +319,10 @@
 		wlf,shared-lrclk;
 	};
 };
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart5>;
+	status = "okay";
+};
+
