@@ -1,0 +1,9 @@
+--- a/sound/soc/codecs/wm8960.c
++++ b/sound/soc/codecs/wm8960.c
+305a306,307
+> 
+> SOC_SINGLE("MICB", WM8960_POWER1, 1, 1, 0),
+353c355
+< SND_SOC_DAPM_SUPPLY("MICB", WM8960_POWER1, 1, 0, NULL, 0),
+---
+> //SND_SOC_DAPM_SUPPLY("MICB", WM8960_POWER1, 1, 0, NULL, 0),
